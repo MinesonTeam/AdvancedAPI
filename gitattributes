@@ -1,0 +1,5 @@
+#Полноценная документация доступна по ссылке https://git-scm.com/docs/gitattributes
+
+#Символ прерывания строки. LF (\n) - line feed: перенос на новую строку.
+#CRLF (\r\n) carriage return; line feed - возврат каретки и перенос на новую строку
+*.java text eol=lf
