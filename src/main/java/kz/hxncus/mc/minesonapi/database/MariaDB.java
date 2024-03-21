@@ -2,9 +2,6 @@ package kz.hxncus.mc.minesonapi.database;
 
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.Result;
 
 import java.util.Map;
 

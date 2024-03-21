@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Command implements CommandExecutor, TabCompleter {
+public abstract class Command implements ICommand, CommandExecutor, TabCompleter {
     /**
      * Gets the class name and removes the
      * end to create a new command.
@@ -43,10 +43,6 @@ public abstract class Command implements CommandExecutor, TabCompleter {
         }
         return result;
     }
-
-    public abstract void execute(@NotNull CommandSender sender, @NotNull String label, String[] args);
-
-    public abstract List<String> complete(CommandSender sender, String label, String[] args);
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, @NotNull String label, @NotNull String[] args) {

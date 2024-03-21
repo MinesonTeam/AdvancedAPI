@@ -17,26 +17,26 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public abstract class MSInventory implements InventoryHolder {
-    private final Inventory inventory;
+public class MSInventory implements InventoryHolder {
+    private Inventory inventory;
     private final Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
     private final List<Consumer<InventoryOpenEvent>> openHandlers = new ArrayList<>();
     private final List<Consumer<InventoryCloseEvent>> closeHandlers = new ArrayList<>();
     private final List<Consumer<InventoryClickEvent>> clickHandlers = new ArrayList<>();
     private Predicate<Player> closeFilter;
-    protected MSInventory(InventoryType type) {
+    public MSInventory(InventoryType type) {
         this(holder -> Bukkit.createInventory(holder, type));
     }
-    protected MSInventory(InventoryType type, String title) {
+    public MSInventory(InventoryType type, String title) {
         this(holder -> Bukkit.createInventory(holder, type, Component.text(title)));
     }
-    protected MSInventory(int slots) {
+    public MSInventory(int slots) {
         this(holder -> Bukkit.createInventory(holder, slots));
     }
-    protected MSInventory(int slots, String title) {
+    public MSInventory(int slots, String title) {
         this(holder -> Bukkit.createInventory(holder, slots, Component.text(title)));
     }
-    protected MSInventory(Function<InventoryHolder, Inventory> inventoryFunction) {
+    public MSInventory(Function<InventoryHolder, Inventory> inventoryFunction) {
         Objects.requireNonNull(inventoryFunction, "inventoryFunction is null");
         Inventory inv = inventoryFunction.apply(this);
 
@@ -44,15 +44,14 @@ public abstract class MSInventory implements InventoryHolder {
             throw new IllegalStateException("Inventory holder is not correct, found: " + inv.getHolder());
         }
         this.inventory = inv;
-        onInitialize();
+//        onInitialize();
     }
-    protected abstract void onInitialize();
-    protected abstract void onOpen(InventoryOpenEvent event);
-
-    protected abstract void onClick(InventoryClickEvent event);
-
-    protected abstract void onClose(InventoryCloseEvent event);
-
+//    protected abstract void onInitialize();
+//    protected abstract void onOpen(InventoryOpenEvent event);
+//
+//    protected abstract void onClick(InventoryClickEvent event);
+//
+//    protected abstract void onClose(InventoryCloseEvent event);
 
     public MSInventory addItem(ItemStack item) {
         return addItem(item, null);
@@ -60,7 +59,7 @@ public abstract class MSInventory implements InventoryHolder {
 
     public MSInventory addItem(ItemStack item, Consumer<InventoryClickEvent> handler) {
         int slot = this.inventory.firstEmpty();
-        if (slot >= 0) {
+        if (slot != -1) {
             setItem(slot, item, handler);
         }
         return this;
@@ -103,12 +102,6 @@ public abstract class MSInventory implements InventoryHolder {
         return this;
     }
 
-    public MSInventory removeItem(int slot) {
-        this.inventory.clear(slot);
-        this.itemHandlers.remove(slot);
-        return this;
-    }
-
     public MSInventory removeItems(int... slots) {
         for (int slot : slots) {
             removeItem(slot);
@@ -119,6 +112,11 @@ public abstract class MSInventory implements InventoryHolder {
         for (int i = slotFrom; i <= slotTo; i++) {
             removeItem(i);
         }
+        return this;
+    }
+    public MSInventory removeItem(int slot) {
+        this.inventory.clear(slot);
+        this.itemHandlers.remove(slot);
         return this;
     }
     public MSInventory setCloseFilter(Predicate<Player> closeFilter) {
@@ -150,25 +148,25 @@ public abstract class MSInventory implements InventoryHolder {
         return this.inventory;
     }
 
-    public void handleOpen(InventoryOpenEvent event) {
-        onOpen(event);
-        this.openHandlers.forEach(open -> open.accept(event));
-    }
-
-    public void handleClose(InventoryCloseEvent event) {
-        onClose(event);
-        this.closeHandlers.forEach(close -> close.accept(event));
-    }
-
-    public void handleClick(InventoryClickEvent event) {
-        onClick(event);
-
-        this.clickHandlers.forEach(click -> click.accept(event));
-
-        Consumer<InventoryClickEvent> clickConsumer = this.itemHandlers.get(event.getRawSlot());
-
-        if (clickConsumer != null) {
-            clickConsumer.accept(event);
-        }
-    }
+//    public void handleOpen(InventoryOpenEvent event) {
+//        onOpen(event);
+//        this.openHandlers.forEach(open -> open.accept(event));
+//    }
+//
+//    public void handleClose(InventoryCloseEvent event) {
+//        onClose(event);
+//        this.closeHandlers.forEach(close -> close.accept(event));
+//    }
+//
+//    public void handleClick(InventoryClickEvent event) {
+//        onClick(event);
+//
+//        this.clickHandlers.forEach(click -> click.accept(event));
+//
+//        Consumer<InventoryClickEvent> clickConsumer = this.itemHandlers.get(event.getRawSlot());
+//
+//        if (clickConsumer != null) {
+//            clickConsumer.accept(event);
+//        }
+//    }
 }

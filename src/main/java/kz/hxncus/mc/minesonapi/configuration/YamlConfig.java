@@ -246,7 +246,7 @@ public class YamlConfig {
 
                         this.setField(field, instance, value);
                     }
-                } catch (Throwable t) {
+                } catch (InvocationTargetException e) {
                     this.logger.debug("Failed to set config option: " + key + ": " + value + " | " + instance);
                     if (configFile != null) {
                         Path parent = configFile.getParent();
@@ -259,11 +259,13 @@ public class YamlConfig {
                             try {
                                 Files.copy(configFile, configFileBackup, StandardCopyOption.REPLACE_EXISTING);
                                 this.logger.warn("Unable to load some of the config options. File was copied to {}", configFileBackup.getFileName());
-                            } catch (Throwable t2) {
-                                this.logger.warn("Unable to load some of the config options and to make a copy.", t2);
+                            } catch (IOException e1) {
+                                this.logger.warn("Unable to load some of the config options and to make a copy.", e1);
                             }
                         }
                     }
+                } catch (IllegalAccessException | NoSuchMethodException | InstantiationException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }

@@ -68,7 +68,7 @@ public class ColorAPI {
 
     @Nonnull
     public static String color(@Nonnull String string, @Nonnull Color color) {
-        return (Version.supportsHex() ? (String)METHOD_OF.invokeStatic(new Object[] { color }) : getClosestColor(color)) + string;
+        return (Version.supportsHex() ? (String)METHOD_OF.invokeStatic(color) : getClosestColor(color)) + string;
     }
 
     @Nonnull
@@ -107,7 +107,7 @@ public class ColorAPI {
 
     @Nonnull
     public static ChatColor getColor(@Nonnull String string) {
-        return Version.supportsHex() ? (ChatColor)METHOD_OF.invokeStatic(new Object[] { new Color(Integer.parseInt(string, 16)) }) : getClosestColor(new Color(Integer.parseInt(string, 16)));
+        return Version.supportsHex() ? (ChatColor)METHOD_OF.invokeStatic(new Color(Integer.parseInt(string, 16))) : getClosestColor(new Color(Integer.parseInt(string, 16)));
     }
 
     @Nonnull
@@ -122,7 +122,7 @@ public class ColorAPI {
         for (int i = 0; i < step; i++) {
             Color color = Color.getHSBColor((float)(colorStep * i), saturation, saturation);
             if (Version.supportsHex()) {
-                colors[i] = (ChatColor)METHOD_OF.invokeStatic(new Object[] { color });
+                colors[i] = (ChatColor)METHOD_OF.invokeStatic(color);
             } else {
                 colors[i] = getClosestColor(color);
             }
@@ -142,7 +142,7 @@ public class ColorAPI {
         for (int i = 0; i < step; i++) {
             Color color = new Color(start.getRed() + stepR * i * direction[0], start.getGreen() + stepG * i * direction[1], start.getBlue() + stepB * i * direction[2]);
             if (Version.supportsHex()) {
-                colors[i] = METHOD_OF.invokeStatic(new Object[] { color });
+                colors[i] = METHOD_OF.invokeStatic(color);
             } else {
                 colors[i] = getClosestColor(color);
             }
