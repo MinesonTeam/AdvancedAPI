@@ -7,11 +7,11 @@ import org.jetbrains.annotations.Nullable;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PROTECTED)
 public enum AnimationType {
     PROGRESSIVE(ProgressiveBossBar.class), STATIC(StaticBossBar.class);
-    Class<? extends IBossBar> bossBarClass;
-    AnimationType(Class<? extends IBossBar> bossBarClass) {
+    Class<? extends BossBar> bossBarClass;
+    AnimationType(Class<? extends BossBar> bossBarClass) {
         this.bossBarClass = bossBarClass;
     }
-    public Class<? extends IBossBar> getBossBarClass() {
+    public Class<? extends BossBar> getBossBarClass() {
         return bossBarClass;
     }
 

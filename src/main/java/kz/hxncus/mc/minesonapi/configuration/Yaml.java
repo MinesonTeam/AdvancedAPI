@@ -1,8 +1,5 @@
 package kz.hxncus.mc.minesonapi.configuration;
 
-import kz.hxncus.mc.minesonapi.MinesonAPI;
-import kz.hxncus.mc.minesonapi.listener.EventManager;
-import kz.hxncus.mc.minesonapi.listener.PluginDisablingEvent;
 import kz.hxncus.mc.minesonapi.util.ReflectionUtil;
 import lombok.Getter;
 import lombok.NonNull;
@@ -15,7 +12,10 @@ import org.bukkit.util.NumberConversions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
@@ -31,11 +31,12 @@ public class Yaml {
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder(), resource);
         createFile(StringUtils.removeEnd(resource, ".yml"), Yaml.class.getClassLoader().getResourceAsStream(resource));
-        EventManager.getInstance(plugin).register(PluginDisablingEvent.class, event -> {
-            if (event.getPlugin() == plugin) {
-                saveConfig();
-                YAML_MAP.remove(resource);
-            }
+    }
+
+    public static void removeYamls(Plugin plugin) {
+        YAML_MAP.entrySet().stream().filter(entry -> entry.getValue().getPlugin() == plugin).forEach(entry -> {
+            entry.getValue().reloadConfig();
+            YAML_MAP.remove(entry.getKey());
         });
     }
 

@@ -2,7 +2,6 @@ package kz.hxncus.mc.minesonapi.inventory;
 
 import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.scheduler.Schedule;
-import kz.hxncus.mc.minesonapi.scheduler.ScheduleManager;
 import lombok.NonNull;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -144,7 +143,7 @@ public class MSInventory implements InventoryHolder {
 
     @NonNull
     public MSInventory setItem(int slot, ItemStack item, Consumer<InventoryClickEvent> handler) {
-        this.inventory.setItem(slot, marking ? MinesonAPI.getPlugin().getDupeFixer().getInventoryItemMarker().markItem(item) : item);
+        this.inventory.setItem(slot, marking ? DupeFixer.getInstance(MinesonAPI.getPlugin()).getInventoryItemMarker().markItem(item) : item);
 
         if (handler != null) {
             this.itemHandlers.put(slot, handler);

@@ -4,15 +4,10 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
-import kz.hxncus.mc.minesonapi.MinesonAPI;
-import kz.hxncus.mc.minesonapi.bossbar.animation.IBossBar;
-import kz.hxncus.mc.minesonapi.listener.EventManager;
-import kz.hxncus.mc.minesonapi.listener.PluginDisablingEvent;
-import lombok.Getter;
+import kz.hxncus.mc.minesonapi.bossbar.animation.BossBar;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,10 +15,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BossBarManager {
-    @Getter private final Plugin plugin;
-    protected static final Map<String, IBossBar> BOSS_BAR_MAP = new HashMap<>();
-    public BossBarManager(@NonNull Plugin plugin) {
-        this.plugin = plugin;
+    private static BossBarManager instance;
+    public static BossBarManager getInstance() {
+        if (BossBarManager.instance == null) {
+            BossBarManager.instance = new BossBarManager();
+        }
+        return BossBarManager.instance;
+    }
+    protected final Map<String, BossBar> BOSS_BAR_MAP = new HashMap<>();
+
+    private BossBarManager() {
         new CommandAPICommand("abossbar").withPermission("minesonapi.bossbar.use").withAliases("abb")
                 .withSubcommand(new CommandAPICommand("reload")
                         .withPermission("minesonapi.bossbar.reload")
@@ -55,14 +56,14 @@ public class BossBarManager {
                             BOSS_BAR_MAP.get(barName).addPlayer(player);
                             sender.sendMessage(Component.text("Added player " + player.getName() + " to " + barName));
                 })).register();
-        EventManager.getInstance(plugin).register(PluginDisablingEvent.class, EventPriority.LOWEST, event -> {
-            if (event.getPlugin() == plugin) {
-                BOSS_BAR_MAP.values().stream().filter(bossBar -> bossBar.getPlugin() == plugin).forEach(IBossBar::stopAnimation);
-                BOSS_BAR_MAP.values().removeIf(bossBar -> bossBar.getPlugin() == plugin);
-            }
-        });
     }
-    public static @Nullable IBossBar getBossBar(String name) {
+
+    public void disableManager(Plugin plugin) {
+        BOSS_BAR_MAP.values().stream().filter(bossBar -> bossBar.getPlugin() == plugin).forEach(BossBar::stopAnimation);
+        BOSS_BAR_MAP.values().removeIf(bossBar -> bossBar.getPlugin() == plugin);
+    }
+
+    public @Nullable BossBar getBossBar(@NonNull String name) {
         return BOSS_BAR_MAP.get(name);
     }
 }
