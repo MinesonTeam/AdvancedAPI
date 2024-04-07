@@ -48,7 +48,6 @@ public class ColorAPI {
 
     @Nonnull
     public static String process(@Nonnull String string) {
-        Bukkit.getLogger();
         String result = LRU_CACHE.getResult(string);
         if (result != null)
             return result;

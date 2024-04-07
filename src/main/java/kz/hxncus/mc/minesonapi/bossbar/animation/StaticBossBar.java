@@ -1,41 +1,30 @@
 package kz.hxncus.mc.minesonapi.bossbar.animation;
 
-import kz.hxncus.mc.minesonapi.bossbar.AnimatedBossBar;
-import kz.hxncus.mc.minesonapi.bossbar.AnimationType;
+import kz.hxncus.mc.minesonapi.bossbar.MSBossBar;
+import kz.hxncus.mc.minesonapi.scheduler.Schedule;
 import lombok.NonNull;
-import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
-import java.util.Set;
 
 public class StaticBossBar extends AnimatedBossBar {
-    public StaticBossBar(@NonNull Plugin plugin, int delay, int duration) {
-        super(plugin, delay, duration, duration);
+    public StaticBossBar(@NonNull Plugin plugin, String name, long delay, long duration) {
+        super(plugin, name, delay, duration, duration);
     }
     @Override
-    public void startAnimation() {
-        if (getAnimation() == null) {
-            List<BossBar> bossBarList = this.getBossBarList();
+    public void startAnimation(Schedule schedule) {
+        if (getAnimation() == null || getAnimation().isCancelled()) {
+            List<MSBossBar> bossBarList = this.getBossBarList();
             if (bossBarList.isEmpty()) {
-                throw new RuntimeException("BossBarList is empty!");
+                return;
             }
             this.getPlayerList().forEach(player -> player.showBossBar(this.replaceBossBar(bossBarList.get(0))));
-            setAnimation(new BukkitRunnable() {
-                int index = 0;
-                @Override
-                public void run() {
-                    getPlayerList().forEach(player -> player.showBossBar(replaceBossBar(bossBarList.get(index++ % bossBarList.size()))));
-                    if (index == Integer.MAX_VALUE) {
-                        index = Integer.MIN_VALUE;
-                    }
-                }
-            });
-        } else if (!getAnimation().isCancelled()) {
+            setAnimation(schedule.timerN(bossBarList.size(), getDelay(), getPeriod(), n -> {
+                this.getPlayerList().forEach(player -> player.showBossBar(this.replaceBossBar(bossBarList.get(n))));
+            }));
+        } else {
             throw new RuntimeException("BossBar animation is already running!");
         }
-        getAnimation().runTaskTimer(getPlugin(), getDelay(), getDuration());
     }
 
     @Override

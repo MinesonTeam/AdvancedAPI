@@ -10,9 +10,8 @@ public class LruElement {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof LruElement))
+        if (!(o instanceof LruElement other))
             return false;
-        LruElement other = (LruElement)o;
         if (!other.canEqual(this))
             return false;
         Object this$input = getInput(), other$input = other.getInput();

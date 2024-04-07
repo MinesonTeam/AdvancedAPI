@@ -39,6 +39,7 @@ import kz.hxncus.mc.minesonapi.configuration.exception.ConfigSaveException;
 import kz.hxncus.mc.minesonapi.configuration.serializer.ConfigSerializer;
 import kz.hxncus.mc.minesonapi.configuration.serializer.ConfigSerializerCollection;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -55,9 +56,7 @@ public class YamlConfig {
     private final Map<Class<?>, ConfigSerializer<?, ?>> registeredSerializers = new HashMap<>();
     private final FieldNameStyle classFieldNameStyle;
     private final FieldNameStyle nodeFieldNameStyle;
-
     private Logger logger = LoggerFactory.getLogger(YamlConfig.class);
-
     public YamlConfig() {
         this.classFieldNameStyle = FieldNameStyle.MACRO_CASE;
         this.nodeFieldNameStyle = FieldNameStyle.KEBAB_CASE;
@@ -97,19 +96,12 @@ public class YamlConfig {
     public LoadResult reload(@NonNull Path configFile, @Nullable String prefix) {
         LoadResult result = this.load(configFile, prefix);
         switch (result) {
-            case SUCCESS: {
-                this.save(configFile);
-                break;
-            }
-            case FAIL:
-            case CONFIG_NOT_EXISTS: {
+            case SUCCESS -> this.save(configFile);
+            case FAIL, CONFIG_NOT_EXISTS -> {
                 this.save(configFile);
                 this.load(configFile, prefix); // Load again, because it now exists.
-                break;
             }
-            default: {
-                throw new AssertionError("Invalid Result.");
-            }
+            default -> throw new AssertionError("Invalid Result.");
         }
 
         return result;
@@ -223,8 +215,7 @@ public class YamlConfig {
                         } else if (field.getGenericType() instanceof ParameterizedType) {
                             if (field.getType() == Map.class && value instanceof Map) {
                                 Type parameterType = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[1];
-                                if (parameterType instanceof Class<?>) {
-                                    Class<?> parameter = (Class<?>) parameterType;
+                                if (parameterType instanceof Class<?> parameter) {
                                     if (this.isNodeMapping(parameter)) {
                                         value = ((Map<String, ?>) value).entrySet().stream()
                                                                         .collect(Collectors.toMap(Map.Entry::getKey,
@@ -233,8 +224,7 @@ public class YamlConfig {
                                 }
                             } else if (field.getType() == List.class && value instanceof List) {
                                 Type parameterType = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-                                if (parameterType instanceof Class<?>) {
-                                    Class<?> parameter = (Class<?>) parameterType;
+                                if (parameterType instanceof Class<?> parameter) {
                                     if (this.isNodeMapping(parameter)) {
                                         value = ((List<?>) value).stream()
                                                                  .map(obj -> this.createNodeSequence(parameter, obj, usePrefix))
@@ -428,7 +418,6 @@ public class YamlConfig {
                         valueToWrite = builder.toString();
                     }
                 }
-
                 writer.write(spacing);
                 writer.write(this.toNodeFieldName(fieldName));
                 writer.write((valueToWrite.contains(lineSeparator) ? ":" : ": "));
@@ -634,8 +623,7 @@ public class YamlConfig {
             }
         }
 
-        if (value instanceof Map) {
-            Map<?, ?> map = (Map<?, ?>) value;
+        if (value instanceof Map<?, ?> map) {
             if (map.isEmpty()) {
                 return "{}";
             }
@@ -652,8 +640,7 @@ public class YamlConfig {
             }
 
             return builder.toString();
-        } else if (value instanceof List) {
-            List<?> listValue = (List<?>) value;
+        } else if (value instanceof List<?> listValue) {
             if (listValue.isEmpty()) {
                 return "[]";
             }
@@ -672,8 +659,7 @@ public class YamlConfig {
             }
 
             return builder.toString();
-        } else if (value instanceof String) {
-            String stringValue = (String) value;
+        } else if (value instanceof String stringValue) {
             if (stringValue.isEmpty()) {
                 return "\"\"";
             }
@@ -700,15 +686,14 @@ public class YamlConfig {
         }
     }
 
-    private ConfigSerializer<?, ?> getAndCacheSerializer(CustomSerializer serializer)
-            throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    private ConfigSerializer<?, ?> getAndCacheSerializer(CustomSerializer serializer) throws
+            NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<? extends ConfigSerializer<?, ?>> serializerClass = serializer.serializerClass();
         ConfigSerializer<?, ?> configSerializer = this.cachedSerializers.get(serializerClass);
         if (configSerializer == null) {
             configSerializer = serializerClass.getDeclaredConstructor().newInstance();
             this.cachedSerializers.put(serializerClass, configSerializer);
         }
-
         return configSerializer;
     }
 
@@ -720,7 +705,6 @@ public class YamlConfig {
     }
 
     public enum LoadResult {
-
         SUCCESS,
         FAIL,
         CONFIG_NOT_EXISTS
@@ -884,7 +868,7 @@ public class YamlConfig {
         /**
          * kebab-case
          */
-        KEBAB_CASE(s -> s.replace("_", "-").toLowerCase(Locale.ROOT), s -> s.replace("-", "_").toUpperCase(Locale.ROOT)),
+        KEBAB_CASE(s -> s.replace("_", "-"), s -> s.replace("-", "_").toUpperCase(Locale.ROOT)),
         /**
          * camelCase
          */

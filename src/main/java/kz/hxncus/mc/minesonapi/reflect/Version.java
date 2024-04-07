@@ -1,5 +1,6 @@
 package kz.hxncus.mc.minesonapi.reflect;
 
+import kz.hxncus.mc.minesonapi.util.ReflectionUtil;
 import lombok.NonNull;
 
 import javax.annotation.Nullable;
