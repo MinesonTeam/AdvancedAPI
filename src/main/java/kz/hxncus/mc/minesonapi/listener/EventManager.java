@@ -4,41 +4,32 @@ import lombok.NonNull;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
-import java.util.function.Consumer;
+public class EventManager {
+    private final Plugin plugin;
 
-public class EventManager implements Listener {
-    private static EventManager instance;
-    private EventManager() {
+    public EventManager(Plugin plugin) {
+        this.plugin = plugin;
     }
 
-    public static EventManager getInstance() {
-        if (EventManager.instance == null) {
-            EventManager.instance = new EventManager();
-        }
-        return EventManager.instance;
+    public void callEvent(@NonNull Event event) {
+        this.plugin.getServer().getPluginManager().callEvent(event);
     }
 
-    public void callEvent(@NonNull Plugin plugin, @NonNull Event event) {
-        plugin.getServer().getPluginManager().callEvent(event);
+    public <E extends Event> void register(@NonNull Class<E> event, @NonNull EventConsumer<E> consumer) {
+        register(event, EventPriority.NORMAL, consumer);
     }
 
-    public <E extends Event> EventManager register(Plugin plugin, @NonNull Class<E> event, @NonNull Consumer<E> consumer) throws IllegalStateException, IllegalArgumentException {
-        return register(plugin, event, EventPriority.NORMAL, consumer);
-    }
-
-    public <E extends Event> EventManager register(Plugin plugin, @NonNull Class<E> event, @NonNull EventPriority priority, @NonNull Consumer<E> consumer) {
-        plugin.getServer().getPluginManager().registerEvent(event, this, priority, (listener, events) -> {
+    public <E extends Event> void register(@NonNull Class<E> event, @NonNull EventPriority priority, @NonNull EventConsumer<E> consumer) {
+        this.plugin.getServer().getPluginManager().registerEvent(event, consumer, priority, (listener, events) -> {
             if (event.isInstance(events)) {
-                consumer.accept(event.cast(events));
+                ((EventConsumer<E>) listener).accept(event.cast(events));
             }
-        }, plugin);
-        return this;
+        }, this.plugin);
     }
 
     public void unregisterAll() {
-        HandlerList.unregisterAll(this);
+        HandlerList.unregisterAll(this.plugin);
     }
 }

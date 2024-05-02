@@ -1,5 +1,6 @@
 package kz.hxncus.mc.minesonapi.reflect;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class ReflectMethod {
@@ -37,21 +38,21 @@ public class ReflectMethod {
         Object object = null;
         try {
             object = this.method.invoke(instance, args);
-        } catch (IllegalAccessException|java.lang.reflect.InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        return (object == null) ? null : (T)object;
+        return (object == null) ? null : (T) object;
     }
 
     public <T> T invokeStatic(Object... args) {
         init();
         Object object = null;
         try {
-            object = this.method.invoke((Object)null, args);
-        } catch (IllegalAccessException|java.lang.reflect.InvocationTargetException e) {
+            object = this.method.invoke(null, args);
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        return (object == null) ? null : (T)object;
+        return (object == null) ? null : (T) object;
     }
 }
 

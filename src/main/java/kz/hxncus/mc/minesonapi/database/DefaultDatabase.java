@@ -1,21 +1,23 @@
 package kz.hxncus.mc.minesonapi.database;
 
 import com.zaxxer.hikari.HikariDataSource;
+import kz.hxncus.mc.minesonapi.util.ReflectionUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 
-import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
-public abstract class AbstractDatabase implements Database {
+public abstract class DefaultDatabase implements Database {
     @Getter
     protected Plugin plugin;
     @Getter
@@ -30,8 +32,24 @@ public abstract class AbstractDatabase implements Database {
     @Setter
     protected Map<String, String> properties;
     protected HikariDataSource dataSource;
+    @Nullable
+    public static Database getDatabaseByType(@NonNull Database.Type dataBaseType, @NonNull Plugin plugin, @NonNull String url, @NonNull String username, @NonNull String password, @NonNull Map<String, String> properties) {
+        Constructor<?> constructor = ReflectionUtil.getConstructor(dataBaseType.clazz, plugin.getClass(), url.getClass(), username.getClass(), password.getClass(), properties.getClass());
+        if (constructor == null) {
+            return null;
+        }
+        Object obj = ReflectionUtil.newInstance(constructor, plugin, url, username, password, properties);
+        if (obj instanceof Database database) {
+            return database;
+        }
+        return null;
+    }
 
-    protected AbstractDatabase(@NonNull Plugin plugin, @NonNull String url, @NonNull String username, @NonNull String password, @Nullable Map<String, String> properties, @Nullable String tableSQL) {
+    protected DefaultDatabase(@NonNull Plugin plugin, @NonNull String url, @NonNull String username, @NonNull String password, @NonNull Map<String, String> properties) {
+        this(plugin, url, username, password, properties, null);
+    }
+
+    protected DefaultDatabase(@NonNull Plugin plugin, @NonNull String url, @NonNull String username, @NonNull String password, @NonNull Map<String, String> properties, @Nullable String tableSQL) {
         this.plugin = plugin;
         this.url = url;
         this.username = username;

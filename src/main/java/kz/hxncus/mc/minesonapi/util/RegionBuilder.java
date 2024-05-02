@@ -46,7 +46,6 @@ public class RegionBuilder {
     }
 
     public RegionBuilder build() {
-        this.regionManager.addRegion(this.cuboidRegion);
-        return this;
+        return editRegion(this.regionManager::addRegion);
     }
 }

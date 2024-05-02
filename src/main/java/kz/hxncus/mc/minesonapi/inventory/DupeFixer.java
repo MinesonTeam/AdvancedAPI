@@ -1,5 +1,6 @@
 package kz.hxncus.mc.minesonapi.inventory;
 
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.inventory.marker.InventoryItemMarker;
 import kz.hxncus.mc.minesonapi.listener.EventManager;
 import lombok.Getter;
@@ -26,21 +27,25 @@ public class DupeFixer {
     private DupeFixer(Plugin plugin) {
         this.inventoryItemMarker = new InventoryItemMarker(plugin, "MS");
         Logger logger = plugin.getLogger();
-        EventManager.getInstance().register(plugin, EntityPickupItemEvent.class, event -> {
+        EventManager eventManager = MinesonAPI.getPlugin()
+                                              .getEventManager();
+        eventManager.register(EntityPickupItemEvent.class, event -> {
             Item item = event.getItem();
             if (inventoryItemMarker.isItemMarked(item.getItemStack())) {
                 logger.info("Someone picked up a Custom Inventory item. Removing it.");
                 event.setCancelled(true);
                 item.remove();
             }
-        }).register(plugin, EntityDropItemEvent.class, event -> {
+        });
+        eventManager.register(EntityDropItemEvent.class, event -> {
             Item item = event.getItemDrop();
             if (inventoryItemMarker.isItemMarked(item.getItemStack())) {
                 logger.info("Someone dropped a Custom Inventory item. Removing it.");
                 event.setCancelled(true);
                 item.remove();
             }
-        }).register(plugin, PlayerLoginEvent.class, event -> plugin.getServer()
+        });
+        eventManager.register(PlayerLoginEvent.class, event -> plugin.getServer()
             .getScheduler().runTaskLater(plugin, () -> {
                PlayerInventory inventory = event.getPlayer().getInventory();
                for (ItemStack itemStack : inventory) {

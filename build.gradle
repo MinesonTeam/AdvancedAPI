@@ -1,5 +1,3 @@
-import javax.annotation.processing.Processor
-
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
@@ -22,10 +20,8 @@ repositories {
 
 dependencies {
     compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
-    compileOnly(files('E:\\dev-server-1.16.5\\plugins\\CommandAPI-9.3.0.jar'))
     compileOnly(files('E:\\dev-server-1.16.5\\plugins\\worldguard-bukkit-7.0.5-dist.jar'))
     compileOnly(files('E:\\dev-server-1.16.5\\plugins\\FastAsyncWorldEdit-Bukkit-2.3.0.jar'))
-    compileOnly(files('E:\\dev-server-1.16.5\\plugins\\DecentHolograms-2.8.6.jar'))
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     compileOnly 'org.projectlombok:lombok:1.18.30'
@@ -34,10 +30,12 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     implementation 'com.zaxxer:HikariCP:5.1.0'
-    implementation 'org.reflections:reflections:0.10.2'
     implementation 'org.jooq:jooq:3.15.12'
     implementation 'it.unimi.dsi:dsiutils:2.6.0'
 }
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
 
 shadowJar {
     destinationDirectory = file("E:\\dev-server-1.16.5\\plugins")

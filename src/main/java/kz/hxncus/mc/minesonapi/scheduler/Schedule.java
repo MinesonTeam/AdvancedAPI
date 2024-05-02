@@ -1,10 +1,8 @@
 package kz.hxncus.mc.minesonapi.scheduler;
 
-import kz.hxncus.mc.minesonapi.MinesonAPI;
-import kz.hxncus.mc.minesonapi.listener.PluginDisablingEvent;
 import lombok.Getter;
 import lombok.NonNull;
-import org.bukkit.event.EventPriority;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -19,13 +17,11 @@ import java.util.stream.IntStream;
 
 public class Schedule {
     @Getter private final Plugin plugin;
-    @Getter private final String name;
     @Getter private final BukkitScheduler bukkitScheduler;
     @Getter private final Set<Integer> tasksId = new HashSet<>();
-    public Schedule(@NonNull Plugin plugin, @NonNull String name) {
+    public Schedule(@NonNull Plugin plugin) {
         this.plugin = plugin;
-        this.name = name;
-        this.bukkitScheduler = plugin.getServer().getScheduler();
+        this.bukkitScheduler = Bukkit.getScheduler();
     }
 
     /**
@@ -372,6 +368,7 @@ public class Schedule {
      * @param task   таск
      */
     public void timerAsync(long delay, long period, Consumer<BukkitTask> task) {
+        task = task.andThen(bukkitTask -> this.tasksId.add(bukkitTask.getTaskId()));
         this.bukkitScheduler.runTaskTimerAsynchronously(this.plugin, task, delay, period);
     }
     

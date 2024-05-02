@@ -4,10 +4,13 @@ import it.unimi.dsi.util.XoRoShiRo128PlusPlusRandom;
 import lombok.NonNull;
 import org.jetbrains.annotations.Range;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class MSRandom extends Random {
+public class MSRandom {
     private static final XoRoShiRo128PlusPlusRandom random = new XoRoShiRo128PlusPlusRandom();
     protected final Map<String, Map.Entry<Double, Double>> stringEntryMap = new HashMap<>();
     private static MSRandom instance;
@@ -21,72 +24,62 @@ public class MSRandom extends Random {
         return instance;
     }
 
-    @Override
-    public float nextFloat() {
+    public static float nextFloat() {
         return MSRandom.random.nextFloat();
     }
 
-    @Override
-    public float nextFloat(float bound) {
+    public static float nextFloat(float bound) {
         return MSRandom.random.nextFloat(bound);
     }
 
-    @Override
-    public float nextFloat(float origin, float bound) {
+    public static float nextFloat(float origin, float bound) {
         return MSRandom.random.nextFloat(origin, bound);
     }
 
-    @Override
-    public double nextDouble(double bound) {
+    public static double nextDouble(double bound) {
         return MSRandom.random.nextDouble(bound);
     }
 
-    @Override
-    public double nextDouble(double origin, double bound) {
+    public static double nextDouble(double origin, double bound) {
         return MSRandom.random.nextDouble(origin, bound);
     }
 
-    public double nextDoubleFast() {
+    public static double nextDoubleFast() {
         return MSRandom.random.nextDoubleFast();
     }
 
-    @Override
-    public int nextInt() {
-        return MSRandom.random.nextInt();
+    public static int nextInt() {
+        return (int) MSRandom.nextLong();
     }
 
-    @Override
-    public int nextInt(int bound) {
-        return MSRandom.random.nextInt(bound);
+    public static int nextInt(int bound) {
+        return (int) MSRandom.nextLong(bound);
     }
 
-    @Override
-    public int nextInt(int origin, int bound) {
+    public static int nextInt(int origin, int bound) {
         return MSRandom.random.nextInt(origin, bound);
     }
 
-    @Override
-    public long nextLong() {
+    public static long nextLong() {
         return MSRandom.random.nextLong();
     }
 
-    @Override
-    public long nextLong(long bound) {
+    public static long nextLong(long bound) {
+        if (bound <= 0) {
+            return 0;
+        }
         return MSRandom.random.nextLong(bound);
     }
 
-    @Override
-    public long nextLong(long origin, long bound) {
+    public static long nextLong(long origin, long bound) {
         return MSRandom.random.nextLong(origin, bound);
     }
 
-    @Override
-    public boolean nextBoolean() {
-        return MSRandom.random.nextBoolean();
+    public static boolean nextBoolean() {
+        return MSRandom.nextLong() < 0L;
     }
 
-    @Override
-    public void nextBytes(byte[] bytes) {
+    public static void nextBytes(byte[] bytes) {
         MSRandom.random.nextBytes(bytes);
     }
 

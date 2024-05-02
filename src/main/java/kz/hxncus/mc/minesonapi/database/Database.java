@@ -1,18 +1,17 @@
 package kz.hxncus.mc.minesonapi.database;
 
-import kz.hxncus.mc.minesonapi.database.type.DatabaseType;
 import lombok.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jooq.DSLContext;
 import org.jooq.QueryPart;
 import org.jooq.Record;
 import org.jooq.Result;
 
-import javax.annotation.Nullable;
 import java.sql.Connection;
 
 interface Database {
     void createConnection();
-    DatabaseType getType();
+    Database.Type getType();
     Connection getConnection();
     void closeConnection();
     DSLContext getDSLContext(@NonNull Connection connection);
@@ -27,4 +26,11 @@ interface Database {
     int execute(@NonNull String sql, QueryPart @NonNull ... parts);
     int getNewId(@NonNull String table);
     void reload();
+    enum Type {
+        SQLITE(SQLite.class), MYSQL(MySQL.class), MARIADB(MariaDB.class);
+        final Class<? extends Database> clazz;
+        Type(Class<? extends Database> clazz) {
+            this.clazz = clazz;
+        }
+    }
 }

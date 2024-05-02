@@ -2,8 +2,7 @@ package kz.hxncus.mc.minesonapi.reflect;
 
 import kz.hxncus.mc.minesonapi.util.ReflectionUtil;
 import lombok.NonNull;
-
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public enum Version {
     V1_8_R1(8),

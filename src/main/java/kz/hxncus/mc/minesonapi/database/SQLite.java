@@ -1,6 +1,5 @@
-package kz.hxncus.mc.minesonapi.database.type;
+package kz.hxncus.mc.minesonapi.database;
 
-import kz.hxncus.mc.minesonapi.database.AbstractDatabase;
 import lombok.NonNull;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
@@ -8,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
-public class SQLite extends AbstractDatabase {
+public class SQLite extends DefaultDatabase {
     public SQLite(@NonNull Plugin plugin, @NonNull String database) {
         this(plugin, database, null);
     }
@@ -25,7 +24,7 @@ public class SQLite extends AbstractDatabase {
         super(plugin, "jdbc:sqlite:plugins/" + directory + "/" + database + ".db", "", "", properties, tableSQL);
     }
     @Override
-    public DatabaseType getType() {
-        return DatabaseType.SQLITE;
+    public Database.Type getType() {
+        return Database.Type.SQLITE;
     }
 }

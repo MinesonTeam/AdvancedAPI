@@ -1,15 +1,15 @@
 package kz.hxncus.mc.minesonapi.util;
 
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.Nullable;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
-import org.bukkit.Bukkit;
-import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public final class ReflectionUtil {

@@ -1,13 +1,11 @@
 package kz.hxncus.mc.minesonapi.color.caching;
 
-import javax.annotation.concurrent.ThreadSafe;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ThreadSafe
 public class LruCache {
     public boolean equals(Object o) {
         if (o == this)

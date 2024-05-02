@@ -1,7 +1,6 @@
 package kz.hxncus.mc.minesonapi.inventory;
 
 import kz.hxncus.mc.minesonapi.MinesonAPI;
-import kz.hxncus.mc.minesonapi.scheduler.Schedule;
 import lombok.NonNull;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -12,19 +11,19 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class MSInventory implements InventoryHolder {
+public class MSInventory {
     private Inventory inventory;
-    private List<Inventory> inventories;
+    private List<Inventory> pagination;
     private final Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
     private final List<Consumer<InventoryOpenEvent>> openHandlers = new ArrayList<>();
     private final List<Consumer<InventoryCloseEvent>> closeHandlers = new ArrayList<>();
@@ -33,38 +32,44 @@ public class MSInventory implements InventoryHolder {
     @Setter
     private boolean marking = true;
 
-    public MSInventory(Plugin plugin, InventoryType type) {
-        this(plugin, holder -> Bukkit.createInventory(holder, type));
+    public MSInventory(InventoryType type) {
+        this(Bukkit.createInventory(null, type));
     }
 
-    public MSInventory(Plugin plugin, InventoryType type, String title) {
-        this(plugin, holder -> Bukkit.createInventory(holder, type, Component.text(title)));
+    public MSInventory(InventoryType type, String title) {
+        this(Bukkit.createInventory(null, type, Component.text(title)));
     }
 
-    public MSInventory(Plugin plugin, InventoryType type, Component title) {
-        this(plugin, holder -> Bukkit.createInventory(holder, type, title));
+    public MSInventory(InventoryType type, Component title) {
+        this(Bukkit.createInventory(null, type, title));
     }
 
-    public MSInventory(Plugin plugin, int size) {
-        this(plugin, holder -> Bukkit.createInventory(holder, size));
+    public MSInventory(int size) {
+        this(Bukkit.createInventory(null, size));
     }
 
-    public MSInventory(Plugin plugin, int size, String title) {
-        this(plugin, holder -> Bukkit.createInventory(holder, size, Component.text(title)));
+    public MSInventory(int size, String title) {
+        this(Bukkit.createInventory(null, size, Component.text(title)));
     }
 
-    public MSInventory(Plugin plugin, int size, Component title) {
-        this(plugin, holder -> Bukkit.createInventory(holder, size, title));
+    public MSInventory(int size, Component title) {
+        this(Bukkit.createInventory(null, size, title));
     }
 
-    public MSInventory(Plugin plugin, Function<InventoryHolder, Inventory> inventoryFunction) {
-        Objects.requireNonNull(inventoryFunction, "inventoryFunction is null");
-        Inventory inv = inventoryFunction.apply(this);
-        if (inv.getHolder() != this) {
-            throw new IllegalStateException("Inventory holder is not correct, found: " + inv.getHolder());
-        }
-        this.inventory = inv;
-        new Schedule(plugin, "on inventory initialize").later(1L, this::onInitialize);
+    public MSInventory(@NonNull Inventory inventory) {
+        this.inventory = inventory;
+        registerInventory();
+        Bukkit.getScheduler().runTaskLater(
+              MinesonAPI.getPlugin(), this::onInitialize, 1L
+        );
+    }
+
+    public void registerInventory() {
+        MSInventoryManager.getInstance().registerInventory(this);
+    }
+
+    public void unregisterInventory() {
+        MSInventoryManager.getInstance().unregisterInventory(this);
     }
 
     protected void onInitialize() {
@@ -202,6 +207,12 @@ public class MSInventory implements InventoryHolder {
     }
 
     @NonNull
+    public MSInventory clear() {
+        this.inventory.clear();
+        return this;
+    }
+
+    @NonNull
     public MSInventory setCloseFilter(Predicate<Player> closeFilter) {
         this.closeFilter = closeFilter;
         return this;
@@ -229,14 +240,18 @@ public class MSInventory implements InventoryHolder {
         player.openInventory(this.inventory);
     }
 
-    @Override
-    @NonNull public Inventory getInventory() {
+    @NonNull
+    public Inventory getInventory() {
         return this.inventory;
     }
 
     @Nullable
     public Inventory getInventory(int index) {
-        return this.inventories.get(index);
+        return this.pagination.get(index);
+    }
+
+    public int close() {
+        return this.getInventory().close();
     }
 
     public void handleOpen(InventoryOpenEvent event) {

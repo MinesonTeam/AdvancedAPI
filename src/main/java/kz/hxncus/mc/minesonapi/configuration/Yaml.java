@@ -9,8 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.NumberConversions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +23,10 @@ import java.util.*;
 
 public class Yaml {
     protected static final Map<String, Yaml> YAML_MAP = new HashMap<>();
-    @Getter private final Plugin plugin;
-    @Getter private final File file;
+    @Getter
+    private final Plugin plugin;
+    @Getter
+    private final File file;
     private YamlConfiguration config;
     public Yaml(@NonNull Plugin plugin, @NonNull String resource) {
         this.plugin = plugin;
@@ -180,7 +181,7 @@ public class Yaml {
     }
 
     @Nullable
-    public List<?> getList(@NotNull String path, @Nullable List<?> def) {
+    public List<?> getList(@NonNull String path, @Nullable List<?> def) {
         Object val = getObject(path, def);
         return (List<?>) ((val instanceof List) ? val : def);
     }
@@ -197,7 +198,7 @@ public class Yaml {
     public List<Long> getLongList(@NonNull String path) {
         return getConfig().getLongList(path);
     }
-    public long getLong(@NotNull String path) {
+    public long getLong(@NonNull String path) {
         return getConfig().getLong(path);
     }
 
@@ -217,7 +218,7 @@ public class Yaml {
         }
         return result;
     }
-    public float getFloat(@NotNull String path) {
+    public float getFloat(@NonNull String path) {
         Object def = getObject(path, null);
         return getFloat(path, (def instanceof Number) ? NumberConversions.toFloat(def) : 0);
     }

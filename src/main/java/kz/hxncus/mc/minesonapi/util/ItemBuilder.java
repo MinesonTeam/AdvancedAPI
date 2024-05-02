@@ -1,7 +1,10 @@
 package kz.hxncus.mc.minesonapi.util;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import lombok.NonNull;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,30 +14,33 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class ItemBuilder implements Cloneable {
+public class ItemBuilder {
     private final ItemStack itemStack;
-
+    private final ItemMeta itemMeta;
     public ItemBuilder(Material material) {
         this(new ItemStack(material));
     }
 
-    public ItemBuilder(@NotNull ItemStack item) {
-        this.itemStack = item;
+    public ItemBuilder(@NonNull ItemStack item) {
+        this.itemStack = item.clone();
+        this.itemMeta = this.itemStack.getItemMeta();
     }
-    public void setItemMeta(ItemMeta meta) {
-        this.itemStack.setItemMeta(meta);
-    }
+
     public ItemBuilder displayName(String name) {
         return displayName(Component.text(name));
     }
+
     public ItemBuilder displayName(Component name) { return meta(meta -> meta.displayName(name)); }
     public ItemBuilder lore(String lore) {
         return lore(Component.text(lore));
@@ -149,22 +155,46 @@ public class ItemBuilder implements Cloneable {
     }
 
     public ItemBuilder meta(Consumer<ItemMeta> metaConsumer) {
-        return edit(item -> {
-            ItemMeta meta = item.getItemMeta();
-            if (meta != null) {
-                metaConsumer.accept(meta);
-                item.setItemMeta(meta);
+        if (itemMeta != null) {
+            metaConsumer.accept(itemMeta);
+        }
+        return this;
+    }
+
+    public ItemBuilder skullMeta(Consumer<SkullMeta> consumer) {
+        return meta(meta -> {
+                if (meta instanceof SkullMeta skullMeta) {
+                    consumer.accept(skullMeta);
+                }
             }
-        });
+        );
+    }
+
+    public ItemBuilder addHeadTexture(@NonNull String url){
+        return skullMeta(skullMeta -> {
+                try {
+                    PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+                    profile.getProperties().add(new ProfileProperty("textures", URI.create(url).toURL().toExternalForm()));
+                    skullMeta.setPlayerProfile(profile);
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        );
+    }
+
+    public ItemBuilder setSkullOwner(@NonNull String name) {
+        return skullMeta(skullMeta -> skullMeta.setOwningPlayer(Bukkit.getOfflinePlayerIfCached(name)));
     }
 
     public ItemBuilder compassLodeStone(Location lodestone, boolean lodestoneTracked) {
         return meta(meta -> {
-            if (meta instanceof CompassMeta compassMeta) {
-                compassMeta.setLodestone(lodestone);
-                compassMeta.setLodestoneTracked(lodestoneTracked);
+                if (meta instanceof CompassMeta compassMeta) {
+                    compassMeta.setLodestone(lodestone);
+                    compassMeta.setLodestoneTracked(lodestoneTracked);
+                }
             }
-        });
+        );
     }
 
     public ItemBuilder armorColor(Color color) {
@@ -180,16 +210,8 @@ public class ItemBuilder implements Cloneable {
     }
 
     public ItemStack build() {
+        this.itemStack.setItemMeta(this.itemMeta);
         return this.itemStack;
-    }
-
-    @Override
-    public ItemBuilder clone() {
-        try {
-            return (ItemBuilder) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 }
 

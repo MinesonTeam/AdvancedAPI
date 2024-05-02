@@ -1,12 +1,6 @@
 package kz.hxncus.mc.minesonapi.color;
 
 import com.google.common.collect.ImmutableMap;
-import java.awt.Color;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import kz.hxncus.mc.minesonapi.color.caching.LruCache;
 import kz.hxncus.mc.minesonapi.color.pattern.GradientPattern;
 import kz.hxncus.mc.minesonapi.color.pattern.Pattern;
@@ -14,8 +8,12 @@ import kz.hxncus.mc.minesonapi.color.pattern.RainbowPattern;
 import kz.hxncus.mc.minesonapi.color.pattern.SolidPattern;
 import kz.hxncus.mc.minesonapi.reflect.ReflectMethod;
 import kz.hxncus.mc.minesonapi.reflect.Version;
+import lombok.NonNull;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
+
+import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class ColorAPI {
     private ColorAPI() {
@@ -46,8 +44,8 @@ public class ColorAPI {
 
     private static final List<Pattern> PATTERNS = Arrays.asList(new GradientPattern(), new SolidPattern(), new RainbowPattern());
 
-    @Nonnull
-    public static String process(@Nonnull String string) {
+    @NonNull
+    public static String process(@NonNull String string) {
         String result = LRU_CACHE.getResult(string);
         if (result != null)
             return result;
@@ -59,19 +57,19 @@ public class ColorAPI {
         return string;
     }
 
-    @Nonnull
-    public static List<String> process(@Nonnull List<String> strings) {
+    @NonNull
+    public static List<String> process(@NonNull List<String> strings) {
         strings.replaceAll(ColorAPI::process);
         return strings;
     }
 
-    @Nonnull
-    public static String color(@Nonnull String string, @Nonnull Color color) {
+    @NonNull
+    public static String color(@NonNull String string, @NonNull Color color) {
         return (Version.supportsHex() ? (String)METHOD_OF.invokeStatic(color) : getClosestColor(color)) + string;
     }
 
-    @Nonnull
-    public static String color(@Nonnull String string, @Nonnull Color start, @Nonnull Color end) {
+    @NonNull
+    public static String color(@NonNull String string, @NonNull Color start, @NonNull Color end) {
         StringBuilder specialColors = new StringBuilder();
         for (String color : SPECIAL_COLORS) {
             if (string.contains(color)) {
@@ -87,8 +85,8 @@ public class ColorAPI {
         return stringBuilder.toString();
     }
 
-    @Nonnull
-    public static String rainbow(@Nonnull String string, float saturation) {
+    @NonNull
+    public static String rainbow(@NonNull String string, float saturation) {
         StringBuilder specialColors = new StringBuilder();
         for (String color : SPECIAL_COLORS) {
             if (string.contains(color)) {
@@ -104,17 +102,17 @@ public class ColorAPI {
         return stringBuilder.toString();
     }
 
-    @Nonnull
-    public static ChatColor getColor(@Nonnull String string) {
+    @NonNull
+    public static ChatColor getColor(@NonNull String string) {
         return Version.supportsHex() ? (ChatColor)METHOD_OF.invokeStatic(new Color(Integer.parseInt(string, 16))) : getClosestColor(new Color(Integer.parseInt(string, 16)));
     }
 
-    @Nonnull
-    public static String stripColorFormatting(@Nonnull String string) {
+    @NonNull
+    public static String stripColorFormatting(@NonNull String string) {
         return string.replaceAll("&\\w{5,8}(:[0-9A-F]{6})?>", "");
     }
 
-    @Nonnull
+    @NonNull
     private static ChatColor[] createRainbow(int step, float saturation) {
         ChatColor[] colors = new ChatColor[step];
         double colorStep = 1.0D / step;
@@ -129,8 +127,8 @@ public class ColorAPI {
         return colors;
     }
 
-    @Nonnull
-    private static ChatColor[] createGradient(@Nonnull Color start, @Nonnull Color end, int step) {
+    @NonNull
+    private static ChatColor[] createGradient(@NonNull Color start, @NonNull Color end, int step) {
         if (step <= 1)
             return new ChatColor[] { ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE };
         ChatColor[] colors = new ChatColor[step];
@@ -149,8 +147,8 @@ public class ColorAPI {
         return colors;
     }
 
-    @Nonnull
-    private static ChatColor getClosestColor(Color color) {
+    @NonNull
+    private static ChatColor getClosestColor(@NonNull Color color) {
         Color nearestColor = null;
         double nearestDistance = 2.147483647E9D;
         for (Object colorObject : COLORS.keySet()) {
