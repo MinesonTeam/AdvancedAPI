@@ -15,8 +15,8 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class ColorAPI {
-    private ColorAPI() {
+public class MSColor {
+    private MSColor() {
 
     }
     private static final ReflectMethod METHOD_OF = new ReflectMethod(ChatColor.class, "of", Color.class);
@@ -59,7 +59,7 @@ public class ColorAPI {
 
     @NonNull
     public static List<String> process(@NonNull List<String> strings) {
-        strings.replaceAll(ColorAPI::process);
+        strings.replaceAll(MSColor::process);
         return strings;
     }
 
@@ -104,7 +104,7 @@ public class ColorAPI {
 
     @NonNull
     public static ChatColor getColor(@NonNull String string) {
-        return Version.supportsHex() ? (ChatColor)METHOD_OF.invokeStatic(new Color(Integer.parseInt(string, 16))) : getClosestColor(new Color(Integer.parseInt(string, 16)));
+        return Version.supportsHex() ? (ChatColor) METHOD_OF.invokeStatic(new Color(Integer.parseInt(string, 16))) : getClosestColor(new Color(Integer.parseInt(string, 16)));
     }
 
     @NonNull
@@ -119,7 +119,7 @@ public class ColorAPI {
         for (int i = 0; i < step; i++) {
             Color color = Color.getHSBColor((float)(colorStep * i), saturation, saturation);
             if (Version.supportsHex()) {
-                colors[i] = (ChatColor)METHOD_OF.invokeStatic(color);
+                colors[i] = METHOD_OF.invokeStatic(color);
             } else {
                 colors[i] = getClosestColor(color);
             }
