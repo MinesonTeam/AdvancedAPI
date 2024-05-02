@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.color.pattern;
 
-import kz.hxncus.mc.minesonapi.color.ColorAPI;
+import kz.hxncus.mc.minesonapi.color.MSColor;
 
 import java.awt.*;
 import java.util.regex.Matcher;
@@ -16,7 +16,7 @@ public class GradientPattern implements Pattern {
             String end = matcher.group(4);
             string = string.replace(matcher
                             .group(),
-                    ColorAPI.color(content, new Color(
+                    MSColor.color(content, new Color(
 
                             Integer.parseInt(start, 16)), new Color(
                             Integer.parseInt(end, 16))));

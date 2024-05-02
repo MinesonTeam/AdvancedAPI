@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.color.pattern;
 
-import kz.hxncus.mc.minesonapi.color.ColorAPI;
+import kz.hxncus.mc.minesonapi.color.MSColor;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +13,7 @@ public class RainbowPattern implements kz.hxncus.mc.minesonapi.color.pattern.Pat
         while (matcher.find()) {
             String saturation = matcher.group(1);
             String content = matcher.group(2);
-            string = string.replace(matcher.group(), ColorAPI.rainbow(content, Float.parseFloat(saturation)));
+            string = string.replace(matcher.group(), MSColor.rainbow(content, Float.parseFloat(saturation)));
         }
         return string;
     }

@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.color.pattern;
 
-import kz.hxncus.mc.minesonapi.color.ColorAPI;
+import kz.hxncus.mc.minesonapi.color.MSColor;
 
 import java.util.regex.Matcher;
 
@@ -13,7 +13,7 @@ public class SolidPattern implements kz.hxncus.mc.minesonapi.color.pattern.Patte
             String color = matcher.group(1);
             if (color == null)
                 color = matcher.group(2);
-            string = string.replace(matcher.group(), String.valueOf(ColorAPI.getColor(color)));
+            string = string.replace(matcher.group(), String.valueOf(MSColor.getColor(color)));
         }
         return string;
     }
