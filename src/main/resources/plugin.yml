@@ -1,7 +1,0 @@
-name: MinesonAPI
-version: '${version}'
-main: kz.hxncus.mc.minesonapi.MinesonAPI
-api-version: '1.16'
-depend:
-  - FastAsyncWorldEdit
-  - WorldGuard
