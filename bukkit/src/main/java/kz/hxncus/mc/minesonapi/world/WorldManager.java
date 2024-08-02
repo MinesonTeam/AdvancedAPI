@@ -95,7 +95,7 @@ public class WorldManager implements Listener {
         for (SimpleWorld simpleWorld : simpleWorlds) {
             simpleWorld.gameMode(gameMode)
                     .difficulty(difficulty)
-                    .weather(storm)
+                    .storm(storm)
                     .time(time);
         }
     }
