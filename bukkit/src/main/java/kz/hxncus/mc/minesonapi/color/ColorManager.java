@@ -6,8 +6,8 @@ import kz.hxncus.mc.minesonapi.color.pattern.GradientPattern;
 import kz.hxncus.mc.minesonapi.color.pattern.Pattern;
 import kz.hxncus.mc.minesonapi.color.pattern.RainbowPattern;
 import kz.hxncus.mc.minesonapi.color.pattern.SolidPattern;
-import kz.hxncus.mc.minesonapi.reflect.ReflectMethod;
 import kz.hxncus.mc.minesonapi.util.Versions;
+import kz.hxncus.mc.minesonapi.util.reflect.ReflectMethod;
 import lombok.NonNull;
 import net.md_5.bungee.api.ChatColor;
 

@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.util;
 
-import kz.hxncus.mc.minesonapi.reflect.ReflectionUtil;
+import kz.hxncus.mc.minesonapi.util.reflect.ReflectionUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;

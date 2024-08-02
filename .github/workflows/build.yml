@@ -1,0 +1,72 @@
+name: Java CI with Gradle
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - name: Set up JDK
+        uses: actions/setup-java@v4.2.1
+        with:
+          distribution: adopt
+          java-version: 21
+      - name: Make build.gradle executable
+        run: chmod +x gradlew
+      - name: Build plugin
+        run: ./gradlew build
+      - name: Upload plugin
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: MinesonAPI
+          path: "*/build/libs/*.jar"
+      - uses: dev-drprasad/delete-tag-and-release@v1.1
+        if: ${{ github.event_name == 'push' }}
+        with:
+          delete_release: true
+          tag_name: dev-build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Find git version
+        id: git-version
+        run: echo "id=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Find correct JAR
+        if: ${{ github.event_name == 'push' }}
+        id: find-jar
+        run: |
+          output="$(find plugin/build/libs/ ! -name "*-javadoc.jar" ! -name "*-sources.jar" -type f -printf "%f\n")"
+          echo "::set-output name=jarname::$output"
+      - name: Release the build
+        if: ${{ github.event_name == 'push' }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: plugin/build/libs/${{ steps.find-jar.outputs.jarname }}
+          body: ${{ join(github.event.commits.*.message, '\n') }}
+          prerelease: true
+          name: Dev-build ${{ steps.git-version.outputs.id }}
+          tag: dev-build
+      - name: Upload to Modrinth
+        if: ${{ github.event_name == 'push' }}
+        uses: RubixDev/modrinth-upload@v1.0.0
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          file_path: plugin/build/libs/${{ steps.find-jar.outputs.jarname }}
+          name: Dev-build ${{ steps.git-version.outputs.id }}
+          version: ${{ steps.git-version.outputs.id }}
+          changelog: ${{ join(github.event.commits.*.message, '\n') }}
+          game_versions: 1.8..latest
+          release_type: beta
+          loaders: |
+            bukkit
+            spigot
+            paper
+            purpur
+            folia
+          featured: false
+          project_id: null

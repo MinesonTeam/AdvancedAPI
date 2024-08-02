@@ -2,6 +2,7 @@ package kz.hxncus.mc.minesonapi.util.builder;
 
 import lombok.NonNull;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -13,8 +14,8 @@ import java.util.function.Consumer;
 public class EntityBuilder {
     private final Entity entity;
 
-    public EntityBuilder(@NonNull Location location, @NonNull EntityType type) {
-        this.entity = location.getWorld().spawnEntity(location, type);
+    public EntityBuilder(@NonNull Location location, @NonNull World world, @NonNull EntityType type) {
+        this.entity = world.spawnEntity(location, type);
     }
 
     public EntityBuilder meta(Consumer<Entity> metaConsumer) {

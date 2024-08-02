@@ -251,8 +251,9 @@ public class SimpleInventory {
         return this;
     }
 
-    public void open(Player player) {
+    public SimpleInventory open(Player player) {
         player.openInventory(this.inventory);
+        return this;
     }
 
 

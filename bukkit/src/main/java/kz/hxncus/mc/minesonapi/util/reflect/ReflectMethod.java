@@ -1,4 +1,4 @@
-package kz.hxncus.mc.minesonapi.reflect;
+package kz.hxncus.mc.minesonapi.util.reflect;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

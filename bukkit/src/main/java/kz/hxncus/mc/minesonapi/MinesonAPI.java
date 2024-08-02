@@ -33,8 +33,7 @@ public final class MinesonAPI extends JavaPlugin {
     public void onEnable() {
         new SimpleCommand("test").withArguments(new StringArgument("player_name"));
         registerManagers();
-        SimpleInventory inventory = new SimpleInventory(54);
-        inventory.setItem(0, new SimpleItem(Material.ACACIA_LOG));
+        SimpleInventory inventory = new SimpleInventory(54).setItem(0, new SimpleItem(Material.ACACIA_LOG).displayName("Aboba").addLore("321", "123").apply());
     }
 
     @Override
