@@ -19,9 +19,8 @@ public class SimpleWorld {
     }
 
     public SimpleWorld(String name, World.Environment environment, WorldType type, ChunkGenerator generator) {
-        WorldCreator creator = new WorldCreator(name);
-        creator.environment(environment);
-        creator.type(type);
+        WorldCreator creator = new WorldCreator(name).environment(environment).type(type);
+
         if (generator != null) {
             creator.generator(generator);
         }
@@ -48,7 +47,7 @@ public class SimpleWorld {
         return this;
     }
 
-    public SimpleWorld weather(boolean storm) {
+    public SimpleWorld storm(boolean storm) {
         world.setStorm(storm);
         return this;
     }

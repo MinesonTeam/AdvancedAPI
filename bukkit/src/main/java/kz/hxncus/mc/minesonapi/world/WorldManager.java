@@ -100,36 +100,6 @@ public class WorldManager implements Listener {
         }
     }
 
-    public void saveWorldSettings(SimpleWorld simpleWorld) {
-        File configFile = new File(plugin.getDataFolder(), "worlds-config/" + simpleWorld.getWorld().getName() + ".yml");
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        World world = simpleWorld.getWorld();
-
-        config.set("gameMode", Bukkit.getServer().getDefaultGameMode().toString());
-        config.set("difficulty", world.getDifficulty().toString());
-        config.set("weather", world.hasStorm());
-        config.set("time", world.getTime());
-
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadWorldSettings(String worldName) {
-        File configFile = new File(plugin.getDataFolder(), "worlds-config/" + worldName + ".yml");
-        if (!configFile.exists()) return;
-
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        SimpleWorld simpleWorld = new SimpleWorld(worldName);
-
-        simpleWorld.gameMode(GameMode.valueOf(config.getString("gameMode")))
-                .difficulty(Difficulty.valueOf(config.getString("difficulty")))
-                .weather(config.getBoolean("weather"))
-                .time(config.getLong("time"));
-    }
-
     @EventHandler
     public void onWorldInit(WorldInitEvent event) {
         World world = event.getWorld();
