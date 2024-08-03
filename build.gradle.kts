@@ -57,7 +57,7 @@ allprojects {
 
 dependencies {
     implementation(project(path = ":bukkit"))
-    implementation(project(path = ":1_20_4"))
+    implementation(project(path = ":1_20_R3"))
 }
 
 tasks {

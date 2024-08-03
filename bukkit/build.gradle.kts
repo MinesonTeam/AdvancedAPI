@@ -17,6 +17,7 @@ group = "kz.hxncus.mc"
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:$spigot")
+    compileOnly(project(path = ":1_20_R3"))
 
     implementation("org.bstats:bstats-bukkit:$bstats")
     implementation("com.zaxxer:HikariCP:$hikaricp")

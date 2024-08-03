@@ -1,2 +1,2 @@
 rootProject.name = "MinesonAPI"
-include("bukkit", "1_20_4")
+include("bukkit", "1_20_R3")
