@@ -1,5 +1,4 @@
 name: Test compiling against Java 8, 11 and 16
-
 on:
   pull_request:
     branches:
@@ -7,7 +6,6 @@ on:
     paths:
     - "src/**"
     - "build.gradle"
-
 jobs:
   testBuilds:
     strategy:
