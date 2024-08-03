@@ -1,4 +1,4 @@
-name: "MinesonAPI"
+name: "$name"
 version: "$version"
 main: kz.hxncus.mc.minesonapi.MinesonAPI
 api-version: '1.13'

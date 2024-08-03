@@ -30,7 +30,9 @@ allprojects {
         mavenCentral()
         maven("https://papermc.io/repo/repository/maven-public/") // Paper
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // Spigot
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://oss.sonatype.org/content/groups/public/")
+        maven("https://repo.triumphteam.dev/snapshots")
         maven("https://libraries.minecraft.net/") // Minecraft repo
         maven("https://maven.enginehub.org/repo/")
         maven("https://jitpack.io") // JitPack
