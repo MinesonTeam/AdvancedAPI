@@ -10,6 +10,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class LruCache {
+    private final Deque<String> QUE = new LinkedList<>();
+
+    private final Map<String, LruElement> MAP = new ConcurrentHashMap<>();
+
+    private final int maxSize;
+
+    public LruCache(int maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == this)
             return true;
@@ -44,16 +55,6 @@ public class LruCache {
 
     public String toString() {
         return "LruCache(QUE=" + getQUE() + ", MAP=" + getMAP() + ", maxSize=" + getMaxSize() + ")";
-    }
-
-    private final Deque<String> QUE = new LinkedList<>();
-
-    private final Map<String, LruElement> MAP = new ConcurrentHashMap<>();
-
-    private final int maxSize;
-
-    public LruCache(int maxSize) {
-        this.maxSize = maxSize;
     }
 
     public String getResult(String input) {

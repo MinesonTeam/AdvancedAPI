@@ -14,6 +14,7 @@ public final class LruElement {
         this.result = result;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;

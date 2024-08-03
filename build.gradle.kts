@@ -13,13 +13,14 @@ val lombok = property("lombok") as String
 // Project version and group
 version = property("projectVersion") as String
 group = "kz.hxncus.mc"
+val projectNameLC = rootProject.name.lowercase(Locale.ENGLISH);
 
 allprojects {
     apply(plugin = "java")
     tasks {
         processResources {
             filesMatching("**/plugin.yml") {
-                expand("version" to rootProject . version, "name" to rootProject . name)
+                expand("version" to rootProject.version, "name" to rootProject.name)
             }
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
             filteringCharset = Charsets.UTF_8.name()
@@ -38,6 +39,7 @@ allprojects {
     dependencies {
         compileOnly("org.projectlombok:lombok:$lombok")
         compileOnly(fileTree("../libs/compileOnly/"))
+
 
         implementation(fileTree("../libs/implementation/"))
 
@@ -68,18 +70,19 @@ tasks {
     }
     shadowJar {
         archiveClassifier.set("")
-        relocate("org.bstats", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".metrics")
-        relocate("ch.qos", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.ch.qos")
-        relocate("com", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.com")
-        relocate("it.unimi.dsi", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.it.unimi.dsi")
-        relocate("javax", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.javax")
-        relocate("org.apache", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.org.apache")
-        relocate("org.checkerframe", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.org.checkerframe")
-        relocate("org.codehaus", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.org.codehaus")
-        relocate("org.jooq", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.org.jooq")
-        relocate("org.reactivestreams", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.org.reactivestreams")
-        relocate("org.slf4j", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.org.slf4j")
-        relocate("xsd", rootProject.group.toString() + "." + rootProject.name.lowercase(Locale.ENGLISH) + ".libs.xsd")
+        relocate("org.bstats", rootProject.group.toString() + "." + projectNameLC + ".metrics")
+        relocate("ch.qos", rootProject.group.toString() + "." + projectNameLC + ".libs.ch.qos")
+        relocate("com", rootProject.group.toString() + "." + projectNameLC + ".libs.com")
+        relocate("it.unimi.dsi", rootProject.group.toString() + "." + projectNameLC + ".libs.fastutil")
+        relocate("javax", rootProject.group.toString() + "." + projectNameLC + ".libs.javax")
+        relocate("migrations", rootProject.group.toString() + "." + projectNameLC + ".libs.migrations")
+        relocate("org.apache", rootProject.group.toString() + "." + projectNameLC + ".libs.apache")
+        relocate("org.checkerframework", rootProject.group.toString() + "." + projectNameLC + ".libs.checkerframework")
+        relocate("org.codehaus", rootProject.group.toString() + "." + projectNameLC + ".libs.codehaus")
+        relocate("org.jooq", rootProject.group.toString() + "." + projectNameLC + ".libs.jooq")
+        relocate("org.reactivestreams", rootProject.group.toString() + "." + projectNameLC + ".libs.reactivestreams")
+        relocate("org.slf4j", rootProject.group.toString() + "." + projectNameLC + ".libs.slf4j")
+        relocate("xsd", rootProject.group.toString() + "." + projectNameLC + ".libs.xsd")
         manifest {
             attributes(mapOf(
                 "Built-By" to System . getProperty("user.name"),
