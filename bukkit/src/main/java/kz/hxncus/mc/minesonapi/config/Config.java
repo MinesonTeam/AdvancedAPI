@@ -25,6 +25,11 @@ public class Config extends YamlConfiguration {
         reloadConfig();
     }
 
+    public Config(String parent, String child) {
+        this.file = new File(parent, child);
+        reloadConfig();
+    }
+
     public Config(String path) {
         this.file = new File(path);
         reloadConfig();

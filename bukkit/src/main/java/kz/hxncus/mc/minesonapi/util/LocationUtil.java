@@ -8,7 +8,7 @@ import org.bukkit.World;
 @UtilityClass
 public class LocationUtil {
     public Location getRandomLocation(World world, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-        SimpleRandom random = SimpleRandom.getInstance();
+        SimpleRandom random = SimpleRandom.get();
         int x = random.nextInt(maxX - minX);
         int y = random.nextInt(maxY - minY);
         int z = random.nextInt(maxZ - minZ);

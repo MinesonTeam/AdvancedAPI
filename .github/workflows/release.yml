@@ -49,4 +49,4 @@ jobs:
           release_type: release
           loaders: bukkit,spigot,paper,purpur,folia
           featured: true
-          project_id: null
+          project_id: DEkjaoKj

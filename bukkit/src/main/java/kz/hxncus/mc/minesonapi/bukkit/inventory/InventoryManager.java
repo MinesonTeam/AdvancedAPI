@@ -5,7 +5,8 @@ import kz.hxncus.mc.minesonapi.bukkit.event.EventManager;
 import kz.hxncus.mc.minesonapi.bukkit.inventory.marker.ItemMarker;
 import kz.hxncus.mc.minesonapi.bukkit.inventory.marker.PDCItemMarker;
 import kz.hxncus.mc.minesonapi.bukkit.inventory.marker.UnavailableItemMarker;
-import kz.hxncus.mc.minesonapi.util.Versions;
+import kz.hxncus.mc.minesonapi.util.VersionUtil;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
+@EqualsAndHashCode
 public class InventoryManager {
     protected static final Map<Inventory, SimpleInventory> inventories = new ConcurrentHashMap<>();
     private final MinesonAPI plugin;
@@ -35,7 +37,7 @@ public class InventoryManager {
     }
 
     private ItemMarker getItemMarker(MinesonAPI plugin) {
-        if (Versions.afterOrEqual(14)) {
+        if (VersionUtil.afterOrEqual(1140)) {
             return new PDCItemMarker(plugin);
         } else {
             return new UnavailableItemMarker();

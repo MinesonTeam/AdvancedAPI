@@ -1,5 +1,7 @@
 package kz.hxncus.mc.minesonapi.util;
 
+import kz.hxncus.mc.minesonapi.MinesonAPI;
+import kz.hxncus.mc.minesonapi.bukkit.server.ServerManager;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -9,7 +11,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 @UtilityClass
 public class EntityUtil {
     public static boolean isUnderWater(Entity entity) {
-        if (Versions.isPaperServer() && Versions.afterOrEqual(19)) {
+        ServerManager serverManager = MinesonAPI.get().getServerManager();
+        if (serverManager.isPaperServer() && VersionUtil.afterOrEqual(1190)) {
 //            return entity.isUnderWater();
             return false;
         } else {
@@ -26,7 +29,8 @@ public class EntityUtil {
     }
 
     public void teleport(Location location, Entity entity, PlayerTeleportEvent.TeleportCause cause) {
-        if (Versions.isPaperServer() || Versions.isFoliaServer() && Versions.afterOrEqual(194)) {
+        ServerManager serverManager = MinesonAPI.get().getServerManager();
+        if (serverManager.isPaperServer() || serverManager.isFoliaServer() && VersionUtil.afterOrEqual(1194)) {
 //            entity.teleportAsync(location, cause);
             entity.teleport(location);
         } else {
@@ -35,7 +39,8 @@ public class EntityUtil {
     }
 
     public static void teleport(Location location, Entity entity) {
-        if (Versions.afterOrEqual(194) && (Versions.isPaperServer() || Versions.isFoliaServer())) {
+        ServerManager serverManager = MinesonAPI.get().getServerManager();
+        if (VersionUtil.afterOrEqual(1194) && (serverManager.isPaperServer() || serverManager.isFoliaServer())) {
 //            entity.teleportAsync(location);
             entity.teleport(location);
         } else {

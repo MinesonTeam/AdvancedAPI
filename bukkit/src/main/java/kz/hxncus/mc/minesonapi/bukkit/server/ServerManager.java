@@ -1,32 +1,21 @@
 package kz.hxncus.mc.minesonapi.bukkit.server;
 
 import kz.hxncus.mc.minesonapi.MinesonAPI;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.bukkit.*;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.SimplePluginManager;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 
 @Getter
+@EqualsAndHashCode
 public class ServerManager {
     private static MinesonAPI plugin;
     private final Server server;
-
-    public static final int MIN_COORD = -29999999;
-    public static final int MAX_COORD = 29999999;
-
-    public final Art[] arts = Art.values();
-    public final Axis[] axes = Axis.values();
-    public final ChatColor[] chatColors = ChatColor.values();
-    public final EntityType[] entityTypes = EntityType.values();
-    public final Material[] materials = Material.values();
-    public final Particle[] particles = Particle.values();
-    public final SoundCategory[] soundCategories = SoundCategory.values();
-    public final Sound[] sounds = Sound.values();
 
     public ServerManager(MinesonAPI plugin, Server server) {
         ServerManager.plugin = plugin;
@@ -56,5 +45,21 @@ public class ServerManager {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean isPaperServer() {
+        if (server.getName().equalsIgnoreCase("Paper")) {
+            return true;
+        }
+        try {
+            Class.forName("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public boolean isFoliaServer() {
+        return server.getName().equalsIgnoreCase("Folia");
     }
 }

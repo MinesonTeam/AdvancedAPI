@@ -1,6 +1,7 @@
 package kz.hxncus.mc.minesonapi.bukkit.event;
 
 import kz.hxncus.mc.minesonapi.MinesonAPI;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerStatisticIncrementEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+@EqualsAndHashCode
 public class EventManager {
     private final Plugin plugin;
     private final PluginManager pluginManager;
@@ -50,11 +52,11 @@ public class EventManager {
             Action action = event.getAction();
             switch (action) {
                 case LEFT_CLICK_AIR, LEFT_CLICK_BLOCK -> callEvent(new PlayerLeftClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
-                                event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
+                    event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
                 case RIGHT_CLICK_AIR, RIGHT_CLICK_BLOCK -> callEvent(new PlayerRightClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
-                                event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
+                    event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
                 default -> callEvent(new PlayerPhysicalInteractEvent(event.getPlayer(), event.getAction(), event.getItem(),
-                                event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
+                    event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
             }
         });
         register(PlayerStatisticIncrementEvent.class, event -> {

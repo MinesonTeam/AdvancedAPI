@@ -70,4 +70,4 @@ jobs:
           release_type: beta
           loaders: bukkit,spigot,paper,purpur,folia
           featured: false
-          project_id: null
+          project_id: DEkjaoKj

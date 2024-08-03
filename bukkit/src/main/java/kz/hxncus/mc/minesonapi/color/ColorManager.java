@@ -6,8 +6,9 @@ import kz.hxncus.mc.minesonapi.color.pattern.GradientPattern;
 import kz.hxncus.mc.minesonapi.color.pattern.Pattern;
 import kz.hxncus.mc.minesonapi.color.pattern.RainbowPattern;
 import kz.hxncus.mc.minesonapi.color.pattern.SolidPattern;
-import kz.hxncus.mc.minesonapi.util.Versions;
+import kz.hxncus.mc.minesonapi.util.VersionUtil;
 import kz.hxncus.mc.minesonapi.util.reflect.ReflectMethod;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import net.md_5.bungee.api.ChatColor;
 
@@ -15,6 +16,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+@EqualsAndHashCode
 public class ColorManager {
     private final ReflectMethod METHOD_OF = new ReflectMethod(ChatColor.class, "of", Color.class);
     private final List<String> SPECIAL_COLORS = Arrays.asList("&l", "&n", "&o", "&k", "&m");
@@ -61,7 +63,7 @@ public class ColorManager {
 
     @NonNull
     public String color(@NonNull String string, @NonNull Color color) {
-        return (Versions.supportsHex() ? (String)METHOD_OF.invokeStatic(color) : getClosestColor(color)) + string;
+        return (VersionUtil.IS_HEX_VERSION ? (String)METHOD_OF.invokeStatic(color) : getClosestColor(color)) + string;
     }
 
     @NonNull
@@ -100,7 +102,7 @@ public class ColorManager {
 
     @NonNull
     public ChatColor getColor(@NonNull String string) {
-        return Versions.supportsHex() ? (ChatColor) METHOD_OF.invokeStatic(new Color(Integer.parseInt(string, 16))) : getClosestColor(new Color(Integer.parseInt(string, 16)));
+        return VersionUtil.IS_HEX_VERSION ? (ChatColor) METHOD_OF.invokeStatic(new Color(Integer.parseInt(string, 16))) : getClosestColor(new Color(Integer.parseInt(string, 16)));
     }
 
     @NonNull
@@ -114,7 +116,7 @@ public class ColorManager {
         double colorStep = 1.0D / step;
         for (int i = 0; i < step; i++) {
             Color color = Color.getHSBColor((float)(colorStep * i), saturation, saturation);
-            if (Versions.supportsHex()) {
+            if (VersionUtil.IS_HEX_VERSION) {
                 colors[i] = METHOD_OF.invokeStatic(color);
             } else {
                 colors[i] = getClosestColor(color);
@@ -134,7 +136,7 @@ public class ColorManager {
         int[] direction = { (start.getRed() < end.getRed()) ? 1 : -1, (start.getGreen() < end.getGreen()) ? 1 : -1, (start.getBlue() < end.getBlue()) ? 1 : -1 };
         for (int i = 0; i < step; i++) {
             Color color = new Color(start.getRed() + stepR * i * direction[0], start.getGreen() + stepG * i * direction[1], start.getBlue() + stepB * i * direction[2]);
-            if (Versions.supportsHex()) {
+            if (VersionUtil.IS_HEX_VERSION) {
                 colors[i] = METHOD_OF.invokeStatic(color);
             } else {
                 colors[i] = getClosestColor(color);

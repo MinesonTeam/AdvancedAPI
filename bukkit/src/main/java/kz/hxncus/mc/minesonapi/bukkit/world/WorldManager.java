@@ -2,6 +2,7 @@ package kz.hxncus.mc.minesonapi.bukkit.world;
 
 import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.bukkit.event.EventManager;
+import lombok.EqualsAndHashCode;
 import org.bukkit.*;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode
 public class WorldManager {
     private final List<SimpleWorld> simpleWorlds = new ArrayList<>();
 

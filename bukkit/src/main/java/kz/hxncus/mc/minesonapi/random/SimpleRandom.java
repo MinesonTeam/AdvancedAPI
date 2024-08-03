@@ -13,7 +13,7 @@ public class SimpleRandom extends XoRoShiRo128PlusRandom {
         return super.nextInt(bound - origin) + origin;
     }
 
-    public static SimpleRandom getInstance() {
+    public static SimpleRandom get() {
         // Техника, которую мы здесь применяем, называется «блокировка с двойной
         // проверкой» (Double-Checked Locking). Она применяется, чтобы
         // предотвратить создание нескольких объектов-одиночек, если метод будет
