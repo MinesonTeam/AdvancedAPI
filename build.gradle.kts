@@ -42,7 +42,6 @@ allprojects {
         compileOnly("org.projectlombok:lombok:$lombok")
         compileOnly(fileTree("../libs/compileOnly/"))
 
-
         implementation(fileTree("../libs/implementation/"))
 
         annotationProcessor("org.projectlombok:lombok:$lombok")
@@ -56,8 +55,8 @@ allprojects {
 }
 
 dependencies {
-    implementation(project(path = ":bukkit"))
-    implementation(project(path = ":1_20_R3"))
+    implementation(project(":bukkit"))
+    implementation(project(":1_20_R3"))
 }
 
 tasks {

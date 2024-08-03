@@ -1,7 +1,5 @@
 plugins {
     id("java")
-    id("io.github.goooler.shadow") version "8.1.7"
-    id("io.github.patrick.remapper") version "1.4.0"
 }
 
 // Library versions
@@ -17,7 +15,6 @@ group = "kz.hxncus.mc"
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:$spigot")
-    compileOnly(project(path = ":1_20_R3"))
 
     implementation("org.bstats:bstats-bukkit:$bstats")
     implementation("com.zaxxer:HikariCP:$hikaricp")
@@ -36,11 +33,5 @@ tasks {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
         filteringCharset = Charsets.UTF_8.name()
     }
-    shadowJar {
-        archiveClassifier.set("")
-        archiveFileName.set(rootProject.name + "-${version}.jar")
-        archiveClassifier.set("")
-    }
     compileJava.get().dependsOn(clean)
-    build.get().dependsOn(shadowJar)
 }

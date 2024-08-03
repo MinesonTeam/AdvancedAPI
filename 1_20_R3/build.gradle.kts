@@ -1,6 +1,5 @@
 plugins {
     id("java")
-    id("io.github.goooler.shadow") version "8.1.7"
     id("io.github.patrick.remapper") version "1.4.0"
 }
 
@@ -26,11 +25,5 @@ tasks {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
         filteringCharset = Charsets.UTF_8.name()
     }
-    shadowJar {
-        archiveClassifier.set("")
-        archiveFileName.set(rootProject.name + "-${version}.jar")
-        archiveClassifier.set("")
-    }
     compileJava.get().dependsOn(clean)
-    build.get().dependsOn(shadowJar)
 }
