@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("io.github.goooler.shadow") version "8.1.7"
 }
 
 // Library versions
@@ -32,6 +33,11 @@ tasks {
         }
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
         filteringCharset = Charsets.UTF_8.name()
+    }
+    shadowJar {
+        minimize {
+            exclude("org.bstats")
+        }
     }
     compileJava.get().dependsOn(clean)
 }

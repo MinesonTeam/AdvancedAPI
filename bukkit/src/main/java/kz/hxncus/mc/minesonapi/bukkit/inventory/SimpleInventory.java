@@ -96,7 +96,7 @@ public class SimpleInventory {
 
     public SimpleInventory addPage(SimpleInventory inventory) {
         this.inventories.add(inventory);
-        inventory.addPage(this);
+        inventory.inventories.add(this);
         return this;
     }
 

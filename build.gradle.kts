@@ -17,6 +17,7 @@ val lombok = property("lombok") as String
 version = property("projectVersion") as String
 group = "kz.hxncus.mc"
 val projectNameLC = rootProject.name.lowercase(Locale.ENGLISH);
+val projectGroup = rootProject.group.toString();
 
 allprojects {
     apply(plugin = "java")
@@ -75,22 +76,22 @@ tasks {
     shadowJar {
         nmsVersionList.forEach { dependsOn(":${it}:remap") }
         archiveClassifier.set("")
-        relocate("org.bstats", rootProject.group.toString() + "." + projectNameLC + ".metrics")
-        relocate("ch.qos", rootProject.group.toString() + "." + projectNameLC + ".libs.ch.qos")
-        relocate("com", rootProject.group.toString() + "." + projectNameLC + ".libs.com")
-        relocate("it.unimi.dsi", rootProject.group.toString() + "." + projectNameLC + ".libs.fastutil")
-        relocate("javax", rootProject.group.toString() + "." + projectNameLC + ".libs.javax")
-        relocate("migrations", rootProject.group.toString() + "." + projectNameLC + ".libs.migrations")
-        relocate("org.apache", rootProject.group.toString() + "." + projectNameLC + ".libs.apache")
-        relocate("org.checkerframework", rootProject.group.toString() + "." + projectNameLC + ".libs.checkerframework")
-        relocate("org.codehaus", rootProject.group.toString() + "." + projectNameLC + ".libs.codehaus")
-        relocate("org.jooq", rootProject.group.toString() + "." + projectNameLC + ".libs.jooq")
-        relocate("org.reactivestreams", rootProject.group.toString() + "." + projectNameLC + ".libs.reactivestreams")
-        relocate("org.slf4j", rootProject.group.toString() + "." + projectNameLC + ".libs.slf4j")
-        relocate("xsd", rootProject.group.toString() + "." + projectNameLC + ".libs.xsd")
+        relocate("org.bstats", "$projectGroup.$projectNameLC.metrics")
+        relocate("ch.qos", "$projectGroup.$projectNameLC.libs.ch.qos")
+        relocate("com", "$projectGroup.$projectNameLC.libs.com")
+        relocate("it.unimi.dsi", "$projectGroup.$projectNameLC.libs.fastutil")
+        relocate("javax", "$projectGroup.$projectNameLC.libs.javax")
+        relocate("migrations", "$projectGroup.$projectNameLC.libs.migrations")
+        relocate("org.apache", "$projectGroup.$projectNameLC.libs.apache")
+        relocate("org.checkerframework", "$projectGroup.$projectNameLC.libs.checkerframework")
+        relocate("org.codehaus", "$projectGroup.$projectNameLC.libs.codehaus")
+        relocate("org.jooq", "$projectGroup.$projectNameLC.libs.jooq")
+        relocate("org.reactivestreams", "$projectGroup.$projectNameLC.libs.reactivestreams")
+        relocate("org.slf4j", "$projectGroup.$projectNameLC.libs.slf4j")
+        relocate("xsd", "$projectGroup.$projectNameLC.libs.xsd")
         manifest {
             attributes(mapOf(
-                "Built-By" to System . getProperty("user.name"),
+                "Built-By" to System.getProperty("user.name"),
                 "Version" to version,
                 "Build-Timestamp" to SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSSZ") . format(Date.from(Instant.now())),
                 "Created-By" to "Gradle ${gradle.gradleVersion}",

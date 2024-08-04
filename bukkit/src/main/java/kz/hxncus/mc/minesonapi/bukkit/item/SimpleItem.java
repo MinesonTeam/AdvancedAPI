@@ -21,20 +21,16 @@ import java.util.function.Consumer;
 
 @EqualsAndHashCode(callSuper = false)
 public class SimpleItem extends ItemStack {
-    private ItemMeta itemMeta;
+    private final ItemMeta itemMeta;
 
     public SimpleItem(ItemStack itemStack) {
         super(itemStack.getType(), itemStack.getAmount());
-        if (itemStack.hasItemMeta()) {
-            this.itemMeta = itemStack.getItemMeta();
-        }
+        this.itemMeta = itemStack.getItemMeta();
     }
 
     public SimpleItem(Material type) {
         super(type);
-        if (this.hasItemMeta()) {
-            this.itemMeta = getItemMeta();
-        }
+        this.itemMeta = getItemMeta();
     }
 
     public SimpleItem(Material type, int amount) {
