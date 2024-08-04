@@ -7,6 +7,9 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.7"
 }
 
+val nmsVersionList: List<String> = listOf(
+    "1_20_R3"
+)
 // Library versions
 val junit = property("junit") as String
 val lombok = property("lombok") as String
@@ -28,7 +31,6 @@ allprojects {
     }
     repositories {
         mavenCentral()
-        maven("https://papermc.io/repo/repository/maven-public/") // Paper
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // Spigot
         maven("https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://oss.sonatype.org/content/groups/public/")
@@ -36,6 +38,7 @@ allprojects {
         maven("https://libraries.minecraft.net/") // Minecraft repo
         maven("https://maven.enginehub.org/repo/")
         maven("https://jitpack.io") // JitPack
+        maven("https://papermc.io/repo/repository/maven-public/") // Paper
         mavenLocal()
     }
     dependencies {
@@ -56,7 +59,7 @@ allprojects {
 
 dependencies {
     implementation(project(":bukkit"))
-    implementation(project(":1_20_R3"))
+    nmsVersionList.forEach { implementation(project(path = ":${it}")) }
 }
 
 tasks {
@@ -70,6 +73,7 @@ tasks {
         filteringCharset = Charsets.UTF_8.name()
     }
     shadowJar {
+        nmsVersionList.forEach { dependsOn(":${it}:remap") }
         archiveClassifier.set("")
         relocate("org.bstats", rootProject.group.toString() + "." + projectNameLC + ".metrics")
         relocate("ch.qos", rootProject.group.toString() + "." + projectNameLC + ".libs.ch.qos")
@@ -101,3 +105,5 @@ tasks {
     compileJava.get().dependsOn(clean)
     build.get().dependsOn(shadowJar)
 }
+
+tasks.jar {enabled = false}

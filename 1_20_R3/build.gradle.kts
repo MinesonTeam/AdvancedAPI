@@ -27,3 +27,7 @@ tasks {
     }
     compileJava.get().dependsOn(clean)
 }
+
+tasks.jar {
+    finalizedBy(tasks.remap)
+}
