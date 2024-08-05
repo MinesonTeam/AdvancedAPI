@@ -23,7 +23,7 @@ jobs:
       - name: Compile Minecraft Spigot (via BuildTools)
         uses: SpraxDev/Action-SpigotMC@v5.1.0
         with:
-          versions: 1.20.4
+          versions: 1.21, 1.20.4
           remapped: true
       - name: Build plugin
         run: ./gradlew build

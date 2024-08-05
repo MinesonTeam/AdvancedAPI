@@ -4,7 +4,7 @@ plugins {
 }
 
 // Library versions
-val spigot = "1.20.5-R0.1-SNAPSHOT:remapped-mojang"
+val spigot = "1.20.4-R0.1-SNAPSHOT:remapped-mojang"
 // Project version and group
 version = property("projectVersion") as String
 group = "kz.hxncus.mc"
@@ -15,7 +15,7 @@ dependencies {
 }
 
 tasks {
-    remap.get().version.set("1.20.5")
+    remap.get().version.set("1.20.4")
     compileJava.get().options.encoding = Charsets.UTF_8.name()
     javadoc.get().options.encoding = Charsets.UTF_8.name()
     processResources {
