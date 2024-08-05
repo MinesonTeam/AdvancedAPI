@@ -11,17 +11,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @EqualsAndHashCode
 public class ConfigManager {
     private static Plugin plugin;
-    private final Map<String, Config> stringConfigMap = new ConcurrentHashMap<>();
+    private final Map<String, SimpleConfig> stringConfigMap = new ConcurrentHashMap<>();
 
     public ConfigManager(Plugin plugin) {
         ConfigManager.plugin = plugin;
     }
 
-    public Config getOrCreateConfig(String name) {
-        return this.stringConfigMap.computeIfAbsent(name, nameFunc -> new Config(plugin.getDataFolder(), nameFunc));
+    public SimpleConfig getOrCreateConfig(String name) {
+        return this.stringConfigMap.computeIfAbsent(name, nameFunc -> new SimpleConfig(plugin.getDataFolder(), nameFunc));
     }
 
-    public Config getOrCreateConfig(String parent, String child) {
-        return this.stringConfigMap.computeIfAbsent(child, nameFunc -> new Config(plugin.getDataFolder() + parent, nameFunc));
+    public SimpleConfig getOrCreateConfig(String parent, String child) {
+        return this.stringConfigMap.computeIfAbsent(child, nameFunc -> new SimpleConfig(plugin.getDataFolder() + parent, nameFunc));
     }
 }

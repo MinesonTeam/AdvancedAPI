@@ -37,8 +37,7 @@ public final class MinesonAPI extends JavaPlugin {
     @Override
     public void onEnable() {
         registerManagers();
-        runnable = new WorkloadRunnable();
-        Scheduler.timer(1L, 1L, runnable);
+        registerRunnables();
     }
 
     @Override
@@ -55,5 +54,10 @@ public final class MinesonAPI extends JavaPlugin {
         this.worldManager = new WorldManager(this);
         this.inventoryManager = new InventoryManager(this);
         this.serverManager = new ServerManager(this, getServer());
+    }
+
+    public void registerRunnables() {
+        Scheduler.timer(1L, 1L, runnable = new WorkloadRunnable());
+        Scheduler.run(() -> {});
     }
 }

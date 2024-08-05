@@ -17,25 +17,25 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
-public class Config extends YamlConfiguration {
+public class SimpleConfig extends YamlConfiguration {
     private final File file;
 
-    public Config(File parent, String child) {
+    public SimpleConfig(File parent, String child) {
         this.file = new File(parent, child);
         reloadConfig();
     }
 
-    public Config(String parent, String child) {
+    public SimpleConfig(String parent, String child) {
         this.file = new File(parent, child);
         reloadConfig();
     }
 
-    public Config(String path) {
+    public SimpleConfig(String path) {
         this.file = new File(path);
         reloadConfig();
     }
 
-    public Config(URI uri) {
+    public SimpleConfig(URI uri) {
         this.file = new File(uri);
         reloadConfig();
     }

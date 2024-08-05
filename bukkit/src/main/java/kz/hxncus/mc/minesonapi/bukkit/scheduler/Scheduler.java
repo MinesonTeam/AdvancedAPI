@@ -20,6 +20,7 @@ import java.util.stream.IntStream;
 public class Scheduler {
     private final Set<Integer> tasksId = new HashSet<>();
     private final MinesonAPI plugin = MinesonAPI.get();
+    private final BukkitScheduler scheduler = Bukkit.getScheduler();
     /**
      * Запустить (z - n) раз
      *
@@ -48,7 +49,7 @@ public class Scheduler {
      * @return {@link BukkitTask}
      */
     public BukkitTask run(Runnable runnable) {
-        BukkitTask task = Bukkit.getScheduler().runTask(plugin, runnable);
+        BukkitTask task = scheduler.runTask(plugin, runnable);
         tasksId.add(task.getTaskId());
         return task;
     }
@@ -59,7 +60,7 @@ public class Scheduler {
      * @param task таск
      * */
     public void run(Consumer<BukkitTask> task) {
-        Bukkit.getScheduler().runTask(plugin, task);
+        scheduler.runTask(plugin, task);
     }
 
     /**
@@ -69,7 +70,7 @@ public class Scheduler {
      * @return bukkit task
      */
     public BukkitTask runAsync(Runnable runnable) {
-        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
+        BukkitTask task = scheduler.runTaskAsynchronously(plugin, runnable);
         tasksId.add(task.getTaskId());
         return task;
     }
@@ -80,7 +81,7 @@ public class Scheduler {
      * @param task таск
      */
     public void runAsync(Consumer<BukkitTask> task) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, task);
+        scheduler.runTaskAsynchronously(plugin, task);
     }
 
     /**
@@ -129,7 +130,7 @@ public class Scheduler {
      */
     public void timerNTimes(long n, long delay, long period, IntConsumer consumer) {
         AtomicInteger integer = new AtomicInteger();
-        Bukkit.getScheduler().runTaskTimer(plugin, task -> {
+        scheduler.runTaskTimer(plugin, task -> {
                     consumer.accept(integer.getAndIncrement());
                     if (integer.get() == n) {
                         task.cancel();
@@ -184,7 +185,7 @@ public class Scheduler {
      */
     public BukkitTask timerN(long n, long delay, long period, IntConsumer consumer) {
         AtomicInteger integer = new AtomicInteger();
-        BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        BukkitTask task = scheduler.runTaskTimer(plugin, () -> {
             consumer.accept(integer.getAndIncrement());
             if (integer.get() == n) {
                 integer.set(0);
@@ -239,7 +240,7 @@ public class Scheduler {
      * @return bukkit task
      */
     public BukkitTask timer(long delay, long period, Runnable runnable) {
-        BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, runnable, delay, period);
+        BukkitTask task = scheduler.runTaskTimer(plugin, runnable, delay, period);
         tasksId.add(task.getTaskId());
         return task;
     }
@@ -285,7 +286,7 @@ public class Scheduler {
      * @param task   таск
      */
     public void timer(long delay, long period, Consumer<BukkitTask> task) {
-        Bukkit.getScheduler().runTaskTimer(plugin, task, delay, period);
+        scheduler.runTaskTimer(plugin, task, delay, period);
     }
 
     /**
@@ -331,7 +332,7 @@ public class Scheduler {
      * @return bukkit task
      */
     public BukkitTask timerAsync(long delay, long period, Runnable runnable) {
-        BukkitTask task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period);
+        BukkitTask task = scheduler.runTaskTimerAsynchronously(plugin, runnable, delay, period);
         tasksId.add(task.getTaskId());
         return task;
     }
@@ -376,7 +377,7 @@ public class Scheduler {
      */
     public void timerAsync(long delay, long period, Consumer<BukkitTask> task) {
         task = task.andThen(bukkitTask -> tasksId.add(bukkitTask.getTaskId()));
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, task, delay, period);
+        scheduler.runTaskTimerAsynchronously(plugin, task, delay, period);
     }
     
     /**
@@ -399,7 +400,7 @@ public class Scheduler {
      * @return bukkit task
      */
     public BukkitTask later(long delay, Runnable runnable) {
-        BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, runnable, delay);
+        BukkitTask task = scheduler.runTaskLater(plugin, runnable, delay);
         tasksId.add(task.getTaskId());
         return task;
     }
@@ -425,7 +426,7 @@ public class Scheduler {
      * @return bukkit task
      */
     public BukkitTask laterAsync(long delay, Runnable runnable) {
-        BukkitTask task = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay);
+        BukkitTask task = scheduler.runTaskLaterAsynchronously(plugin, runnable, delay);
         tasksId.add(task.getTaskId());
         return task;
     }
@@ -443,7 +444,7 @@ public class Scheduler {
      * @param runnableID - айди таймера, который будем останавливать.
      */
     public void stopTimer(int runnableID) {
-        Bukkit.getScheduler().cancelTask(runnableID);
+        scheduler.cancelTask(runnableID);
     }
 
     public void cancelPluginSchedulers(Plugin plugin) {

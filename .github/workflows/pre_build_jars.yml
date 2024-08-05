@@ -25,5 +25,10 @@ jobs:
         java-version: "${{ matrix.java-version }}"
     - name: Make build.gradle executable
       run: chmod +x gradlew
+    - name: Compile Minecraft Spigot (via BuildTools)
+      uses: SpraxDev/Action-SpigotMC@v5.1.0
+      with:
+        versions: 1.21, 1.20.4
+        remapped: true
     - name: Build jar with Java ${{ matrix.java-version }}
       run: ./gradlew build
