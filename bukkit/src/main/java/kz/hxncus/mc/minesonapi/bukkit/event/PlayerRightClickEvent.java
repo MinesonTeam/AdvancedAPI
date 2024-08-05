@@ -1,6 +1,7 @@
 package kz.hxncus.mc.minesonapi.bukkit.event;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,20 +14,30 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import javax.annotation.Nullable;
+
 @Getter
 @Setter
 public class PlayerRightClickEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
+    @Nullable
     protected ItemStack item;
+    @NonNull
     protected Action action;
+    @Nullable
     protected Block blockClicked;
+    @NonNull
     protected BlockFace blockFace;
+    @NonNull
     private Result useClickedBlock;
+    @NonNull
     private Result useItemInHand;
+    @Nullable
     private EquipmentSlot hand;
+    @Nullable
     private Vector clickedPosition;
 
-    public PlayerRightClickEvent(Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace, EquipmentSlot hand, Vector clickedPosition) {
+    public PlayerRightClickEvent(@NonNull Player who, @NonNull Action action, @Nullable ItemStack item, @Nullable Block clickedBlock, @NonNull BlockFace clickedFace, @Nullable EquipmentSlot hand, @Nullable Vector clickedPosition) {
         super(who);
         this.action = action;
         this.item = item;

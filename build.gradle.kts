@@ -82,6 +82,7 @@ tasks {
         relocate("it.unimi.dsi", "$projectGroup.$projectNameLC.libs.fastutil")
         relocate("javax", "$projectGroup.$projectNameLC.libs.javax")
         relocate("migrations", "$projectGroup.$projectNameLC.libs.migrations")
+        relocate("assets.org", "$projectGroup.$projectNameLC.libs")
         relocate("org.apache", "$projectGroup.$projectNameLC.libs.apache")
         relocate("org.checkerframework", "$projectGroup.$projectNameLC.libs.checkerframework")
         relocate("org.codehaus", "$projectGroup.$projectNameLC.libs.codehaus")

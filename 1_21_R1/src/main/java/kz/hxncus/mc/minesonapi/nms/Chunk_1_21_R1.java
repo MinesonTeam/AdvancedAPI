@@ -8,10 +8,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.entity.Player;
 
-public class Chunk_1_20_R3 implements NMSChunk {
+public class Chunk_1_21_R1 implements NMSChunk {
     public ServerLevel nmsWorld;
     public LevelChunk nmsChunk;
     public World world;

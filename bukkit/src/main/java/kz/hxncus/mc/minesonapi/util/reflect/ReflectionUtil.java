@@ -96,9 +96,9 @@ public final class ReflectionUtil {
     public Object getFieldValue(@NonNull Field field, @NonNull Object object) {
         try {
             Object obj = field.get(object);
-            if (obj instanceof Enum<?> e) {
-                return e.name();
-            } else if (obj instanceof Number number && number.doubleValue() == 0) {
+            if (obj instanceof Enum<?>) {
+                return ((Enum<?>) obj).name();
+            } else if (obj instanceof Number && ((Number) obj).doubleValue() == 0) {
                 return null;
             }
             return obj;

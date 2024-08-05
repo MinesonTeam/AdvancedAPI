@@ -17,16 +17,16 @@ public class LocationUtil {
 
     public Location getRandomLocation(World world, int min, int max, LocationUtil.Coordinate coordinate) {
         switch (coordinate) {
-            case X -> {
+            case X: {
                 return getRandomLocation(world, min, 0, 0, max, 0, 0);
             }
-            case Y -> {
+            case Y: {
                 return getRandomLocation(world, 0, min, 0, 0, max, 0);
             }
-            case Z -> {
+            case Z: {
                 return getRandomLocation(world, 0, 0, min, 0, 0, max);
             }
-            default -> {
+            default: {
                 return getRandomLocation(world, min, min, min, max, max, max);
             }
         }

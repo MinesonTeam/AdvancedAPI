@@ -24,8 +24,9 @@ public class LruCache {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof LruCache other))
+        if (!(o instanceof LruCache))
             return false;
+        LruCache other = (LruCache) o;
         if (!other.canEqual(this))
             return false;
         if (getMaxSize() != other.getMaxSize())

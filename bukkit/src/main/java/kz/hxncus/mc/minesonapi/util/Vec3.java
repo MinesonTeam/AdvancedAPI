@@ -1,9 +1,6 @@
 package kz.hxncus.mc.minesonapi.util;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.math3.util.FastMath;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -13,6 +10,8 @@ import org.bukkit.util.Vector;
 @Getter
 @AllArgsConstructor
 @Builder(toBuilder=true)
+@ToString
+@EqualsAndHashCode
 public class Vec3 {
     private double x;
     private double y;
@@ -39,7 +38,7 @@ public class Vec3 {
     }
 
     public double distance(Vec3 vec) {
-        return FastMath.sqrt(pow2(this.x - vec.x) + pow2(this.y - vec.y) + pow2(this.z - vec.z));
+        return Math.sqrt(pow2(this.x - vec.x) + pow2(this.y - vec.y) + pow2(this.z - vec.z));
     }
 
     private double pow2(double val) {
@@ -111,7 +110,7 @@ public class Vec3 {
     }
 
     public double length() {
-        return FastMath.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
     public Vec3 cross(Vec3 vec) {
@@ -155,29 +154,6 @@ public class Vec3 {
         double cos = FastMath.cos(angle);
         double sin = FastMath.sin(angle);
         return rotateX(sin, cos);
-    }
-
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Vec3 vec3 = (Vec3)o;
-        return (Double.compare(vec3.x, this.x) == 0 && Double.compare(vec3.y, this.y) == 0 && Double.compare(vec3.z, this.z) == 0);
-    }
-
-    public int hashCode() {
-        long temp = Double.doubleToLongBits(this.x);
-        int result = (int)(temp ^ temp >>> 32L);
-        temp = Double.doubleToLongBits(this.y);
-        result = 31 * result + (int)(temp ^ temp >>> 32L);
-        temp = Double.doubleToLongBits(this.z);
-        result = 31 * result + (int)(temp ^ temp >>> 32L);
-        return result;
-    }
-
-    public String toString() {
-        return "Vec3{x=" + this.x + ", y=" + this.y + ", z=" + this.z + '}';
     }
 
     public Vec3 copy() {

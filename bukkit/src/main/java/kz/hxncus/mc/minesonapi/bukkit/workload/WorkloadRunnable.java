@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class WorkloadRunnable implements Runnable {
-    private static final double MAX_MILLIS_PER_TICK = 5;
+    private static final double MAX_MILLIS_PER_TICK = 10;
     private static final int MAX_NANOS_PER_TICK = (int) (MAX_MILLIS_PER_TICK * 1E6);
     private final Deque<Workload> workloads = new ArrayDeque<>();
 

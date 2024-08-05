@@ -29,17 +29,29 @@ public class TimeUtil {
 
     public Long stringToMillis(@NonNull String input) {
         String[] splitted = input.split("(?<=\\\\D)(?=\\\\d)|(?<=\\\\d)(?=\\\\D)");
-        long l = Long.parseLong(splitted[0]);
+        long parsedLong = Long.parseLong(splitted[0]);
         if (splitted.length < 2) {
-            return l;
+            return parsedLong;
         }
         String lowerCase = splitted[1].toLowerCase(Locale.ENGLISH);
-        return switch (lowerCase) {
-            case "t", "tick", "ticks" -> ticksToMillis(l);
-            case "s", "second", "seconds" -> secondsToMillis(l);
-            case "m", "minute", "minutes" -> minutesToMillis(l);
-            case "fps", "framepersecond" -> fpsToMillis(Double.parseDouble(splitted[0]));
-            default -> l;
-        };
+        switch (lowerCase) {
+            case "tick":
+            case "ticks":
+            case "t":
+                return ticksToMillis(parsedLong);
+            case "seconds":
+            case "second":
+            case "s":
+                return secondsToMillis(parsedLong);
+            case "minutes":
+            case "minute":
+            case "m":
+                return minutesToMillis(parsedLong);
+            case "fps":
+            case "framepersecond":
+                return fpsToMillis(Double.parseDouble(splitted[0]));
+            default:
+                return parsedLong;
+        }
     }
 }

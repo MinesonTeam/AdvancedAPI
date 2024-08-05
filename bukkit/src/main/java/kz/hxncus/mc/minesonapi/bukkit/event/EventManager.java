@@ -51,12 +51,17 @@ public class EventManager {
         register(PlayerInteractEvent.class, event -> {
             Action action = event.getAction();
             switch (action) {
-                case LEFT_CLICK_AIR, LEFT_CLICK_BLOCK -> callEvent(new PlayerLeftClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
-                    event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
-                case RIGHT_CLICK_AIR, RIGHT_CLICK_BLOCK -> callEvent(new PlayerRightClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
-                    event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
-                default -> callEvent(new PlayerPhysicalInteractEvent(event.getPlayer(), event.getAction(), event.getItem(),
-                    event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
+                case LEFT_CLICK_BLOCK:
+                case LEFT_CLICK_AIR:
+                    callEvent(new PlayerLeftClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
+                        event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
+                case RIGHT_CLICK_BLOCK:
+                case RIGHT_CLICK_AIR:
+                    callEvent(new PlayerRightClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
+                        event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
+                default:
+                    callEvent(new PlayerPhysicalInteractEvent(event.getPlayer(), event.getAction(), event.getItem(),
+                        event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()));
             }
         });
         register(PlayerStatisticIncrementEvent.class, event -> {

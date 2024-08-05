@@ -10,12 +10,85 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockIterator;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @UtilityClass
 public class VersionUtil {
+    public final Map<Integer, String> NMS_VERSION_BY_INT = new HashMap<>();
+    static {
+        NMS_VERSION_BY_INT.put(180, "1_8_R1");
+        NMS_VERSION_BY_INT.put(183, "1_8_R2");
+        NMS_VERSION_BY_INT.put(184, "1_8_R3");
+        NMS_VERSION_BY_INT.put(185, "1_8_R3");
+        NMS_VERSION_BY_INT.put(186, "1_8_R3");
+        NMS_VERSION_BY_INT.put(187, "1_8_R3");
+        NMS_VERSION_BY_INT.put(188, "1_8_R3");
+
+        NMS_VERSION_BY_INT.put(190, "1_9_R1");
+        NMS_VERSION_BY_INT.put(192, "1_9_R1");
+        NMS_VERSION_BY_INT.put(194, "1_9_R2");
+
+        NMS_VERSION_BY_INT.put(1100, "1_10_R1");
+        NMS_VERSION_BY_INT.put(1102, "1_10_R1");
+
+        NMS_VERSION_BY_INT.put(1110, "1_11_R1");
+        NMS_VERSION_BY_INT.put(1111, "1_11_R1");
+        NMS_VERSION_BY_INT.put(1112, "1_11_R1");
+
+        NMS_VERSION_BY_INT.put(1120, "1_12_R1");
+        NMS_VERSION_BY_INT.put(1121, "1_12_R1");
+        NMS_VERSION_BY_INT.put(1122, "1_12_R1");
+
+        NMS_VERSION_BY_INT.put(1130, "1_13_R1");
+        NMS_VERSION_BY_INT.put(1131, "1_13_R2");
+        NMS_VERSION_BY_INT.put(1132, "1_13_R2");
+
+        NMS_VERSION_BY_INT.put(1140, "1_14_R1");
+        NMS_VERSION_BY_INT.put(1141, "1_14_R1");
+        NMS_VERSION_BY_INT.put(1142, "1_14_R1");
+        NMS_VERSION_BY_INT.put(1143, "1_14_R1");
+        NMS_VERSION_BY_INT.put(1144, "1_14_R1");
+
+        NMS_VERSION_BY_INT.put(1150, "1_15_R1");
+        NMS_VERSION_BY_INT.put(1151, "1_15_R1");
+        NMS_VERSION_BY_INT.put(1152, "1_15_R1");
+
+
+        NMS_VERSION_BY_INT.put(1160, "1_16_R1");
+        NMS_VERSION_BY_INT.put(1161, "1_16_R1");
+        NMS_VERSION_BY_INT.put(1162, "1_16_R2");
+        NMS_VERSION_BY_INT.put(1163, "1_16_R2");
+        NMS_VERSION_BY_INT.put(1164, "1_16_R3");
+        NMS_VERSION_BY_INT.put(1165, "1_16_R3");
+
+        NMS_VERSION_BY_INT.put(1170, "1_17_R1");
+        NMS_VERSION_BY_INT.put(1171, "1_17_R1");
+
+        NMS_VERSION_BY_INT.put(1180, "1_18_R1");
+        NMS_VERSION_BY_INT.put(1181, "1_18_R1");
+        NMS_VERSION_BY_INT.put(1182, "1_18_R2");
+
+        NMS_VERSION_BY_INT.put(1190, "1_19_R1");
+        NMS_VERSION_BY_INT.put(1191, "1_19_R1");
+        NMS_VERSION_BY_INT.put(1192, "1_19_R1");
+        NMS_VERSION_BY_INT.put(1193, "1_19_R2");
+        NMS_VERSION_BY_INT.put(1194, "1_19_R3");
+
+        NMS_VERSION_BY_INT.put(1200, "1_20_R1");
+        NMS_VERSION_BY_INT.put(1201, "1_20_R1");
+        NMS_VERSION_BY_INT.put(1202, "1_20_R2");
+        NMS_VERSION_BY_INT.put(1203, "1_20_R3");
+        NMS_VERSION_BY_INT.put(1204, "1_20_R3");
+        NMS_VERSION_BY_INT.put(1205, "1_20_R3");
+        NMS_VERSION_BY_INT.put(1206, "1_20_R4");
+
+        NMS_VERSION_BY_INT.put(1210, "1_21_R1");
+    }
     public final int CURRENT_VERSION = getCurrentVersion();
+    public final String NMS_VERSION = NMS_VERSION_BY_INT.get(CURRENT_VERSION);
     public final boolean IS_PDC_VERSION = CURRENT_VERSION >= 1140;
     public final boolean IS_HEX_VERSION = CURRENT_VERSION >= 1160;
     public final boolean IS_TARGET_BLOCK_VERSION = CURRENT_VERSION >= 1140;

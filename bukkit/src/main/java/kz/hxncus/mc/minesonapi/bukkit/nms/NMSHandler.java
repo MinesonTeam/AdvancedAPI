@@ -1,5 +1,7 @@
 package kz.hxncus.mc.minesonapi.bukkit.nms;
 
+import kz.hxncus.mc.minesonapi.util.VersionUtil;
+
 import java.lang.reflect.InvocationTargetException;
 
 public class NMSHandler {
@@ -10,7 +12,7 @@ public class NMSHandler {
             return chunk;
         }
         try {
-            return (NMSChunk) Class.forName("kz.hxncus.mc.minesonapi.nms.Chunk_1_20_R3").getConstructor().newInstance();
+            return (NMSChunk) Class.forName("kz.hxncus.mc.minesonapi.nms.Chunk_" + VersionUtil.NMS_VERSION).getConstructor().newInstance();
         } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException |
                  InstantiationException e) {
             throw new RuntimeException(e);
