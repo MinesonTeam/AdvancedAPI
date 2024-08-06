@@ -14,38 +14,39 @@ import org.bukkit.World;
 import java.util.function.Consumer;
 
 public class RegionBuilder {
-    public final RegionContainer regionContainer = WorldGuard.getInstance()
-                                                             .getPlatform()
-                                                             .getRegionContainer();
-    private final ProtectedCuboidRegion cuboidRegion;
-    private final RegionManager regionManager;
-    public RegionBuilder(@NonNull String regionName, @NonNull Location pos1, @NonNull Location pos2) {
-        this(regionName, pos1.getWorld(), BukkitAdapter.asBlockVector(pos1), BukkitAdapter.asBlockVector(pos2));
-    }
-
-    public RegionBuilder(@NonNull String regionName, @NonNull World world, @NonNull Location pos1, @NonNull Location pos2) {
-        this(regionName, world, BukkitAdapter.asBlockVector(pos1), BukkitAdapter.asBlockVector(pos2));
-    }
-
-    public RegionBuilder(@NonNull String regionName, @NonNull World world, @NonNull BlockVector3 pos1, @NonNull BlockVector3 pos2) {
-        this.regionManager = regionContainer.get(BukkitAdapter.adapt(world));
-        this.cuboidRegion = new ProtectedCuboidRegion(regionName, pos1, pos2);
-    }
-
-    public <T extends Flag<V>, V> RegionBuilder setFlag(T flag, V value) {
-        return editRegion(region -> region.setFlag(flag, value));
-    }
-
-    public RegionBuilder editRegion(Consumer<ProtectedCuboidRegion> consumer) {
-        consumer.accept(this.cuboidRegion);
-        return this;
-    }
-
-    public RegionBuilder removeRegion() {
-        return editRegion(region -> this.regionManager.removeRegion(region.getId()));
-    }
-
-    public RegionBuilder build() {
-        return editRegion(this.regionManager::addRegion);
-    }
+	public final RegionContainer regionContainer = WorldGuard.getInstance()
+	                                                         .getPlatform()
+	                                                         .getRegionContainer();
+	private final ProtectedCuboidRegion cuboidRegion;
+	private final RegionManager regionManager;
+	
+	public RegionBuilder(@NonNull final String regionName, @NonNull final Location pos1, @NonNull final Location pos2) {
+		this(regionName, pos1.getWorld(), BukkitAdapter.asBlockVector(pos1), BukkitAdapter.asBlockVector(pos2));
+	}
+	
+	public RegionBuilder(@NonNull final String regionName, @NonNull final World world, @NonNull final BlockVector3 pos1, @NonNull final BlockVector3 pos2) {
+		this.regionManager = this.regionContainer.get(BukkitAdapter.adapt(world));
+		this.cuboidRegion = new ProtectedCuboidRegion(regionName, pos1, pos2);
+	}
+	
+	public RegionBuilder(@NonNull final String regionName, @NonNull final World world, @NonNull final Location pos1, @NonNull final Location pos2) {
+		this(regionName, world, BukkitAdapter.asBlockVector(pos1), BukkitAdapter.asBlockVector(pos2));
+	}
+	
+	public <T extends Flag<V>, V> RegionBuilder setFlag(final T flag, final V value) {
+		return this.editRegion(region -> region.setFlag(flag, value));
+	}
+	
+	public RegionBuilder editRegion(final Consumer<ProtectedCuboidRegion> consumer) {
+		consumer.accept(this.cuboidRegion);
+		return this;
+	}
+	
+	public RegionBuilder removeRegion() {
+		return this.editRegion(region -> this.regionManager.removeRegion(region.getId()));
+	}
+	
+	public RegionBuilder build() {
+		return this.editRegion(this.regionManager::addRegion);
+	}
 }

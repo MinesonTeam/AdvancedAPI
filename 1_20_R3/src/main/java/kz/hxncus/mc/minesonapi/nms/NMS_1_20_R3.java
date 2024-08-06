@@ -8,18 +8,33 @@ import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R3.command.VanillaCommandWrapper;
+import org.bukkit.event.Listener;
 
-public class NMS_1_20_R3 {
+/**
+ * The type Nms 1 20 r 3.
+ */
+public class NMS_1_20_R3 implements Listener {
+    /**
+     * Gets minecraft server.
+     *
+     * @return the minecraft server
+     */
     public DedicatedServer getMinecraftServer() {
-        Server var2 = Bukkit.getServer();
-        if (var2 instanceof CraftServer server) {
+        final Server var2 = Bukkit.getServer();
+        if (var2 instanceof final CraftServer server) {
             return server.getServer();
         } else {
             return null;
         }
     }
-
-    public Command wrapToVanillaCommandWrapper(CommandNode<CommandSourceStack> node) {
-        return new VanillaCommandWrapper(getMinecraftServer().vanillaCommandDispatcher, node);
+    
+    /**
+     * Wrap-to-vanilla command wrapper command.
+     *
+     * @param node the node
+     * @return the command
+     */
+    public Command wrapToVanillaCommandWrapper(final CommandNode<CommandSourceStack> node) {
+        return new VanillaCommandWrapper(this.getMinecraftServer().vanillaCommandDispatcher, node);
     }
 }

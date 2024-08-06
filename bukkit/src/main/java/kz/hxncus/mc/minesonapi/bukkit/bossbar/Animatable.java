@@ -2,11 +2,20 @@ package kz.hxncus.mc.minesonapi.bukkit.bossbar;
 
 import kz.hxncus.mc.minesonapi.bukkit.scheduler.Scheduler;
 
+/**
+ * The interface Animatable.
+ */
 public interface Animatable {
-    void stopAnimation();
-    void startAnimation(Scheduler scheduler);
-    enum AnimationType {
-        STATIC,
-        PROGRESSIVE,
-    }
+	/**
+	 * Stop animation.
+	 */
+	void stopAnimation();
+	
+	/**
+	 * Start animation.
+	 *
+	 * @param scheduler the scheduler
+	 */
+	void startAnimation(Scheduler scheduler);
+	
 }

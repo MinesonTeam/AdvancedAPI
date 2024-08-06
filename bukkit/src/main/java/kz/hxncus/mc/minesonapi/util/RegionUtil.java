@@ -15,29 +15,32 @@ import java.util.Set;
 
 @UtilityClass
 public class RegionUtil {
-    public final RegionContainer regionContainer = WorldGuard.getInstance().getPlatform().getRegionContainer();
-
-    public Set<ProtectedRegion> getRegions(@NonNull Location location) {
-        return getApplicableRegions(location).getRegions();
-    }
-    public ApplicableRegionSet getApplicableRegions(@NonNull Location location) {
-        return getRegionManager(location.getWorld()).getApplicableRegions(BukkitAdapter.asBlockVector(location));
-    }
-
-    public void removeRegion(@NonNull World world, @NonNull String name) {
-        getRegionManager(world).removeRegion(name);
-    }
-
-    public boolean hasRegion(@NonNull World world, @NonNull String name) {
-        return getRegionManager(world).hasRegion(name);
-    }
-
-    @NonNull
-    public RegionManager getRegionManager(@NonNull World world) {
-        RegionManager regionManager = regionContainer.get(BukkitAdapter.adapt(world));
-        if (regionManager == null) {
-            throw new RuntimeException("Region Manager is null");
-        }
-        return regionManager;
-    }
+	public final RegionContainer regionContainer = WorldGuard.getInstance()
+	                                                         .getPlatform()
+	                                                         .getRegionContainer();
+	
+	public Set<ProtectedRegion> getRegions(@NonNull final Location location) {
+		return getApplicableRegions(location).getRegions();
+	}
+	
+	public ApplicableRegionSet getApplicableRegions(@NonNull final Location location) {
+		return getRegionManager(location.getWorld()).getApplicableRegions(BukkitAdapter.asBlockVector(location));
+	}
+	
+	@NonNull
+	public RegionManager getRegionManager(@NonNull final World world) {
+		final RegionManager regionManager = regionContainer.get(BukkitAdapter.adapt(world));
+		if (regionManager == null) {
+			throw new RuntimeException("Region Manager is null");
+		}
+		return regionManager;
+	}
+	
+	public void removeRegion(@NonNull final World world, @NonNull final String name) {
+		getRegionManager(world).removeRegion(name);
+	}
+	
+	public boolean hasRegion(@NonNull final World world, @NonNull final String name) {
+		return getRegionManager(world).hasRegion(name);
+	}
 }

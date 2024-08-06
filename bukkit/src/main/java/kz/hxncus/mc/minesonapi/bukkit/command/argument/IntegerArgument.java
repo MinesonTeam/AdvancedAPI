@@ -1,7 +1,15 @@
 package kz.hxncus.mc.minesonapi.bukkit.command.argument;
 
+/**
+ * The type Integer argument.
+ */
 public class IntegerArgument extends NumberArgument {
-    protected IntegerArgument(String nodeName) {
-        super(nodeName);
-    }
+	/**
+	 * Instantiates a new Integer argument.
+	 *
+	 * @param nodeName the node name
+	 */
+	public IntegerArgument(final String nodeName) {
+		super(nodeName);
+	}
 }

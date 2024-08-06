@@ -6,7 +6,7 @@ import org.bukkit.NamespacedKey;
 
 @UtilityClass
 public class NamespacedKeyUtil {
-    public static NamespacedKey create(String key) {
-        return new NamespacedKey(MinesonAPI.get(), key);
-    }
+	public static NamespacedKey create(final String key) {
+		return new NamespacedKey(MinesonAPI.getInstance(), key);
+	}
 }

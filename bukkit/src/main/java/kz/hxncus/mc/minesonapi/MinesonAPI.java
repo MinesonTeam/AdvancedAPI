@@ -4,60 +4,53 @@ import kz.hxncus.mc.minesonapi.bukkit.event.EventManager;
 import kz.hxncus.mc.minesonapi.bukkit.inventory.InventoryManager;
 import kz.hxncus.mc.minesonapi.bukkit.scheduler.Scheduler;
 import kz.hxncus.mc.minesonapi.bukkit.server.ServerManager;
-import kz.hxncus.mc.minesonapi.bukkit.workload.WorkloadRunnable;
 import kz.hxncus.mc.minesonapi.bukkit.world.WorldManager;
 import kz.hxncus.mc.minesonapi.color.ColorManager;
 import kz.hxncus.mc.minesonapi.config.ConfigManager;
 import lombok.Getter;
-import org.bukkit.Location;
+import lombok.ToString;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * The type Mineson api.
+ */
 @Getter
-public final class MinesonAPI extends JavaPlugin {
-    private static MinesonAPI instance;
-    private ColorManager colorManager;
-    private ConfigManager configManager;
-    private EventManager eventManager;
-    private InventoryManager inventoryManager;
-    private ServerManager serverManager;
-    private WorldManager worldManager;
-    private WorkloadRunnable runnable;
-
-    public MinesonAPI() {
-        instance = this;
-    }
-
-    public static MinesonAPI get() {
-        return instance;
-    }
-
-    public Location firstPos;
-    public Location secondPos;
-
-    @Override
-    public void onEnable() {
-        registerManagers();
-        registerRunnables();
-    }
-
-    @Override
-    public void onDisable() {
-        InventoryManager.closeAll();
-        EventManager.unregisterAll();
-        Scheduler.stopAllTimers();
-    }
-
-    public void registerManagers() {
-        this.colorManager = new ColorManager();
-        this.configManager = new ConfigManager(this);
-        this.eventManager = new EventManager(this);
-        this.worldManager = new WorldManager(this);
-        this.inventoryManager = new InventoryManager(this);
-        this.serverManager = new ServerManager(this, getServer());
-    }
-
-    public void registerRunnables() {
-        Scheduler.timer(1L, 1L, runnable = new WorkloadRunnable());
-        Scheduler.run(() -> {});
-    }
+@ToString
+public class MinesonAPI extends JavaPlugin implements Mineson {
+	@Getter
+	private static MinesonAPI instance;
+	private ColorManager colorManager;
+	private ConfigManager configManager;
+	private EventManager eventManager;
+	private InventoryManager inventoryManager;
+	private ServerManager serverManager;
+	private WorldManager worldManager;
+	
+	/**
+	 * Instantiates a new Mineson api.
+	 */
+	public MinesonAPI() {
+		instance = this;
+	}
+	
+	@Override
+	public void onDisable() {
+		Scheduler.stopTimers();
+		this.inventoryManager.closeAll();
+		this.eventManager.unregisterAll();
+	}
+	
+	@Override
+	public void onEnable() {
+		this.registerManagers();
+	}
+	
+	public void registerManagers() {
+		this.colorManager = new ColorManager();
+		this.configManager = new ConfigManager(this);
+		this.eventManager = new EventManager(this);
+		this.worldManager = new WorldManager(this);
+		this.inventoryManager = new InventoryManager(this);
+		this.serverManager = new ServerManager(this, this.getServer());
+	}
 }

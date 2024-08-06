@@ -67,7 +67,16 @@ tasks {
     compileJava.get().options.encoding = Charsets.UTF_8.name()
     javadoc.get().options.encoding = Charsets.UTF_8.name()
     processResources {
-        filesNotMatching(listOf("**/*.png", "**/*.ogg", "**/models/**", "**/textures/**", "**/font/**.json", "**/plugin.yml")) {
+        filesNotMatching(
+            listOf(
+                "**/*.png",
+                "**/*.ogg",
+                "**/models/**",
+                "**/textures/**",
+                "**/font/**.json",
+                "**/plugin.yml"
+            )
+        ) {
             expand(mapOf(project.version.toString() to version))
         }
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
@@ -91,15 +100,25 @@ tasks {
         relocate("org.slf4j", "$projectGroup.$projectNameLC.libs.slf4j")
         relocate("xsd", "$projectGroup.$projectNameLC.libs.xsd")
         manifest {
-            attributes(mapOf(
-                "Built-By" to System.getProperty("user.name"),
-                "Version" to version,
-                "Build-Timestamp" to SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSSZ") . format(Date.from(Instant.now())),
-                "Created-By" to "Gradle ${gradle.gradleVersion}",
-                "Build-Jdk" to "${System.getProperty("java.version")} ${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")}",
-                "Build-OS" to "${System.getProperty("os.name")} ${System.getProperty("os.arch")} ${System.getProperty("os.version")}",
-                "Compiled" to(project.findProperty("compiled")?.toString() ?: "true").toBoolean()
-            ))
+            attributes(
+                mapOf(
+                    "Built-By" to System.getProperty("user.name"),
+                    "Version" to version,
+                    "Build-Timestamp" to SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSSZ").format(Date.from(Instant.now())),
+                    "Created-By" to "Gradle ${gradle.gradleVersion}",
+                    "Build-Jdk" to "${System.getProperty("java.version")} ${System.getProperty("java.vendor")} ${
+                        System.getProperty(
+                            "java.vm.version"
+                        )
+                    }",
+                    "Build-OS" to "${System.getProperty("os.name")} ${System.getProperty("os.arch")} ${
+                        System.getProperty(
+                            "os.version"
+                        )
+                    }",
+                    "Compiled" to (project.findProperty("compiled")?.toString() ?: "true").toBoolean()
+                )
+            )
         }
         archiveFileName.set(rootProject.name + "-${version}.jar")
         archiveClassifier.set("")
@@ -108,4 +127,4 @@ tasks {
     build.get().dependsOn(shadowJar)
 }
 
-tasks.jar {enabled = false}
+tasks.jar { enabled = false }

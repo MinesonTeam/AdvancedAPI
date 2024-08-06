@@ -1,7 +1,7 @@
 name: Java CI with Gradle
 on:
   release:
-    types: [published]
+    types: [ published ]
 jobs:
   build:
     permissions: write-all

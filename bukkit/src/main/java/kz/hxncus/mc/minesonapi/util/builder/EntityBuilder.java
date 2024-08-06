@@ -12,36 +12,36 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import java.util.function.Consumer;
 
 public class EntityBuilder {
-    private final Entity entity;
-
-    public EntityBuilder(@NonNull Location location, @NonNull World world, @NonNull EntityType type) {
-        this.entity = world.spawnEntity(location, type);
-    }
-
-    public EntityBuilder meta(Consumer<Entity> metaConsumer) {
-        if (entity != null) {
-            metaConsumer.accept(entity);
-        }
-        return this;
-    }
-
-    public <T extends Entity> EntityBuilder meta(Class<T> metaClass, Consumer<T> metaConsumer) {
-        return meta(meta -> {
-            if (metaClass.isInstance(meta)) {
-                metaConsumer.accept(metaClass.cast(meta));
-            }
-        });
-    }
-
-    public EntityBuilder fireworkMeta(Consumer<FireworkMeta> consumer) {
-        return meta(Firework.class, firework -> {
-            FireworkMeta meta = firework.getFireworkMeta();
-            consumer.accept(meta);
-            firework.setFireworkMeta(meta);
-        });
-    }
-
-    public EntityBuilder itemMeta(Consumer<Item> consumer) {
-        return meta(Item.class, consumer);
-    }
+	private final Entity entity;
+	
+	public EntityBuilder(@NonNull final Location location, @NonNull final World world, @NonNull final EntityType type) {
+		this.entity = world.spawnEntity(location, type);
+	}
+	
+	public EntityBuilder fireworkMeta(final Consumer<FireworkMeta> consumer) {
+		return this.meta(Firework.class, firework -> {
+			final FireworkMeta meta = firework.getFireworkMeta();
+			consumer.accept(meta);
+			firework.setFireworkMeta(meta);
+		});
+	}
+	
+	public <T extends Entity> EntityBuilder meta(final Class<T> metaClass, final Consumer<T> metaConsumer) {
+		return this.meta(meta -> {
+			if (metaClass.isInstance(meta)) {
+				metaConsumer.accept(metaClass.cast(meta));
+			}
+		});
+	}
+	
+	public EntityBuilder meta(final Consumer<Entity> metaConsumer) {
+		if (this.entity != null) {
+			metaConsumer.accept(this.entity);
+		}
+		return this;
+	}
+	
+	public EntityBuilder itemMeta(final Consumer<Item> consumer) {
+		return this.meta(Item.class, consumer);
+	}
 }

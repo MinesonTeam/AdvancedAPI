@@ -9,17 +9,31 @@ import org.bukkit.command.Command;
 import org.bukkit.craftbukkit.v1_21_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_21_R1.command.VanillaCommandWrapper;
 
+/**
+ * The type Nms 1 21 r 1.
+ */
 public class NMS_1_21_R1 {
-    public DedicatedServer getMinecraftServer() {
-        Server var2 = Bukkit.getServer();
-        if (var2 instanceof CraftServer server) {
-            return server.getServer();
-        } else {
-            return null;
-        }
-    }
-
-    public Command wrapToVanillaCommandWrapper(CommandNode<CommandSourceStack> node) {
-        return new VanillaCommandWrapper(getMinecraftServer().vanillaCommandDispatcher, node);
-    }
+	/**
+	 * Wrap-to-vanilla command wrapper command.
+	 *
+	 * @param node the node
+	 * @return the command
+	 */
+	public Command wrapToVanillaCommandWrapper(final CommandNode<CommandSourceStack> node) {
+		return new VanillaCommandWrapper(this.getMinecraftServer().vanillaCommandDispatcher, node);
+	}
+	
+	/**
+	 * Gets minecraft server.
+	 *
+	 * @return the minecraft server
+	 */
+	public DedicatedServer getMinecraftServer() {
+		final Server var2 = Bukkit.getServer();
+		if (var2 instanceof final CraftServer server) {
+			return server.getServer();
+		} else {
+			return null;
+		}
+	}
 }

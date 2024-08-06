@@ -1,7 +1,15 @@
 package kz.hxncus.mc.minesonapi.bukkit.command.argument;
 
+/**
+ * The type Long argument.
+ */
 public class LongArgument extends NumberArgument {
-    protected LongArgument(String nodeName) {
-        super(nodeName);
-    }
+	/**
+	 * Instantiates a new Long argument.
+	 *
+	 * @param nodeName the node name
+	 */
+	public LongArgument(final String nodeName) {
+		super(nodeName);
+	}
 }

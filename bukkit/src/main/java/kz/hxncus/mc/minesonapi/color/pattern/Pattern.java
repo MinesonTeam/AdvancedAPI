@@ -1,5 +1,5 @@
 package kz.hxncus.mc.minesonapi.color.pattern;
 
 public interface Pattern {
-    String process(String paramString);
+	String process(String paramString);
 }

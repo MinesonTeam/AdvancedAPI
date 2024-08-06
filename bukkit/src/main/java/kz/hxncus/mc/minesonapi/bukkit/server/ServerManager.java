@@ -14,52 +14,57 @@ import java.util.Map;
 @Getter
 @EqualsAndHashCode
 public class ServerManager {
-    private static MinesonAPI plugin;
-    private final Server server;
-
-    public ServerManager(MinesonAPI plugin, Server server) {
-        ServerManager.plugin = plugin;
-        this.server = server;
-    }
-
-    public SimplePluginManager getSimplePluginManager() {
-        return (SimplePluginManager) server.getPluginManager();
-    }
-
-    public SimpleCommandMap getSimpleCommandMap() {
-        try {
-            Field commandMapField = getSimplePluginManager().getClass().getDeclaredField("commandMap");
-            commandMapField.setAccessible(true);
-            return (SimpleCommandMap) commandMapField.get(getSimplePluginManager());
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Map<String, Command> getKnownCommands() {
-        try {
-            SimpleCommandMap commandMap = getSimpleCommandMap();
-            Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
-            knownCommandsField.setAccessible(true);
-            return (Map<String, Command>) knownCommandsField.get(commandMap);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean isPaperServer() {
-        if (server.getName().equalsIgnoreCase("Paper")) {
-            return true;
-        }
-        try {
-            Class.forName("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
-    public boolean isFoliaServer() {
-        return server.getName().equalsIgnoreCase("Folia");
-    }
+	private static MinesonAPI plugin;
+	private final Server server;
+	
+	public ServerManager(final MinesonAPI plugin, final Server server) {
+		ServerManager.plugin = plugin;
+		this.server = server;
+	}
+	
+	public Map<String, Command> getKnownCommands() {
+		try {
+			final SimpleCommandMap commandMap = this.getSimpleCommandMap();
+			final Field knownCommandsField = commandMap.getClass()
+			                                           .getDeclaredField("knownCommands");
+			knownCommandsField.setAccessible(true);
+			return (Map<String, Command>) knownCommandsField.get(commandMap);
+		} catch (final NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public SimpleCommandMap getSimpleCommandMap() {
+		try {
+			final Field commandMapField = this.getSimplePluginManager()
+			                                  .getClass()
+			                                  .getDeclaredField("commandMap");
+			commandMapField.setAccessible(true);
+			return (SimpleCommandMap) commandMapField.get(this.getSimplePluginManager());
+		} catch (final NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public SimplePluginManager getSimplePluginManager() {
+		return (SimplePluginManager) this.server.getPluginManager();
+	}
+	
+	public boolean isPaperServer() {
+		if ("Paper"
+				.equalsIgnoreCase(this.server.getName())) {
+			return true;
+		}
+		try {
+			Class.forName("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent");
+			return true;
+		} catch (final ClassNotFoundException e) {
+			return false;
+		}
+	}
+	
+	public boolean isFoliaServer() {
+		return "Folia"
+				.equalsIgnoreCase(this.server.getName());
+	}
 }

@@ -1,42 +1,54 @@
 package kz.hxncus.mc.minesonapi.bukkit.bossbar;
 
 import kz.hxncus.mc.minesonapi.bukkit.scheduler.Scheduler;
+import lombok.ToString;
 
+/**
+ * The type Animated boss bar.
+ */
+@ToString
 public class AnimatedBossBar extends SimpleBossBar implements Animatable {
-    private final AnimationType animationType;
-    private final long delay;
-    private final long period;
-
-    public AnimatedBossBar(AnimationType animationType, long delay, long period) {
-        this.animationType = animationType;
-        this.delay = delay;
-        this.period = period;
-    }
-
-    @Override
-    public void stopAnimation() {
-
-    }
-
-    @Override
-    public void startAnimation(Scheduler scheduler) {
-        Scheduler.timerAsync(0L, 20L, () -> {
-            switch (animationType) {
-                case STATIC:
-                    startStaticAnimation();
-                    break;
-                case PROGRESSIVE:
-                    startProgressiveAnimation();
-                    break;
-            }
-        });
-    }
-
-    private void startStaticAnimation() {
-
-    }
-
-    private void startProgressiveAnimation() {
-
-    }
+	private final AnimationType animationType;
+	private final long delay;
+	private final long period;
+	
+	/**
+	 * Instantiates a new Animated boss bar.
+	 *
+	 * @param animationType the animation type
+	 * @param delay         the delay
+	 * @param period        the period
+	 */
+	public AnimatedBossBar(final AnimationType animationType, final long delay, final long period) {
+		this.animationType = animationType;
+		this.delay = delay;
+		this.period = period;
+	}
+	
+	@Override
+	public void stopAnimation() {
+	
+	}
+	
+	@Override
+	public void startAnimation(final Scheduler scheduler) {
+		Scheduler.timerAsync(this.delay, this.period, () -> {
+			switch (this.animationType) {
+				case STATIC:
+					this.startStaticAnimation();
+					break;
+				case PROGRESSIVE:
+					this.startProgressiveAnimation();
+					break;
+			}
+		});
+	}
+	
+	private void startStaticAnimation() {
+	
+	}
+	
+	private void startProgressiveAnimation() {
+	
+	}
 }

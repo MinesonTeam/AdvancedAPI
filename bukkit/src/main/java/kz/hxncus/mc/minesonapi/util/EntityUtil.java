@@ -10,42 +10,45 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 @UtilityClass
 public class EntityUtil {
-    public static boolean isUnderWater(Entity entity) {
-        ServerManager serverManager = MinesonAPI.get().getServerManager();
-        if (serverManager.isPaperServer() && VersionUtil.afterOrEqual(1190)) {
-//            return entity.isUnderWater();
-            return false;
-        } else {
-            return entity.isInWater();
-        }
-    }
-
-    public static boolean isFixed(ItemDisplay itemDisplay) {
-        return itemDisplay.getItemDisplayTransform() == ItemDisplay.ItemDisplayTransform.FIXED;
-    }
-
-    public static boolean isNone(ItemDisplay itemDisplay) {
-        return itemDisplay.getItemDisplayTransform() == ItemDisplay.ItemDisplayTransform.NONE;
-    }
-
-    public void teleport(Location location, Entity entity, PlayerTeleportEvent.TeleportCause cause) {
-        ServerManager serverManager = MinesonAPI.get().getServerManager();
-        if (serverManager.isPaperServer() || serverManager.isFoliaServer() && VersionUtil.afterOrEqual(1194)) {
-//            entity.teleportAsync(location, cause);
-            entity.teleport(location);
-        } else {
-            entity.teleport(location);
-        }
-    }
-
-    public static void teleport(Location location, Entity entity) {
-        ServerManager serverManager = MinesonAPI.get().getServerManager();
-        if (VersionUtil.afterOrEqual(1194) && (serverManager.isPaperServer() || serverManager.isFoliaServer())) {
-//            entity.teleportAsync(location);
-            entity.teleport(location);
-        } else {
-            entity.teleport(location);
-        }
-    }
-
+	public static boolean isUnderWater(final Entity entity) {
+		final ServerManager serverManager = MinesonAPI.getInstance()
+		                                              .getServerManager();
+		if (serverManager.isPaperServer() && VersionUtil.afterOrEqual(1190)) {
+			//            return entity.isUnderWater();
+			return false;
+		} else {
+			return entity.isInWater();
+		}
+	}
+	
+	public static boolean isFixed(final ItemDisplay itemDisplay) {
+		return itemDisplay.getItemDisplayTransform() == ItemDisplay.ItemDisplayTransform.FIXED;
+	}
+	
+	public static boolean isNone(final ItemDisplay itemDisplay) {
+		return itemDisplay.getItemDisplayTransform() == ItemDisplay.ItemDisplayTransform.NONE;
+	}
+	
+	public void teleport(final Location location, final Entity entity, final PlayerTeleportEvent.TeleportCause cause) {
+		final ServerManager serverManager = MinesonAPI.getInstance()
+		                                              .getServerManager();
+		if (serverManager.isPaperServer() || serverManager.isFoliaServer() && VersionUtil.afterOrEqual(1194)) {
+			//            entity.teleportAsync(location, cause);
+			entity.teleport(location);
+		} else {
+			entity.teleport(location);
+		}
+	}
+	
+	public static void teleport(final Location location, final Entity entity) {
+		final ServerManager serverManager = MinesonAPI.getInstance()
+		                                              .getServerManager();
+		if (VersionUtil.afterOrEqual(1194) && (serverManager.isPaperServer() || serverManager.isFoliaServer())) {
+			//            entity.teleportAsync(location);
+			entity.teleport(location);
+		} else {
+			entity.teleport(location);
+		}
+	}
+	
 }

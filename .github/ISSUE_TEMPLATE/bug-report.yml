@@ -1,6 +1,6 @@
 name: 🐜 Bug report
 description: Found something that doesn't work as expected? Raise it here!
-labels: ["bug"]
+labels: [ "bug" ]
 body:
   - type: markdown
     attributes:

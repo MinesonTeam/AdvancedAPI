@@ -10,7 +10,8 @@
 
 ### Early supporters
 
-> Users who bought the plugin during its beta (version 0.x) and decided to trust me and support the project while it was not yet finished.
+> Users who bought the plugin during its beta (version 0.x) and decided to trust me and support the project while it was
+> not yet finished.
 
 * Noone
 

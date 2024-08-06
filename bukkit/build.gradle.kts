@@ -15,6 +15,7 @@ group = "kz.hxncus.mc"
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:$spigot")
+    compileOnly(project(":api"))
 
     implementation("org.bstats:bstats-bukkit:$bstats")
     implementation("com.zaxxer:HikariCP:$hikaricp")
@@ -27,7 +28,16 @@ tasks {
     compileJava.get().options.encoding = Charsets.UTF_8.name()
     javadoc.get().options.encoding = Charsets.UTF_8.name()
     processResources {
-        filesNotMatching(listOf("**/*.png", "**/*.ogg", "**/models/**", "**/textures/**", "**/font/**.json", "**/plugin.yml")) {
+        filesNotMatching(
+            listOf(
+                "**/*.png",
+                "**/*.ogg",
+                "**/models/**",
+                "**/textures/**",
+                "**/font/**.json",
+                "**/plugin.yml"
+            )
+        ) {
             expand(mapOf(project.version.toString() to version))
         }
         duplicatesStrategy = DuplicatesStrategy.INCLUDE

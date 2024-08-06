@@ -18,175 +18,177 @@ import java.net.URI;
 import java.util.*;
 
 public class SimpleConfig extends YamlConfiguration {
-    private final File file;
-
-    public SimpleConfig(File parent, String child) {
-        this.file = new File(parent, child);
-        reloadConfig();
-    }
-
-    public SimpleConfig(String parent, String child) {
-        this.file = new File(parent, child);
-        reloadConfig();
-    }
-
-    public SimpleConfig(String path) {
-        this.file = new File(path);
-        reloadConfig();
-    }
-
-    public SimpleConfig(URI uri) {
-        this.file = new File(uri);
-        reloadConfig();
-    }
-
-    public void save() {
-        try {
-            save(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void createFile() {
-        try {
-            this.file.getParentFile().mkdirs();
-            this.file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException();
-        }
-    }
-
-    public void reloadConfig() {
-        createFile();
-        try {
-            load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void setAndSave(@NonNull String path, @NonNull Object value) {
-        set(path, value);
-        save();
-    }
-
-    public UUID getUuid(@NonNull String path) {
-        try {
-            return UUID.fromString(get(path, "").toString());
-        } catch (IllegalArgumentException e) {
-            return UUIDUtil.EMPTY_UUID;
-        }
-    }
-
-    public boolean isUuid(@NonNull String path) {
-        return getUuid(path) != UUIDUtil.EMPTY_UUID;
-    }
-
-    @NonNull
-    public Material getMaterial(@NonNull String path, @NonNull Material def) {
-        Material material = getMaterial(path);
-        return material == null ? def : material;
-    }
-
-    public Material getMaterial(@NonNull String path) {
-        return Material.getMaterial(getString(path, ""));
-    }
-
-    public boolean isMaterial(@NonNull String path) {
-        return getMaterial(path) != null;
-    }
-
-    @NonNull
-    public Set<String> getKeys(String path, boolean deep) {
-        ConfigurationSection section = getConfigurationSection(path);
-        if (section == null) {
-            return Collections.emptySet();
-        }
-        return section.getKeys(deep);
-    }
-
-    public List<Material> getMaterialList(@NonNull String path) {
-        List<Material> list = new LinkedList<>();
-        for (String key : getKeys(path, false)) {
-            list.add(getMaterial(path + "." + key));
-        }
-        return list;
-    }
-
-    @NonNull
-    public Entity getEntity(@NonNull String path, @NonNull Entity def) {
-        Entity entity = Bukkit.getEntity(getUuid(path));
-        return entity == null ? def : entity;
-    }
-
-    public Entity getEntity(@NonNull String path) {
-        return Bukkit.getEntity(getUuid(path));
-    }
-
-    public boolean isEntity(@NonNull String path) {
-        return getEntity(path) != null;
-    }
-
-    public List<Entity> getEntityList(@NonNull String path) {
-        List<Entity> list = new LinkedList<>();
-        for (String key : getKeys(path, false)) {
-            list.add(getEntity(path + "." + key));
-        }
-        return list;
-    }
-
-    @Override
-    @NonNull
-    public OfflinePlayer getOfflinePlayer(@NonNull String path) {
-        UUID uuid = getUuid(path);
-        if (uuid == UUIDUtil.EMPTY_UUID) {
-            return Bukkit.getOfflinePlayer(getString(path, ""));
-        } else {
-            return Bukkit.getOfflinePlayer(uuid);
-        }
-    }
-
-    public List<OfflinePlayer> getOfflinePlayerList(@NonNull String path) {
-        List<OfflinePlayer> list = new LinkedList<>();
-        for (String key : getKeys(path, false)) {
-            list.add(getOfflinePlayer(path + "." + key));
-        }
-        return list;
-    }
-
-    public Player getOnlinePlayer(@NonNull String path) {
-        UUID uuid = getUuid(path);
-        if (uuid == UUIDUtil.EMPTY_UUID) {
-            return Bukkit.getPlayer(getString(path, ""));
-        } else {
-            return Bukkit.getPlayer(uuid);
-        }
-    }
-
-    @NonNull
-    public Player getOnlinePlayer(@NonNull String path, Player def) {
-        Player player = getOnlinePlayer(path);
-        return player == null ? def : player;
-    }
-
-    public boolean isOnlinePlayer(@NonNull String path) {
-        return getOnlinePlayer(path) != null;
-    }
-
-    public List<Player> getOnlinePlayerList(@NonNull String path) {
-        List<Player> list = new LinkedList<>();
-        for (String key : getKeys(path, false)) {
-            list.add(getOnlinePlayer(path + "." + key));
-        }
-        return list;
-    }
-
-    public List<ItemStack> getItemStackList(@NonNull String path) {
-        List<ItemStack> list = new LinkedList<>();
-        for (String key : getKeys(path, false)) {
-            list.add(getItemStack(path + "." + key));
-        }
-        return list;
-    }
+	private final File file;
+	
+	public SimpleConfig(final File parent, final String child) {
+		this.file = new File(parent, child);
+		this.reloadConfig();
+	}
+	
+	public void reloadConfig() {
+		this.createFile();
+		try {
+			this.load(this.file);
+		} catch (final IOException | InvalidConfigurationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public void createFile() {
+		try {
+			this.file.getParentFile()
+			         .mkdirs();
+			this.file.createNewFile();
+		} catch (final IOException e) {
+			throw new RuntimeException();
+		}
+	}
+	
+	public SimpleConfig(final String parent, final String child) {
+		this.file = new File(parent, child);
+		this.reloadConfig();
+	}
+	
+	public SimpleConfig(final String path) {
+		this.file = new File(path);
+		this.reloadConfig();
+	}
+	
+	public SimpleConfig(final URI uri) {
+		this.file = new File(uri);
+		this.reloadConfig();
+	}
+	
+	public void setAndSave(@NonNull final String path, @NonNull final Object value) {
+		this.set(path, value);
+		this.save();
+	}
+	
+	public void save() {
+		try {
+			this.save(this.file);
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public boolean isUuid(@NonNull final String path) {
+		return this.getUuid(path) != UUIDUtil.EMPTY_UUID;
+	}
+	
+	public UUID getUuid(@NonNull final String path) {
+		try {
+			return UUID.fromString(this.get(path, "")
+			                           .toString());
+		} catch (final IllegalArgumentException e) {
+			return UUIDUtil.EMPTY_UUID;
+		}
+	}
+	
+	@NonNull
+	public Material getMaterial(@NonNull final String path, @NonNull final Material def) {
+		final Material material = this.getMaterial(path);
+		return material == null ? def : material;
+	}
+	
+	public Material getMaterial(@NonNull final String path) {
+		return Material.getMaterial(this.getString(path, ""));
+	}
+	
+	public boolean isMaterial(@NonNull final String path) {
+		return this.getMaterial(path) != null;
+	}
+	
+	public List<Material> getMaterialList(@NonNull final String path) {
+		final List<Material> list = new LinkedList<>();
+		for (final String key : this.getKeys(path, false)) {
+			list.add(this.getMaterial(path + "." + key));
+		}
+		return list;
+	}
+	
+	@NonNull
+	public Set<String> getKeys(final String path, final boolean deep) {
+		final ConfigurationSection section = this.getConfigurationSection(path);
+		if (section == null) {
+			return Collections.emptySet();
+		}
+		return section.getKeys(deep);
+	}
+	
+	@NonNull
+	public Entity getEntity(@NonNull final String path, @NonNull final Entity def) {
+		final Entity entity = Bukkit.getEntity(this.getUuid(path));
+		return entity == null ? def : entity;
+	}
+	
+	public boolean isEntity(@NonNull final String path) {
+		return this.getEntity(path) != null;
+	}
+	
+	public Entity getEntity(@NonNull final String path) {
+		return Bukkit.getEntity(this.getUuid(path));
+	}
+	
+	public List<Entity> getEntityList(@NonNull final String path) {
+		final List<Entity> list = new LinkedList<>();
+		for (final String key : this.getKeys(path, false)) {
+			list.add(this.getEntity(path + "." + key));
+		}
+		return list;
+	}
+	
+	public List<OfflinePlayer> getOfflinePlayerList(@NonNull final String path) {
+		final List<OfflinePlayer> list = new LinkedList<>();
+		for (final String key : this.getKeys(path, false)) {
+			list.add(this.getOfflinePlayer(path + "." + key));
+		}
+		return list;
+	}
+	
+	@Override
+	@NonNull
+	public OfflinePlayer getOfflinePlayer(@NonNull final String path) {
+		final UUID uuid = this.getUuid(path);
+		if (uuid == UUIDUtil.EMPTY_UUID) {
+			return Bukkit.getOfflinePlayer(this.getString(path, ""));
+		} else {
+			return Bukkit.getOfflinePlayer(uuid);
+		}
+	}
+	
+	@NonNull
+	public Player getOnlinePlayer(@NonNull final String path, final Player def) {
+		final Player player = this.getOnlinePlayer(path);
+		return player == null ? def : player;
+	}
+	
+	public Player getOnlinePlayer(@NonNull final String path) {
+		final UUID uuid = this.getUuid(path);
+		if (uuid == UUIDUtil.EMPTY_UUID) {
+			return Bukkit.getPlayer(this.getString(path, ""));
+		} else {
+			return Bukkit.getPlayer(uuid);
+		}
+	}
+	
+	public boolean isOnlinePlayer(@NonNull final String path) {
+		return this.getOnlinePlayer(path) != null;
+	}
+	
+	public List<Player> getOnlinePlayerList(@NonNull final String path) {
+		final List<Player> list = new LinkedList<>();
+		for (final String key : this.getKeys(path, false)) {
+			list.add(this.getOnlinePlayer(path + "." + key));
+		}
+		return list;
+	}
+	
+	public List<ItemStack> getItemStackList(@NonNull final String path) {
+		final List<ItemStack> list = new LinkedList<>();
+		for (final String key : this.getKeys(path, false)) {
+			list.add(this.getItemStack(path + "." + key));
+		}
+		return list;
+	}
 }

@@ -1,6 +1,6 @@
 name: 📄 Documentation amendment
 description: Is there something wrong with the documentation? Raise it here!
-labels: ["documentation"]
+labels: [ "documentation" ]
 body:
   - type: input
     id: link

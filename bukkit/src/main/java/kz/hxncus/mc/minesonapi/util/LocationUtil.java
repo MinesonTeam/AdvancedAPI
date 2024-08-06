@@ -7,36 +7,36 @@ import org.bukkit.World;
 
 @UtilityClass
 public class LocationUtil {
-    public Location getRandomLocation(World world, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-        SimpleRandom random = SimpleRandom.get();
-        int x = random.nextInt(maxX - minX);
-        int y = random.nextInt(maxY - minY);
-        int z = random.nextInt(maxZ - minZ);
-        return new Location(world, x, y, z);
-    }
-
-    public Location getRandomLocation(World world, int min, int max, LocationUtil.Coordinate coordinate) {
-        switch (coordinate) {
-            case X: {
-                return getRandomLocation(world, min, 0, 0, max, 0, 0);
-            }
-            case Y: {
-                return getRandomLocation(world, 0, min, 0, 0, max, 0);
-            }
-            case Z: {
-                return getRandomLocation(world, 0, 0, min, 0, 0, max);
-            }
-            default: {
-                return getRandomLocation(world, min, min, min, max, max, max);
-            }
-        }
-    }
-
-    public Location getRandomLocation(World world, int minX, int minZ, int maxX, int maxZ) {
-        return getRandomLocation(world, minX, 0, minZ, maxX, 0, maxZ);
-    }
-
-    public enum Coordinate {
-        X, Y, Z;
-    }
+	public Location getRandomLocation(final World world, final int min, final int max, final LocationUtil.Coordinate coordinate) {
+		switch (coordinate) {
+			case X: {
+				return getRandomLocation(world, min, 0, 0, max, 0, 0);
+			}
+			case Y: {
+				return getRandomLocation(world, 0, min, 0, 0, max, 0);
+			}
+			case Z: {
+				return getRandomLocation(world, 0, 0, min, 0, 0, max);
+			}
+			default: {
+				return getRandomLocation(world, min, min, min, max, max, max);
+			}
+		}
+	}
+	
+	public Location getRandomLocation(final World world, final int minX, final int minY, final int minZ, final int maxX, final int maxY, final int maxZ) {
+		final SimpleRandom random = SimpleRandom.get();
+		final int x = random.nextInt(maxX - minX);
+		final int y = random.nextInt(maxY - minY);
+		final int z = random.nextInt(maxZ - minZ);
+		return new Location(world, x, y, z);
+	}
+	
+	public Location getRandomLocation(final World world, final int minX, final int minZ, final int maxX, final int maxZ) {
+		return getRandomLocation(world, minX, 0, minZ, maxX, 0, maxZ);
+	}
+	
+	public enum Coordinate {
+		X, Y, Z
+	}
 }

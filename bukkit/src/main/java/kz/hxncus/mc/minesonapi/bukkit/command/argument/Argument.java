@@ -1,5 +1,13 @@
 package kz.hxncus.mc.minesonapi.bukkit.command.argument;
 
+/**
+ * The interface Argument.
+ */
 public interface Argument {
-    void setOptional(boolean optional);
+	/**
+	 * Sets optional.
+	 *
+	 * @param optional the optional
+	 */
+	void setOptional(boolean optional);
 }

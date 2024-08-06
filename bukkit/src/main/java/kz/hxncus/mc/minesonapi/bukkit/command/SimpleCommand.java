@@ -1,9 +1,15 @@
 package kz.hxncus.mc.minesonapi.bukkit.command;
 
+/**
+ * The type Simple command.
+ */
 public class SimpleCommand extends AbstractCommand {
-    public SimpleCommand(String commandName) {
-        super(commandName);
-    }
-
-    
+	/**
+	 * Instantiates a new Simple command.
+	 *
+	 * @param commandName the command name
+	 */
+	public SimpleCommand(final String commandName) {
+		super(commandName);
+	}
 }
