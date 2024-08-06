@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 @Getter
 @ToString
-public class MinesonAPI extends JavaPlugin implements Mineson {
+public class MinesonAPI extends JavaPlugin {
 	@Getter
 	private static MinesonAPI instance;
 	private ColorManager colorManager;

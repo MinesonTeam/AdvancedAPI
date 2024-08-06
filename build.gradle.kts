@@ -85,20 +85,14 @@ tasks {
     shadowJar {
         nmsVersionList.forEach { dependsOn(":${it}:remap") }
         archiveClassifier.set("")
-        relocate("org.bstats", "$projectGroup.$projectNameLC.metrics")
-        relocate("ch.qos", "$projectGroup.$projectNameLC.libs.ch.qos")
         relocate("com", "$projectGroup.$projectNameLC.libs.com")
-        relocate("it.unimi.dsi", "$projectGroup.$projectNameLC.libs.fastutil")
         relocate("javax", "$projectGroup.$projectNameLC.libs.javax")
-        relocate("migrations", "$projectGroup.$projectNameLC.libs.migrations")
-        relocate("assets.org", "$projectGroup.$projectNameLC.libs")
-        relocate("org.apache", "$projectGroup.$projectNameLC.libs.apache")
-        relocate("org.checkerframework", "$projectGroup.$projectNameLC.libs.checkerframework")
-        relocate("org.codehaus", "$projectGroup.$projectNameLC.libs.codehaus")
+        relocate("org.bstats", "$projectGroup.$projectNameLC.metrics")
         relocate("org.jooq", "$projectGroup.$projectNameLC.libs.jooq")
+        relocate("migrations", "$projectGroup.$projectNameLC.libs.jooq")
         relocate("org.reactivestreams", "$projectGroup.$projectNameLC.libs.reactivestreams")
         relocate("org.slf4j", "$projectGroup.$projectNameLC.libs.slf4j")
-        relocate("xsd", "$projectGroup.$projectNameLC.libs.xsd")
+        relocate("xsd", "$projectGroup.$projectNameLC.libs.jooq")
         manifest {
             attributes(
                 mapOf(

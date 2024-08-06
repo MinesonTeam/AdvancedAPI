@@ -34,23 +34,23 @@ public class WorldSettings {
 				consumerWorld.setBiome(key.getLeft(), key.getMiddle(), key.getRight(), entry.getValue());
 			}
 		}, world);
-		FunctionalUtil.acceptIfTrue(() -> this.tripletBlockDataMap != null, consumerWorld -> {
-			for (final Map.Entry<Triplet<Integer, Integer, Integer>, BlockData> entry : this.tripletBlockDataMap.entrySet()) {
-				final Triplet<Integer, Integer, Integer> key = entry.getKey();
-				consumerWorld.setBlockData(key.getLeft(), key.getMiddle(), key.getRight(), entry.getValue());
-			}
-		}, world);
-		FunctionalUtil.acceptIfTrue(() -> this.chunkBoolMap != null, consumerWorld -> {
-			for (final Map.Entry<Pair<Integer, Integer>, Boolean> entry : this.chunkBoolMap.entrySet()) {
-				final Pair<Integer, Integer> key = entry.getKey();
-				consumerWorld.setChunkForceLoaded(key.getLeft(), key.getRight(), entry.getValue());
-			}
-		}, world);
-		FunctionalUtil.acceptIfTrue(() -> this.clearWeatherDuration != null, consumerWorld -> consumerWorld.setClearWeatherDuration(this.clearWeatherDuration), world);
-		FunctionalUtil.acceptIfTrue(() -> this.difficulty != null, consumerWorld -> consumerWorld.setDifficulty(this.difficulty), world);
-		FunctionalUtil.acceptIfTrue(() -> this.fullTime != null, consumerWorld -> consumerWorld.setFullTime(this.fullTime), world);
-		FunctionalUtil.acceptIfTrue(() -> this.hardcore != null, consumerWorld -> consumerWorld.setHardcore(this.hardcore), world);
-		FunctionalUtil.acceptIfTrue(() -> this.storm != null, consumerWorld -> consumerWorld.setStorm(this.storm), world);
+//		FunctionalUtil.acceptIfTrue(() -> this.tripletBlockDataMap != null, consumerWorld -> {
+//			for (final Map.Entry<Triplet<Integer, Integer, Integer>, BlockData> entry : this.tripletBlockDataMap.entrySet()) {
+//				final Triplet<Integer, Integer, Integer> key = entry.getKey();
+//				consumerWorld.setBlockData(key.getLeft(), key.getMiddle(), key.getRight(), entry.getValue());
+//			}
+//		}, world);
+//		FunctionalUtil.acceptIfTrue(() -> this.chunkBoolMap != null, consumerWorld -> {
+//			for (final Map.Entry<Pair<Integer, Integer>, Boolean> entry : this.chunkBoolMap.entrySet()) {
+//				final Pair<Integer, Integer> key = entry.getKey();
+//				consumerWorld.setChunkForceLoaded(key.getLeft(), key.getRight(), entry.getValue());
+//			}
+//		}, world);
+//		FunctionalUtil.acceptIfTrue(() -> this.clearWeatherDuration != null, consumerWorld -> consumerWorld.setClearWeatherDuration(this.clearWeatherDuration), world);
+//		FunctionalUtil.acceptIfTrue(() -> this.difficulty != null, consumerWorld -> consumerWorld.setDifficulty(this.difficulty), world);
+//		FunctionalUtil.acceptIfTrue(() -> this.fullTime != null, consumerWorld -> consumerWorld.setFullTime(this.fullTime), world);
+//		FunctionalUtil.acceptIfTrue(() -> this.hardcore != null, consumerWorld -> consumerWorld.setHardcore(this.hardcore), world);
+//		FunctionalUtil.acceptIfTrue(() -> this.storm != null, consumerWorld -> consumerWorld.setStorm(this.storm), world);
 		return world;
 	}
 }

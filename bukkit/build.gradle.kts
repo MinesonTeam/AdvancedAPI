@@ -20,8 +20,6 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:$bstats")
     implementation("com.zaxxer:HikariCP:$hikaricp")
     implementation("org.jooq:jooq:$jooq")
-    implementation("org.apache.commons:commons-math3:$apachemath3")
-    implementation("it.unimi.dsi:dsiutils:$dsiutils")
 }
 
 tasks {
