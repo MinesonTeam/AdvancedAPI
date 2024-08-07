@@ -36,7 +36,7 @@ public class InventoryManager {
 	}
 	
 	private ItemMarker getItemMarker(final MinesonAPI plugin) {
-		if (VersionUtil.afterOrEqual(1140)) {
+		if (VersionUtil.isAfterOrEqual(1140)) {
 			return new PDCItemMarker(plugin);
 		} else {
 			return new UnavailableItemMarker();

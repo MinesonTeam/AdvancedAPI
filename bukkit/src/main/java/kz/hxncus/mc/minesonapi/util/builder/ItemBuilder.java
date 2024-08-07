@@ -1,16 +1,17 @@
 package kz.hxncus.mc.minesonapi.util.builder;
 
-import kz.hxncus.mc.minesonapi.util.ItemUtil;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import org.bukkit.*;
+import lombok.ToString;
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Arrays;
@@ -19,49 +20,110 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * Class Item builder.
+ *
+ * @author Hxncus
+ * @since 1.0.0
+ */
+@ToString
 @EqualsAndHashCode(callSuper = false)
 public class ItemBuilder {
 	private final ItemStack itemStack;
 	private final ItemMeta itemMeta;
 	
+	/**
+	 * Instantiates a new Item builder.
+	 *
+	 * @param itemStack the item stack
+	 */
 	public ItemBuilder(final ItemStack itemStack) {
 		this.itemStack = itemStack;
 		this.itemMeta = itemStack.getItemMeta();
 	}
 	
+	/**
+	 * Instantiates a new Item builder.
+	 *
+	 * @param type the type
+	 */
 	public ItemBuilder(final Material type) {
 		this.itemStack = new ItemStack(type);
 		this.itemMeta = this.itemStack.getItemMeta();
 	}
 	
+	/**
+	 * Instantiates a new Item builder.
+	 *
+	 * @param type   the type
+	 * @param amount the amount
+	 */
 	public ItemBuilder(final Material type, final int amount) {
 		this.itemStack = new ItemStack(type, amount);
 		this.itemMeta = this.itemStack.getItemMeta();
 	}
 	
-	public ItemBuilder displayName(final String name) {
+	/**
+	 * Display name item builder.
+	 *
+	 * @param name the name
+	 * @return the item builder
+	 */
+	public ItemBuilder setDisplayName(final String name) {
 		this.itemMeta.setDisplayName(name);
 		return this;
 	}
 	
+	/**
+	 * Lore item builder.
+	 *
+	 * @param lore the lore
+	 * @return the item builder
+	 */
 	public ItemBuilder lore(final String lore) {
 		return this.loreString(Collections.singletonList(lore));
 	}
 	
+	/**
+	 * Lore string item builder.
+	 *
+	 * @param lore the lore
+	 * @return the item builder
+	 */
+	@SuppressWarnings("TypeMayBeWeakened")
 	public ItemBuilder loreString(final List<String> lore) {
 		this.itemMeta.setLore(lore);
 		return this;
 	}
 	
+	/**
+	 * Lore item builder.
+	 *
+	 * @param lore the lore
+	 * @return the item builder
+	 */
 	public ItemBuilder lore(final String... lore) {
 		return this.loreString(Arrays.asList(lore));
 	}
 	
+	/**
+	 * Add lore item builder.
+	 *
+	 * @param line the line
+	 * @return the item builder
+	 */
 	public ItemBuilder addLore(final String line) {
 		this.addLore(Collections.singletonList(line));
 		return this;
 	}
 	
+	/**
+	 * Add lore item builder.
+	 *
+	 * @param lines the lines
+	 * @return the item builder
+	 */
+	@SuppressWarnings("TypeMayBeWeakened")
 	public ItemBuilder addLore(final List<String> lines) {
 		final List<String> lore = this.itemMeta.getLore();
 		if (lore == null) {
@@ -72,27 +134,68 @@ public class ItemBuilder {
 		return this;
 	}
 	
+	/**
+	 * Add lore item builder.
+	 *
+	 * @param lines the lines
+	 * @return the item builder
+	 */
 	public ItemBuilder addLore(final String... lines) {
 		return this.addLore(Arrays.asList(lines));
 	}
 	
+	/**
+	 * Sets material.
+	 *
+	 * @param material the material
+	 * @return the material
+	 */
 	public ItemBuilder setMaterial(final Material material) {
 		this.itemStack.setType(material);
 		return this;
 	}
 	
-	public ItemBuilder amount(final int amount) {
+	/**
+	 * Sets material.
+	 *
+	 * @param material the material
+	 * @return the material
+	 */
+	public ItemBuilder setType(final Material material) {
+		this.itemStack.setType(material);
+		return this;
+	}
+	
+	/**
+	 * Amount item builder.
+	 *
+	 * @param amount the amount
+	 * @return the item builder
+	 */
+	public ItemBuilder setAmount(final int amount) {
 		this.itemStack.setAmount(amount);
 		return this;
 	}
 	
+	/**
+	 * Color item builder.
+	 *
+	 * @param color the color
+	 * @return the item builder
+	 */
 	public ItemBuilder color(final int color) {
 		return this.color(Color.fromRGB(color));
 	}
 	
+	/**
+	 * Color item builder.
+	 *
+	 * @param color the color
+	 * @return the item builder
+	 */
 	public ItemBuilder color(@NonNull final Color color) {
 		if (this.itemMeta instanceof LeatherArmorMeta) {
-			this.armorColor(color);
+			((LeatherArmorMeta) this.itemMeta).setColor(color);
 		} else if (this.itemStack.getType()
 		                         .name()
 		                         .endsWith("_wool")) {
@@ -105,130 +208,212 @@ public class ItemBuilder {
 		return this;
 	}
 	
-	public ItemBuilder armorColor(final Color color) {
-		return this.meta(LeatherArmorMeta.class, meta -> meta.setColor(color));
-	}
 	
+	/**
+	 * Sets data.
+	 *
+	 * @param data the data
+	 * @return the data
+	 */
 	public ItemBuilder setData(final int data) {
 		this.itemStack.setDurability((short) data);
 		return this;
 	}
 	
-	public <T extends ItemMeta> ItemBuilder meta(final Class<T> metaClass, final Consumer<T> metaConsumer) {
+	/**
+	 * Meta item builder.
+	 *
+	 * @param <T>          the type parameter
+	 * @param metaClass    the meta-class
+	 * @param metaConsumer the meta-consumer
+	 * @return the item builder
+	 */
+	public <T extends ItemMeta> ItemBuilder meta(final Class<T> metaClass, final Consumer<? super T> metaConsumer) {
 		if (metaClass.isInstance(this.itemMeta)) {
 			metaConsumer.accept(metaClass.cast(this.itemMeta));
 		}
 		return this;
 	}
 	
+	/**
+	 * Color item builder.
+	 *
+	 * @param color the color
+	 * @return the item builder
+	 */
 	public ItemBuilder color(@NonNull final DyeColor color) {
 		return this.color(color.getColor());
 	}
 	
-	public ItemBuilder enchant(final Enchantment enchantment) {
-		return this.enchant(enchantment, 1);
+	/**
+	 * Enchant item builder.
+	 *
+	 * @param enchantment the enchantment
+	 * @param level       the level
+	 * @return the item builder
+	 */
+	public ItemBuilder addEnchant(final Enchantment enchantment, final int level) {
+		return this.addEnchant(enchantment, level, true);
 	}
 	
-	public ItemBuilder enchant(final Enchantment enchantment, final int level) {
-		return this.enchant(enchantment, level, true);
-	}
-	
-	public ItemBuilder enchant(final Enchantment enchantment, final int level, final boolean override) {
+	/**
+	 * Enchant item builder.
+	 *
+	 * @param enchantment the enchantment
+	 * @param level       the level
+	 * @param override    the override
+	 * @return the item builder
+	 */
+	public ItemBuilder addEnchant(final Enchantment enchantment, final int level, final boolean override) {
 		this.itemMeta.addEnchant(enchantment, level, override);
 		return this;
 	}
 	
+	/**
+	 * Remove enchant item builder.
+	 *
+	 * @param enchantment the enchantment
+	 * @return the item builder
+	 */
 	public ItemBuilder removeEnchant(final Enchantment enchantment) {
 		this.itemMeta.removeEnchant(enchantment);
 		return this;
 	}
 	
+	/**
+	 * Clear enchants item builder.
+	 *
+	 * @return the item builder
+	 */
 	public ItemBuilder clearEnchants() {
 		this.itemMeta.getEnchants()
 		             .forEach((enchantment, level) -> this.itemMeta.removeEnchant(enchantment));
 		return this;
 	}
 	
-	public ItemBuilder flags() {
-		return this.flags(ItemFlag.values());
+	/**
+	 * Flags item builder.
+	 *
+	 * @return the item builder
+	 */
+	public ItemBuilder addAllFlags() {
+		return this.addFlags(ItemFlag.values());
 	}
 	
-	public ItemBuilder flags(final ItemFlag... flags) {
+	/**
+	 * Flags item builder.
+	 *
+	 * @param flags the flags
+	 * @return the item builder
+	 */
+	public ItemBuilder addFlags(final ItemFlag... flags) {
 		this.itemMeta.addItemFlags(flags);
 		return this;
 	}
 	
-	public ItemBuilder removeFlags() {
+	/**
+	 * Remove flags item builder.
+	 *
+	 * @return the item builder
+	 */
+	public ItemBuilder clearFlags() {
 		return this.removeFlags(ItemFlag.values());
 	}
 	
+	/**
+	 * Remove flags item builder.
+	 *
+	 * @param flags the flags
+	 * @return the item builder
+	 */
 	public ItemBuilder removeFlags(final ItemFlag... flags) {
 		this.itemMeta.removeItemFlags(flags);
 		return this;
 	}
 	
+	/**
+	 * Sets pdc.
+	 *
+	 * @param <T>           the type parameter
+	 * @param namespacedKey the namespaced key
+	 * @param pdt           the pdt
+	 * @param value         the value
+	 * @return the pdc
+	 */
 	public <T> ItemBuilder setPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, T> pdt, final T value) {
 		this.itemMeta.getPersistentDataContainer()
 		             .set(namespacedKey, pdt, value);
 		return this;
 	}
 	
+	/**
+	 * Gets pdc.
+	 *
+	 * @param <T>           the type parameter
+	 * @param namespacedKey the namespaced key
+	 * @param pdt           the pdt
+	 * @return the pdc
+	 */
 	public <T> T getPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, T> pdt) {
 		return this.itemMeta.getPersistentDataContainer()
 		                    .get(namespacedKey, pdt);
 	}
 	
-	public <T> T getOrDefaultPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, T> pdt, final T def) {
+	/**
+	 * Gets or default pdc.
+	 *
+	 * @param <T>           the type parameter
+	 * @param namespacedKey the namespaced key
+	 * @param pdt           the pdt
+	 * @param def           the def
+	 * @return the or default pdc
+	 */
+	public <T> T getOrDefaultPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, ? extends T> pdt, final T def) {
 		final T value = this.itemMeta.getPersistentDataContainer()
 		                             .get(namespacedKey, pdt);
 		return value == null ? def : value;
 	}
 	
+	/**
+	 * Has pdc boolean.
+	 *
+	 * @param <T>           the type parameter
+	 * @param namespacedKey the namespaced key
+	 * @param pdt           the pdt
+	 * @return the boolean
+	 */
 	public <T> boolean hasPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, T> pdt) {
 		return this.itemMeta.getPersistentDataContainer()
 		                    .has(namespacedKey, pdt);
 	}
 	
+	/**
+	 * Remove pdc item builder.
+	 *
+	 * @param namespacedKey the namespaced key
+	 * @return the item builder
+	 */
 	public ItemBuilder removePDC(final NamespacedKey namespacedKey) {
 		this.itemMeta.getPersistentDataContainer()
 		             .remove(namespacedKey);
 		return this;
 	}
 	
+	/**
+	 * Gets pdc keys.
+	 *
+	 * @return the pdc keys
+	 */
 	public Set<NamespacedKey> getPDCKeys() {
 		return this.itemMeta.getPersistentDataContainer()
 		                    .getKeys();
 	}
 	
-	public ItemBuilder addHeadTexture(@NonNull final String url) {
-		return this.meta(SkullMeta.class, meta -> {
-			//            try {
-			//                PlayerProfile profile = Bukkit.createP(UUID.randomUUID());
-			//                PlayerTextures textures = profile.getTextures();
-			//                textures.setSkin(URI.create(url).toURL());
-			//                profile.setTextures(textures);
-			//                meta.setOwnerProfile(profile);
-			//            } catch (MalformedURLException e) {
-			//                throw new RuntimeException(e);
-			//            }
-		});
-	}
-	
-	public ItemBuilder setSkullOwner(@NonNull final String name) {
-		return this.meta(SkullMeta.class, meta -> meta.setOwningPlayer(Bukkit.getOfflinePlayer(name)));
-	}
-	
-	public ItemBuilder compassLodeStone(final Location lodestone, final boolean lodestoneTracked) {
-		return this.meta(CompassMeta.class, meta -> {
-			meta.setLodestone(lodestone);
-			meta.setLodestoneTracked(lodestoneTracked);
-		});
-	}
-	
-	public String serializeString() {
-		return ItemUtil.serialize(this.itemStack);
-	}
-	
+	/**
+	 * Build item stack.
+	 *
+	 * @return the item stack
+	 */
 	public ItemStack build() {
 		this.itemStack.setItemMeta(this.itemMeta);
 		return this.itemStack;

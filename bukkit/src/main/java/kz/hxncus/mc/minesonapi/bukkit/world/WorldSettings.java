@@ -4,6 +4,7 @@ import kz.hxncus.mc.minesonapi.util.FunctionalUtil;
 import kz.hxncus.mc.minesonapi.util.tuples.Pair;
 import kz.hxncus.mc.minesonapi.util.tuples.Triplet;
 import lombok.Builder;
+import lombok.ToString;
 import org.bukkit.Difficulty;
 import org.bukkit.block.Biome;
 import org.bukkit.block.data.BlockData;
@@ -11,7 +12,14 @@ import org.bukkit.metadata.MetadataValue;
 
 import java.util.Map;
 
+/**
+ * Class World settings.
+ *
+ * @author Hxncus
+ * @since 1.0.0
+ */
 @Builder
+@ToString
 public class WorldSettings {
 	private Boolean autoSave;
 	private Map<Triplet<Integer, Integer, Integer>, Biome> tripletBiomeMap;
@@ -26,9 +34,15 @@ public class WorldSettings {
 	private Boolean storm;
 	private Long time;
 	
+	/**
+	 * Apply simple world.
+	 *
+	 * @param world the world
+	 * @return the simple world
+	 */
 	public SimpleWorld apply(final SimpleWorld world) {
-		FunctionalUtil.acceptIfTrue(() -> this.autoSave != null, worlds -> worlds.setAutoSave(this.autoSave), world);
-		FunctionalUtil.acceptIfTrue(() -> this.tripletBiomeMap != null, consumerWorld -> {
+		FunctionalUtil.ifTrueAccept(() -> this.autoSave != null, worlds -> worlds.setAutoSave(this.autoSave), world);
+		FunctionalUtil.ifTrueAccept(() -> this.tripletBiomeMap != null, consumerWorld -> {
 			for (final Map.Entry<Triplet<Integer, Integer, Integer>, Biome> entry : this.tripletBiomeMap.entrySet()) {
 				final Triplet<Integer, Integer, Integer> key = entry.getKey();
 				consumerWorld.setBiome(key.getLeft(), key.getMiddle(), key.getRight(), entry.getValue());

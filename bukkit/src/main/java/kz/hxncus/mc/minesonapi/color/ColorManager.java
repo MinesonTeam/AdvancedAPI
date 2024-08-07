@@ -10,18 +10,31 @@ import kz.hxncus.mc.minesonapi.util.VersionUtil;
 import kz.hxncus.mc.minesonapi.util.reflect.ReflectMethod;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.ToString;
 import net.md_5.bungee.api.ChatColor;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class Color manager.
+ *
+ * @author Hxncus
+ * @since 1.0.
+ */
+@ToString
 @EqualsAndHashCode
 public class ColorManager {
-	private final ReflectMethod METHOD_OF = new ReflectMethod(ChatColor.class, "of", Color.class);
-	private final List<String> SPECIAL_COLORS = Arrays.asList("&l", "&n", "&o", "&k", "&m");
-	private final LruCache LRU_CACHE = new LruCache(1);
-	private final ImmutableMap<Object, Object> COLORS = ImmutableMap.builder()
+	/**
+	 * The constant BUKKIT_COLOR_CHAR.
+	 */
+	public static final char BUKKIT_COLOR_CHAR = '&';
+	private static final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile("&\\w{5,8}(:[0-9A-F]{6})?>");
+	private final ReflectMethod methodOf = new ReflectMethod(ChatColor.class, "of", Color.class);
+	private final List<String> specialColors = Arrays.asList("&l", "&n", "&o", "&k", "&m");
+	private final LruCache lruCache = new LruCache(1);
+	private final ImmutableMap<Object, Object> colors = ImmutableMap.builder()
 	                                                                .put(new Color(0), ChatColor.getByChar('0'))
 	                                                                .put(new Color(170), ChatColor.getByChar('1'))
 	                                                                .put(new Color(43520), ChatColor.getByChar('2'))
@@ -40,64 +53,95 @@ public class ColorManager {
 	                                                                .put(new Color(16777215), ChatColor.getByChar('f'))
 	                                                                .build();
 	
-	private final List<Pattern> PATTERNS = Arrays.asList(new GradientPattern(), new SolidPattern(), new RainbowPattern());
+	private final List<Pattern> patterns = Arrays.asList(new GradientPattern(), new SolidPattern(), new RainbowPattern());
 	
+	/**
+	 * Process list.
+	 *
+	 * @param strings the strings
+	 * @return the list
+	 */
 	@NonNull
 	public List<String> process(@NonNull final List<String> strings) {
 		strings.replaceAll(this::process);
 		return strings;
 	}
 	
+	/**
+	 * Process message.
+	 *
+	 * @param message the message
+	 * @return the message
+	 */
 	@NonNull
-	public String process(@NonNull String string) {
-		final String result = this.LRU_CACHE.getResult(string);
+	public String process(@NonNull final String message) {
+		String str = message;
+		final String result = this.lruCache.getResult(str);
 		if (result == null) {
-			final String input = string;
-			for (final Pattern pattern : this.PATTERNS) {
-				string = pattern.process(string);
+			final String input = str;
+			for (final Pattern pattern : this.patterns) {
+				str = pattern.process(str);
 			}
-			string = ChatColor.translateAlternateColorCodes('&', string);
-			this.LRU_CACHE.put(input, string);
-			return string;
+			str = ChatColor.translateAlternateColorCodes(BUKKIT_COLOR_CHAR, str);
+			this.lruCache.put(input, str);
+			return str;
 		}
 		return result;
 	}
 	
+	/**
+	 * Color message.
+	 *
+	 * @param message the message
+	 * @param color   the color
+	 * @return the message
+	 */
 	@NonNull
-	public String color(@NonNull final String string, @NonNull final Color color) {
-		return (VersionUtil.IS_HEX_VERSION ? (String) this.METHOD_OF.invokeStatic(color) : this.getClosestColor(color)) + string;
+	public String color(@NonNull final String message, @NonNull final Color color) {
+		return (VersionUtil.IS_HEX_VERSION ? (String) this.methodOf.invokeStatic(color) : this.getClosestColor(color)) + message;
 	}
 	
 	@NonNull
 	private ChatColor getClosestColor(@NonNull final Color color) {
 		Color nearestColor = null;
 		double nearestDistance = 2.147483647E9D;
-		for (final Object colorObject : this.COLORS.keySet()) {
+		for (final Object colorObject : this.colors.keySet()) {
 			final Color constantColor = (Color) colorObject;
-			final double distance = Math.pow((color.getRed() - constantColor.getRed()), 2.0D) + Math.pow((color.getGreen() - constantColor.getGreen()), 2.0D) + Math.pow((color.getBlue() - constantColor.getBlue()), 2.0D);
+			final double distance = StrictMath.pow((color.getRed() - constantColor.getRed()), 2.0D) + StrictMath.pow((color.getGreen() - constantColor.getGreen()), 2.0D) + StrictMath.pow((color.getBlue() - constantColor.getBlue()), 2.0D);
 			if (nearestDistance > distance) {
 				nearestColor = constantColor;
 				nearestDistance = distance;
 			}
 		}
-		return (ChatColor) this.COLORS.get(nearestColor);
+		return (ChatColor) this.colors.get(nearestColor);
 	}
 	
+	/**
+	 * Color message.
+	 *
+	 * @param message the message
+	 * @param start   the start
+	 * @param end     the end
+	 * @return the message
+	 */
 	@NonNull
-	public String color(@NonNull String string, @NonNull final Color start, @NonNull final Color end) {
-		final StringBuilder specialColors = new StringBuilder();
-		for (final String color : this.SPECIAL_COLORS) {
-			if (string.contains(color)) {
-				specialColors.append(color);
-				string = string.replace(color, "");
+	public String color(@NonNull final String message, @NonNull final Color start, @NonNull final Color end) {
+		String str = message;
+		final StringBuilder colorsBuilder = new StringBuilder(this.specialColors.size());
+		for (final String color : this.specialColors) {
+			if (str.contains(color)) {
+				colorsBuilder.append(color);
+				str = str.replace(color, "");
 			}
 		}
-		final StringBuilder stringBuilder = new StringBuilder();
-		final ChatColor[] colors = this.createGradient(start, end, string.length());
-		final String[] characters = string.split("");
-		for (int i = 0; i < string.length(); i++)
-			stringBuilder.append(colors[i])
-			             .append(specialColors)
+		final int length = str.length();
+		final StringBuilder stringBuilder = new StringBuilder(length * 3);
+		final ChatColor[] gradient = this.createGradient(start, end, length);
+		final java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("");
+		final String[] characters = pattern.split(str);
+		for (int i = 0; i < length; i++)
+			stringBuilder.append(gradient[i])
+			             .append(colorsBuilder)
 			             .append(characters[i]);
 		return stringBuilder.toString();
 	}
@@ -106,7 +150,7 @@ public class ColorManager {
 	private ChatColor[] createGradient(@NonNull final Color start, @NonNull final Color end, final int step) {
 		if (step <= 1)
 			return new ChatColor[]{ChatColor.WHITE, ChatColor.WHITE, ChatColor.WHITE};
-		final ChatColor[] colors = new ChatColor[step];
+		final ChatColor[] chatColors = new ChatColor[step];
 		final int stepR = Math.abs(start.getRed() - end.getRed()) / (step - 1);
 		final int stepG = Math.abs(start.getGreen() - end.getGreen()) / (step - 1);
 		final int stepB = Math.abs(start.getBlue() - end.getBlue()) / (step - 1);
@@ -114,56 +158,79 @@ public class ColorManager {
 		for (int i = 0; i < step; i++) {
 			final Color color = new Color(start.getRed() + stepR * i * direction[0], start.getGreen() + stepG * i * direction[1], start.getBlue() + stepB * i * direction[2]);
 			if (VersionUtil.IS_HEX_VERSION) {
-				colors[i] = this.METHOD_OF.invokeStatic(color);
+				chatColors[i] = this.methodOf.invokeStatic(color);
 			} else {
-				colors[i] = this.getClosestColor(color);
+				chatColors[i] = this.getClosestColor(color);
 			}
 		}
-		return colors;
+		return chatColors;
 	}
 	
+	/**
+	 * Rainbow message.
+	 *
+	 * @param message     the message
+	 * @param saturation the saturation
+	 * @return the message
+	 */
 	@NonNull
-	public String rainbow(@NonNull String string, final float saturation) {
-		final StringBuilder specialColors = new StringBuilder();
-		for (final String color : this.SPECIAL_COLORS) {
-			if (string.contains(color)) {
-				specialColors.append(color);
-				string = string.replace(color, "");
+	public String rainbow(@NonNull final String message, final float saturation) {
+		String str = message;
+		final StringBuilder colorsBuilder = new StringBuilder(this.specialColors.size());
+		for (final String color : this.specialColors) {
+			if (str.contains(color)) {
+				colorsBuilder.append(color);
+				str = str.replace(color, "");
 			}
 		}
-		final StringBuilder stringBuilder = new StringBuilder();
-		final ChatColor[] colors = this.createRainbow(string.length(), saturation);
-		final String[] characters = string.split("");
-		for (int i = 0; i < string.length(); i++)
-			stringBuilder.append(colors[i])
-			             .append(specialColors)
+		final int length = str.length();
+		final StringBuilder stringBuilder = new StringBuilder(length * 3);
+		final java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("");
+		final ChatColor[] rainbow = this.createRainbow(length, saturation);
+		final String[] characters = pattern.split(str);
+		for (int i = 0; i < length; i++)
+			stringBuilder.append(rainbow[i])
+			             .append(colorsBuilder)
 			             .append(characters[i]);
 		return stringBuilder.toString();
 	}
 	
 	@NonNull
 	private ChatColor[] createRainbow(final int step, final float saturation) {
-		final ChatColor[] colors = new ChatColor[step];
+		final ChatColor[] chatColors = new ChatColor[step];
 		final double colorStep = 1.0D / step;
 		for (int i = 0; i < step; i++) {
 			final Color color = Color.getHSBColor((float) (colorStep * i), saturation, saturation);
 			if (VersionUtil.IS_HEX_VERSION) {
-				colors[i] = this.METHOD_OF.invokeStatic(color);
+				chatColors[i] = this.methodOf.invokeStatic(color);
 			} else {
-				colors[i] = this.getClosestColor(color);
+				chatColors[i] = this.getClosestColor(color);
 			}
 		}
-		return colors;
+		return chatColors;
 	}
 	
+	/**
+	 * Gets color.
+	 *
+	 * @param message the message
+	 * @return the color
+	 */
 	@NonNull
-	public ChatColor getColor(@NonNull final String string) {
-		return VersionUtil.IS_HEX_VERSION ? (ChatColor) this.METHOD_OF.invokeStatic(new Color(Integer.parseInt(string, 16))) : this.getClosestColor(new Color(Integer.parseInt(string, 16)));
+	public ChatColor getColor(@NonNull final String message) {
+		return VersionUtil.IS_HEX_VERSION ? (ChatColor) this.methodOf.invokeStatic(new Color(Integer.parseInt(message, 16))) : this.getClosestColor(new Color(Integer.parseInt(message, 16)));
 	}
 	
+	/**
+	 * Strip color formatting message.
+	 *
+	 * @param message the message
+	 * @return the message
+	 */
 	@NonNull
-	public String stripColorFormatting(@NonNull final String string) {
-		return string.replaceAll("&\\w{5,8}(:[0-9A-F]{6})?>", "");
+	public String stripColorFormatting(@NonNull final CharSequence message) {
+		return PATTERN.matcher(message)
+		              .replaceAll("");
 	}
 }
 

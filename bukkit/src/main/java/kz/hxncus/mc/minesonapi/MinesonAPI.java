@@ -13,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * The type Mineson api.
+ * @author Hxncus
+ * @since 1.0.0
  */
 @Getter
 @ToString
@@ -45,7 +47,7 @@ public class MinesonAPI extends JavaPlugin {
 		this.registerManagers();
 	}
 	
-	public void registerManagers() {
+	private void registerManagers() {
 		this.colorManager = new ColorManager();
 		this.configManager = new ConfigManager(this);
 		this.eventManager = new EventManager(this);

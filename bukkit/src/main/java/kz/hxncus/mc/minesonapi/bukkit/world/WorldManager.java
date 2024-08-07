@@ -4,6 +4,7 @@ import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.bukkit.event.EventManager;
 import kz.hxncus.mc.minesonapi.util.FileUtil;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -16,10 +17,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class World manager.
+ *
+ * @author GeliusIHe
+ * @since 1.0.1
+ */
+@ToString
 @EqualsAndHashCode
 public class WorldManager {
-	private final List<SimpleWorld> simpleWorlds = new ArrayList<>();
+	private final List<SimpleWorld> simpleWorlds = new ArrayList<>(16);
 	
+	/**
+	 * Instantiates a new World manager.
+	 *
+	 * @param plugin the plugin
+	 */
 	public WorldManager(final MinesonAPI plugin) {
 		final EventManager eventManager = plugin.getEventManager();
 		this.registerEvents(eventManager);
@@ -54,12 +67,24 @@ public class WorldManager {
 		});
 	}
 	
+	/**
+	 * Create world simple world.
+	 *
+	 * @param worldCreator the world creator
+	 * @return the simple world
+	 */
 	public SimpleWorld createWorld(final WorldCreator worldCreator) {
 		final SimpleWorld simpleWorld = new SimpleWorld(worldCreator);
 		this.simpleWorlds.add(simpleWorld);
 		return simpleWorld;
 	}
 	
+	/**
+	 * Load world simple world.
+	 *
+	 * @param name the name
+	 * @return the simple world
+	 */
 	public SimpleWorld loadWorld(final String name) {
 		final World world = Bukkit.getWorld(name);
 		if (world != null) {
@@ -70,6 +95,13 @@ public class WorldManager {
 		return null;
 	}
 	
+	/**
+	 * Delete world boolean.
+	 *
+	 * @param name the name
+	 * @return the boolean
+	 */
+	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
 	public boolean deleteWorld(final String name) {
 		if (this.unloadWorld(name)) {
 			final File worldFolder = new File(Bukkit.getWorldContainer(), name);
@@ -83,6 +115,13 @@ public class WorldManager {
 		return false;
 	}
 	
+	/**
+	 * Unload world boolean.
+	 *
+	 * @param name the name
+	 * @return the boolean
+	 */
+	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
 	public boolean unloadWorld(final String name) {
 		final World world = Bukkit.getWorld(name);
 		if (world != null && Bukkit.unloadWorld(world, true)) {
@@ -93,14 +132,29 @@ public class WorldManager {
 		return false;
 	}
 	
+	/**
+	 * Gets worlds.
+	 *
+	 * @return the worlds
+	 */
 	public List<World> getWorlds() {
 		return Bukkit.getWorlds();
 	}
 	
+	/**
+	 * Gets simple worlds.
+	 *
+	 * @return the simple worlds
+	 */
 	public List<SimpleWorld> getSimpleWorlds() {
 		return Collections.unmodifiableList(this.simpleWorlds);
 	}
 	
+	/**
+	 * Apply settings to all worlds.
+	 *
+	 * @param settings the settings
+	 */
 	public void applySettingsToAllWorlds(final WorldSettings settings) {
 		for (final SimpleWorld simpleWorld : this.simpleWorlds) {
 			settings.apply(simpleWorld);

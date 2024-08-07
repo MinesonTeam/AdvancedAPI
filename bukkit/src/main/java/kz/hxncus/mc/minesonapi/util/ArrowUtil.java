@@ -9,7 +9,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * ArrowUtil
+ * Class ArrowUtil
+ *
+ * @author Hxncus
+ * @since 1.0
  */
 @UtilityClass
 public class ArrowUtil {

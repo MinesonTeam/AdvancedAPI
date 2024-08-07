@@ -10,6 +10,8 @@ import java.util.random.RandomGenerator;
 
 /**
  * The type Simple random.
+ * @author Hxncus
+ * @since  1.0.0
  */
 @ToString
 public class SimpleRandom extends Random {

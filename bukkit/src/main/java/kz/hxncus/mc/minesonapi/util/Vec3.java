@@ -9,6 +9,8 @@ import org.bukkit.util.Vector;
 
 /**
  * The type Vec 3.
+ * @author Hxncus
+ * @since  1.0.1
  */
 @Data
 @AllArgsConstructor

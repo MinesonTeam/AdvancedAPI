@@ -11,34 +11,50 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The type Database settings.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class DatabaseSettings {
-	protected String host;
-	protected String port;
-	protected String database;
-	protected String username;
-	protected String password;
-	protected String tablePrefix;
-	protected SQLDialect sqlDialect;
-	protected Map<String, String> properties;
+	private String host;
+	private String port;
+	private String database;
+	private String username;
+	private String password;
+	private String tablePrefix;
+	private SQLDialect sqlDialect;
+	private Map<String, String> properties;
 	
+	/**
+	 * From config database settings.
+	 *
+	 * @param section the section
+	 * @return the database settings
+	 */
 	public static DatabaseSettings fromConfig(final ConfigurationSection section) {
 		final ConfigurationSection dbSection = section.getConfigurationSection("database.sql");
+		if (dbSection == null) {
+			return builder().build();
+		}
+		final ConfigurationSection sectionProperties;
+		if (dbSection.contains("properties")) {
+			sectionProperties = dbSection.getConfigurationSection("properties");
+		} else {
+			sectionProperties = dbSection.createSection("properties");
+		}
 		return builder()
 				.host(dbSection.getString("host", "localhost"))
 				.port(dbSection.getString("port", "3306"))
-				.database(dbSection.getString("database", "simplepenalty"))
+				.database(dbSection.getString("database", ""))
 				.username(dbSection.getString("username", "root"))
 				.password(dbSection.getString("password", ""))
-				.tablePrefix(dbSection.getString("table-prefix", "simplepenalty_"))
+				.tablePrefix(dbSection.getString("table-prefix", ""))
 				.sqlDialect(SQLDialect.valueOf(section.getString("database.type", "SQLITE")
-				                                      .toUpperCase(Locale.ENGLISH))
-				)
-				.properties(dbSection.getConfigurationSection("properties")
-				                     .getValues(false)
+				    .toUpperCase(Locale.ENGLISH))
+				).properties(sectionProperties.getValues(false)
 				                     .entrySet()
 				                     .stream()
 				                     .collect(Collectors.toMap(
@@ -46,7 +62,6 @@ public class DatabaseSettings {
 						                     value -> value.getValue()
 						                                   .toString()
 				                     ))
-				)
-				.build();
+				).build();
 	}
 }

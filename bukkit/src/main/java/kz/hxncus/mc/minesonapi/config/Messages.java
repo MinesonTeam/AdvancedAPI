@@ -8,8 +8,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.List;
 
+/**
+ * The enum Messages.
+ * @author Hxncus
+ * @since  1.0.1
+ */
 public enum Messages {
-	PREFIX("general.prefix");
+	PREFIX("general.prefix"), TEST("general.test");
 	
 	private final String path;
 	
@@ -17,6 +22,11 @@ public enum Messages {
 		this.path = path;
 	}
 	
+	/**
+	 * To path string.
+	 *
+	 * @return the string
+	 */
 	@NonNull
 	public String toPath() {
 		return this.path;
@@ -28,15 +38,33 @@ public enum Messages {
 		                        .toString());
 	}
 	
+	/**
+	 * To string string.
+	 *
+	 * @param def the def
+	 * @return the string
+	 */
 	public String toString(final String def) {
 		return this.process(this.getValue(def)
 		                        .toString());
 	}
 	
+	/**
+	 * Process string.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
 	public String process(final String message) {
 		return this.colorize(this.format(message));
 	}
 	
+	/**
+	 * Gets value.
+	 *
+	 * @param def the def
+	 * @return the value
+	 */
 	@NonNull
 	public Object getValue(final Object def) {
 		return this.getLanguages()
@@ -49,20 +77,31 @@ public enum Messages {
 		                 .process(message);
 	}
 	
-	private String format(String message, final Object... args) {
+	private String format(final String message, final Object... args) {
+		String result = message;
 		for (int i = 0; i < args.length; i++) {
-			message = message.replace("{" + i + "}", args[i].toString());
+			result = result.replace("{" + i + "}", args[i].toString());
 		}
-		return message.replace("{PREFIX}", this.colorize(PREFIX.getValue()
-		                                                       .toString()));
+		return result.replace("{PREFIX}", this.colorize(PREFIX.getValue()
+		                                                        .toString()));
 	}
 	
+	/**
+	 * Gets languages.
+	 *
+	 * @return the languages
+	 */
 	public YamlConfiguration getLanguages() {
 		return MinesonAPI.getInstance()
 		                 .getConfigManager()
 		                 .getOrCreateConfig("languages.yml");
 	}
 	
+	/**
+	 * Gets value.
+	 *
+	 * @return the value
+	 */
 	@NonNull
 	public Object getValue() {
 		final Object obj = this.getLanguages()
@@ -70,11 +109,22 @@ public enum Messages {
 		return obj == null ? "" : obj;
 	}
 	
+	/**
+	 * To string string.
+	 *
+	 * @param args the args
+	 * @return the string
+	 */
 	public String toString(final Object... args) {
 		return this.process(this.getValue()
 		                        .toString(), args);
 	}
 	
+	/**
+	 * To string a list.
+	 *
+	 * @return the list
+	 */
 	public List<String> toStringList() {
 		final List<String> stringList = this.getLanguages()
 		                                    .getStringList(this.path);
@@ -82,6 +132,13 @@ public enum Messages {
 		return stringList;
 	}
 	
+	/**
+	 * Process string.
+	 *
+	 * @param message the message
+	 * @param args    the args
+	 * @return the string
+	 */
 	public String process(final String message, final Object... args) {
 		return this.colorize(this.format(message, args));
 	}
@@ -100,6 +157,12 @@ public enum Messages {
 		}
 	}
 	
+	/**
+	 * Send.
+	 *
+	 * @param sender the sender
+	 * @param args   the args
+	 */
 	public void send(final CommandSender sender, final Object... args) {
 		if (this.getValue() instanceof List<?>) {
 			this.sendList(sender, args);
@@ -108,6 +171,11 @@ public enum Messages {
 		}
 	}
 	
+	/**
+	 * Log.
+	 *
+	 * @param args the args
+	 */
 	public void log(final Object... args) {
 		if (this.getValue() instanceof List<?>) {
 			this.sendList(Bukkit.getConsoleSender(), args);

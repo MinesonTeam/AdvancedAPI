@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockIterator;
@@ -15,18 +15,56 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The type Version util.
+ * @author Hxncus
+ * @since 1.0.0
+ */
 @UtilityClass
 public class VersionUtil {
-	public final Map<Integer, String> NMS_VERSION_BY_INT = new HashMap<>();
+	/**
+	 * The Nms version by int.
+	 */
+	public final Map<Integer, String> NMS_VERSION_BY_INT = new HashMap<>(64);
+	/**
+	 * The Current version.
+	 */
 	public final int CURRENT_VERSION = getCurrentVersion();
+	/**
+	 * The Nms version.
+	 */
 	public final String NMS_VERSION = NMS_VERSION_BY_INT.get(CURRENT_VERSION);
+	/**
+	 * The Is pdc version.
+	 */
 	public final boolean IS_PDC_VERSION = CURRENT_VERSION >= 1140;
+	/**
+	 * The Is hex version.
+	 */
 	public final boolean IS_HEX_VERSION = CURRENT_VERSION >= 1160;
+	/**
+	 * The Is target block version.
+	 */
 	public final boolean IS_TARGET_BLOCK_VERSION = CURRENT_VERSION >= 1140;
+	/**
+	 * The Is namespaced key version.
+	 */
 	public final boolean IS_NAMESPACED_KEY_VERSION = CURRENT_VERSION >= 1120;
+	/**
+	 * The Is spawn egg meta-version.
+	 */
 	public final boolean IS_SPAWN_EGG_META_VERSION = CURRENT_VERSION >= 1110;
+	/**
+	 * The Is potion color version.
+	 */
 	public final boolean IS_POTION_COLOR_VERSION = CURRENT_VERSION >= 1110;
+	/**
+	 * The Is potion data version.
+	 */
 	public final boolean IS_POTION_DATA_VERSION = CURRENT_VERSION >= 190;
+	/**
+	 * The Sign.
+	 */
 	public final Material SIGN = getSign();
 	
 	static {
@@ -99,33 +137,62 @@ public class VersionUtil {
 		NMS_VERSION_BY_INT.put(1210, "1_21_R1");
 	}
 	
-	public boolean is(final int minor) {
+	/**
+	 * Is equal boolean.
+	 *
+	 * @param minor the minor
+	 * @return the boolean
+	 */
+	public boolean isEqual(final int minor) {
 		return CURRENT_VERSION == minor;
 	}
 	
-	public boolean after(final int minor) {
+	/**
+	 * Is after boolean.
+	 *
+	 * @param minor the minor
+	 * @return the boolean
+	 */
+	public boolean isAfter(final int minor) {
 		return CURRENT_VERSION > minor;
 	}
 	
-	public boolean afterOrEqual(final int minor) {
+	/**
+	 * Is after or equal boolean.
+	 *
+	 * @param minor the minor
+	 * @return the boolean
+	 */
+	public boolean isAfterOrEqual(final int minor) {
 		return CURRENT_VERSION >= minor;
 	}
 	
-	public boolean before(final int minor) {
+	/**
+	 * Is before boolean.
+	 *
+	 * @param minor the minor
+	 * @return the boolean
+	 */
+	public boolean isBefore(final int minor) {
 		return CURRENT_VERSION < minor;
 	}
 	
-	public boolean beforeOrEqual(final int minor) {
+	/**
+	 * Is before or equal boolean.
+	 *
+	 * @param minor the minor
+	 * @return the boolean
+	 */
+	public boolean isBeforeOrEqual(final int minor) {
 		return CURRENT_VERSION <= minor;
 	}
 	
 	private int getCurrentVersion() {
 		final Matcher matcher = Pattern.compile("(?<version>\\d+\\.\\d+)(?<patch>\\.\\d+)?")
 		                               .matcher(Bukkit.getBukkitVersion());
-		final StringBuilder stringBuilder = new StringBuilder();
+		final StringBuilder stringBuilder = new StringBuilder(8);
 		if (matcher.find()) {
-			stringBuilder.append(matcher.group("version")
-			                            .replace(".", ""));
+			stringBuilder.append(matcher.group("version").replace(".", ""));
 			final String patch = matcher.group("patch");
 			if (patch == null) {
 				stringBuilder.append('0');
@@ -148,6 +215,13 @@ public class VersionUtil {
 		}
 	}
 	
+	/**
+	 * Gets target block.
+	 *
+	 * @param player   the player
+	 * @param distance the distance
+	 * @return the target block
+	 */
 	public Block getTargetBlock(final Player player, final int distance) {
 		if (IS_TARGET_BLOCK_VERSION) {
 			final Block targetBlock = player.getTargetBlockExact(distance);
@@ -163,10 +237,15 @@ public class VersionUtil {
 				}
 			}
 		}
-		return player.getLocation()
-		             .getBlock();
+		return player.getLocation().getBlock();
 	}
 	
+	/**
+	 * Gets enchantment name.
+	 *
+	 * @param enchantment the enchantment
+	 * @return the enchantment name
+	 */
 	public String getEnchantmentName(final Enchantment enchantment) {
 		if (IS_NAMESPACED_KEY_VERSION) {
 			return enchantment.getKey()
@@ -176,8 +255,14 @@ public class VersionUtil {
 		}
 	}
 	
+	/**
+	 * Remove falling block after land.
+	 *
+	 * @param plugin       the plugin
+	 * @param fallingBlock the falling block
+	 */
 	// TODO Check when FallingBlock#setCancelDrop(boolean cancel) is created
-	public void removeFallingBlockAfterLand(final Plugin plugin, final FallingBlock fallingBlock) {
+	public void removeFallingBlockAfterLand(final Plugin plugin, final Entity fallingBlock) {
 		plugin.getServer()
 		      .getScheduler()
 		      .runTaskTimer(plugin, task -> {
