@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerEvent;
 @Setter
 public class PlayerJumpEvent extends PlayerEvent implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
-	private boolean cancel = false;
+	private boolean cancelled = false;
 	private Location from;
 	private Location to;
 	
@@ -29,12 +29,12 @@ public class PlayerJumpEvent extends PlayerEvent implements Cancellable {
 	
 	@Override
 	public boolean isCancelled() {
-		return this.cancel;
+		return this.cancelled;
 	}
 	
 	@Override
 	public void setCancelled(final boolean cancel) {
-		this.setCancel(cancel);
+		this.setCancelled(cancel);
 		if (cancel) {
 			this.player.setVelocity(VectorUtil.ZERO_VECTOR);
 		}

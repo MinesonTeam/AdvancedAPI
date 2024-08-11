@@ -2,8 +2,15 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
 plugins {
     id("java")
+    id("maven-publish")
     id("io.github.goooler.shadow") version "8.1.7"
 }
 
@@ -21,15 +28,8 @@ val projectGroup = rootProject.group.toString();
 
 allprojects {
     apply(plugin = "java")
-    tasks {
-        processResources {
-            filesMatching("**/plugin.yml") {
-                expand("version" to rootProject.version, "name" to rootProject.name)
-            }
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE
-            filteringCharset = Charsets.UTF_8.name()
-        }
-    }
+    apply(plugin = "maven-publish")
+    apply(plugin = "io.github.goooler.shadow")
     repositories {
         mavenCentral()
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // Spigot
@@ -40,7 +40,15 @@ allprojects {
         maven("https://maven.enginehub.org/repo/")
         maven("https://jitpack.io") // JitPack
         maven("https://papermc.io/repo/repository/maven-public/") // Paper
-        mavenLocal()
+    }
+    tasks {
+        processResources {
+            filesMatching("**/plugin.yml") {
+                expand("version" to rootProject.version, "name" to rootProject.name)
+            }
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            filteringCharset = Charsets.UTF_8.name()
+        }
     }
     dependencies {
         compileOnly("org.projectlombok:lombok:$lombok")
@@ -59,29 +67,14 @@ allprojects {
 }
 
 dependencies {
-    implementation(project(":bukkit"))
-    nmsVersionList.forEach { implementation(project(path = ":${it}")) }
+    implementation(project(":api"))
+    implementation(project(path = ":bukkit", configuration = "shadow"))
+    nmsVersionList.forEach { implementation(project(path = ":${it}", configuration = "reobf")) }
 }
 
 tasks {
     compileJava.get().options.encoding = Charsets.UTF_8.name()
     javadoc.get().options.encoding = Charsets.UTF_8.name()
-    processResources {
-        filesNotMatching(
-            listOf(
-                "**/*.png",
-                "**/*.ogg",
-                "**/models/**",
-                "**/textures/**",
-                "**/font/**.json",
-                "**/plugin.yml"
-            )
-        ) {
-            expand(mapOf(project.version.toString() to version))
-        }
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        filteringCharset = Charsets.UTF_8.name()
-    }
     shadowJar {
         nmsVersionList.forEach { dependsOn(":${it}:remap") }
         archiveClassifier.set("")
@@ -120,5 +113,3 @@ tasks {
     compileJava.get().dependsOn(clean)
     build.get().dependsOn(shadowJar)
 }
-
-tasks.jar { enabled = false }

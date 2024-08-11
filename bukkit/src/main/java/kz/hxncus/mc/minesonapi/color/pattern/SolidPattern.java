@@ -20,8 +20,8 @@ public class SolidPattern implements Pattern {
 		String result = message;
 		final Matcher matcher = PATTERN.matcher(result);
 		while (true) {
-			final ifNotFound ifNotFound = !matcher.find();
-			if (isFound) {
+			final boolean ifNotFound = !matcher.find();
+			if (ifNotFound) {
 				break;
 			}
 			String color = matcher.group(1);

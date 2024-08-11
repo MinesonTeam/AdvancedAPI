@@ -4,6 +4,7 @@ import kz.hxncus.mc.minesonapi.MinesonAPI;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
@@ -12,12 +13,21 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerStatisticIncrementEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+/**
+ * Class Event manager.
+ *
+ * @author Hxncus
+ * @since 1.0.
+ */
 @ToString
 @EqualsAndHashCode
 public class EventManager {
@@ -25,6 +35,8 @@ public class EventManager {
 	private final PluginManager pluginManager;
 	
 	/**
+	 * Instantiates a new Event manager.
+	 *
 	 * @param plugin plugin instance
 	 */
 	public EventManager(final Plugin plugin) {
@@ -70,20 +82,53 @@ public class EventManager {
 				this.callEvent(new PlayerDamageBlockByShieldEvent(player, lastDamageCause.getEntity(), event.getNewValue() - event.getPreviousValue()));
 			}
 		});
+		this.register(InventoryClickEvent.class, event -> {
+		
+		});
+		this.register(BlockDispenseArmorEvent.class, event -> {
+			final ArmorEquipEvent.ArmorType armorType = ArmorEquipEvent.ArmorType.matchType(event.getItem());
+			if (armorType == null) {
+				return;
+			}
+			final ArmorEquipEvent armorEquipEvent = new ArmorEquipEvent(event.getTargetEntity(),
+			                                                            ArmorEquipEvent.EquipMethod.DISPENSER, armorType,
+			                                                            new ItemStack(Material.AIR), event.getItem());
+			this.callEvent(armorEquipEvent);
+			if (armorEquipEvent.isCancelled()) {
+				event.setCancelled(true);
+			}
+		});
 	}
 	
+	/**
+	 * Register.
+	 *
+	 * @param <E>      the type parameter
+	 * @param event    the event
+	 * @param consumer the consumer
+	 */
 	public <E extends Event> void register(@NonNull final Class<E> event, @NonNull final EventConsumer<E> consumer) {
 		this.register(event, EventPriority.NORMAL, consumer);
 	}
 	
 	/**
+	 * Call event.
+	 *
 	 * @param event Event that needs to call
 	 */
 	public void callEvent(@NonNull final Event event) {
 		this.pluginManager.callEvent(event);
 	}
 	
-	public <E extends Event> void register(final @NonNull Class<? extends E> event, @NonNull final EventPriority priority, @NonNull final EventConsumer<E> consumer) {
+	/**
+	 * Register.
+	 *
+	 * @param <E>      the type parameter
+	 * @param event    the event
+	 * @param priority the priority
+	 * @param consumer the consumer
+	 */
+	public <E extends Event> void register(final @NonNull Class<? extends E> event, @NonNull final EventPriority priority, @NonNull final Listener consumer) {
 		this.pluginManager.registerEvent(event, consumer, priority, (listener, events) -> {
 			if (event.isInstance(events)) {
 				((EventConsumer<E>) listener).accept(event.cast(events));
@@ -91,22 +136,49 @@ public class EventManager {
 		}, this.plugin);
 	}
 	
+	/**
+	 * Unregister all.
+	 */
 	public void unregisterAll() {
 		HandlerList.unregisterAll(MinesonAPI.getInstance());
 	}
 	
+	/**
+	 * The interface Event consumer.
+	 *
+	 * @param <E> the type parameter
+	 * @author Hxncus
+	 * @since 1.0.
+	 */
 	@FunctionalInterface
 	public interface EventConsumer<E extends Event> extends Listener {
-		default EventConsumer<E> append(final EventConsumer<E> other) {
+		/**
+		 * Append event consumer.
+		 *
+		 * @param other the other
+		 * @return the event consumer
+		 */
+		default EventConsumer<E> append(final EventConsumer<? super E> other) {
 			return event -> {
 				this.accept(event);
 				other.accept(event);
 			};
 		}
 		
+		/**
+		 * Accept.
+		 *
+		 * @param event the event
+		 */
 		void accept(E event);
 		
-		default EventConsumer<E> prepend(final EventConsumer<E> other) {
+		/**
+		 * Prepend event consumer.
+		 *
+		 * @param other the other
+		 * @return the event consumer
+		 */
+		default EventConsumer<E> prepend(final EventConsumer<? super E> other) {
 			return event -> {
 				other.accept(event);
 				this.accept(event);
