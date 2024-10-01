@@ -1,10 +1,14 @@
 package kz.hxncus.mc.minesonapi.bukkit.bossbar;
 
+import kz.hxncus.mc.minesonapi.api.bukkit.bossbar.Animatable;
+import kz.hxncus.mc.minesonapi.api.bukkit.bossbar.AnimationType;
 import kz.hxncus.mc.minesonapi.bukkit.scheduler.Scheduler;
 import lombok.ToString;
 
 /**
  * The type Animated boss bar.
+ * @author Hxncus
+ * @since  1.0.1
  */
 @ToString
 public class AnimatedBossBar extends SimpleBossBar implements Animatable {

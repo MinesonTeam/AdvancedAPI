@@ -1,5 +1,7 @@
 package kz.hxncus.mc.minesonapi.bukkit.command.argument;
 
+import kz.hxncus.mc.minesonapi.api.bukkit.command.argument.AbstractArgument;
+
 /**
  * The type String argument.
  */

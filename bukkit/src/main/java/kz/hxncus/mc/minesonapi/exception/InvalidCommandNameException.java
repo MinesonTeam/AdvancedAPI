@@ -12,6 +12,6 @@ public class InvalidCommandNameException extends RuntimeException {
 	 * @param commandName the command name
 	 */
 	public InvalidCommandNameException(final String commandName) {
-		super("Command name " + commandName + " is not a valid.");
+		super("Command name " + commandName + " it is not valid.");
 	}
 }

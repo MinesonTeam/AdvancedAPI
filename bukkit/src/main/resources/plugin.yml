@@ -2,6 +2,8 @@ name: "$name"
 version: "$version"
 main: kz.hxncus.mc.minesonapi.MinesonAPI
 api-version: '1.13'
+depend:
+  - ProtocolLib
 softdepend:
   - FastAsyncWorldEdit
   - WorldGuard

@@ -1,8 +1,10 @@
 package kz.hxncus.mc.minesonapi.bukkit.event;
 
-import kz.hxncus.mc.minesonapi.util.VectorUtil;
+import kz.hxncus.mc.minesonapi.utility.VectorUtil;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
+import lombok.ToString;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -11,20 +13,17 @@ import org.bukkit.event.player.PlayerEvent;
 
 @Getter
 @Setter
+@ToString
 public class PlayerJumpEvent extends PlayerEvent implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled = false;
 	private Location from;
 	private Location to;
 	
-	public PlayerJumpEvent(final Player player, final Location from, final Location to) {
-		super(player);
+	public PlayerJumpEvent(final Player who, final Location from, final Location to) {
+		super(who);
 		this.from = from;
 		this.to = to;
-	}
-	
-	public static HandlerList getHandlerList() {
-		return handlers;
 	}
 	
 	@Override
@@ -34,14 +33,14 @@ public class PlayerJumpEvent extends PlayerEvent implements Cancellable {
 	
 	@Override
 	public void setCancelled(final boolean cancel) {
-		this.setCancelled(cancel);
+		this.cancelled = cancel;
 		if (cancel) {
 			this.player.setVelocity(VectorUtil.ZERO_VECTOR);
 		}
 	}
 	
 	@Override
-	public HandlerList getHandlers() {
+	public @NonNull HandlerList getHandlers() {
 		return handlers;
 	}
 }

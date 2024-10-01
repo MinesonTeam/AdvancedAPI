@@ -107,7 +107,7 @@ public class ArmorEquipEvent extends EntityEvent implements Cancellable {
 	@ToString
 	public enum EquipMethod {
 		/**
-		 * When you shift click an armor piece to equip or unequip
+		 * When you shift, click an armor piece to equip or unequip
 		 */
 		SHIFT_CLICK,
 		/**

@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.bukkit.scheduler;
 
-import kz.hxncus.mc.minesonapi.MinesonAPI;
+import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -23,7 +23,7 @@ import java.util.stream.IntStream;
 @UtilityClass
 public class Scheduler {
 	private final Set<Integer> tasksId = new HashSet<>(8);
-	private final MinesonAPI plugin = MinesonAPI.getInstance();
+	private final MinesonAPIPlugin plugin = MinesonAPIPlugin.getInstance();
 	private final BukkitScheduler scheduler = Bukkit.getScheduler();
 	/**
 	 * The constant 1 second = 20 ticks.

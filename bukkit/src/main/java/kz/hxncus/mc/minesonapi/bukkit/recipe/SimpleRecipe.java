@@ -1,7 +1,8 @@
 package kz.hxncus.mc.minesonapi.bukkit.recipe;
 
-import kz.hxncus.mc.minesonapi.MinesonAPI;
-import kz.hxncus.mc.minesonapi.util.NamespacedKeyUtil;
+import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.api.bukkit.recipe.RecipeType;
+import kz.hxncus.mc.minesonapi.utility.NamespacedKeyUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.CraftingRecipe;
@@ -12,10 +13,10 @@ import org.bukkit.inventory.ShapelessRecipe;
 @Getter
 @Setter
 public class SimpleRecipe extends CraftingRecipe {
-	private MinesonAPI plugin;
+	private MinesonAPIPlugin plugin;
 	private RecipeType recipeType;
 	
-	public SimpleRecipe(final MinesonAPI plugin, final String key, final ItemStack result, final RecipeType recipeType) {
+	public SimpleRecipe(final MinesonAPIPlugin plugin, final String key, final ItemStack result, final RecipeType recipeType) {
 		super(NamespacedKeyUtil.create(key), result);
 		this.plugin = plugin;
 		this.recipeType = recipeType;

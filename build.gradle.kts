@@ -2,29 +2,22 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-}
-
 plugins {
     id("java")
     id("maven-publish")
     id("io.github.goooler.shadow") version "8.1.7"
 }
 
-val nmsVersionList: List<String> = listOf(
-    "1_20_R3"
-)
+val nmsVersionList: List<String> = listOf()
+
 // Library versions
-val junit = property("junit") as String
-val lombok = property("lombok") as String
+val junit: String = property("junit") as String
+val lombok: String = property("lombok") as String
 // Project version and group
 version = property("projectVersion") as String
 group = "kz.hxncus.mc"
-val projectNameLC = rootProject.name.lowercase(Locale.ENGLISH);
-val projectGroup = rootProject.group.toString();
+val projectNameLC: String = rootProject.name.lowercase(Locale.ENGLISH);
+val projectGroup: String = rootProject.group.toString();
 
 allprojects {
     apply(plugin = "java")
@@ -36,10 +29,11 @@ allprojects {
         maven("https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://repo.triumphteam.dev/snapshots")
+        maven("https://repo.dmulloy2.net/repository/public/")
         maven("https://libraries.minecraft.net/") // Minecraft repo
-        maven("https://maven.enginehub.org/repo/")
         maven("https://jitpack.io") // JitPack
         maven("https://papermc.io/repo/repository/maven-public/") // Paper
+        mavenLocal()
     }
     tasks {
         processResources {
@@ -67,9 +61,8 @@ allprojects {
 }
 
 dependencies {
-    implementation(project(":api"))
     implementation(project(path = ":bukkit", configuration = "shadow"))
-    nmsVersionList.forEach { implementation(project(path = ":${it}", configuration = "reobf")) }
+    nmsVersionList.forEach { implementation(project(path = ":${it}")) }
 }
 
 tasks {

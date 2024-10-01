@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * The type Simple boss bar.
+ * @author Hxncus
+ * @since  1.0.1
  */
 @ToString
 public class SimpleBossBar {

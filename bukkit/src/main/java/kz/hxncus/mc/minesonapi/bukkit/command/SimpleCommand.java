@@ -1,5 +1,7 @@
 package kz.hxncus.mc.minesonapi.bukkit.command;
 
+import kz.hxncus.mc.minesonapi.api.bukkit.command.AbstractCommand;
+
 /**
  * The type Simple command.
  */

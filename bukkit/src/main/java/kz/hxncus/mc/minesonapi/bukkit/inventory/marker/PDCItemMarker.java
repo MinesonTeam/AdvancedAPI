@@ -1,6 +1,7 @@
 package kz.hxncus.mc.minesonapi.bukkit.inventory.marker;
 
-import kz.hxncus.mc.minesonapi.util.builder.ItemBuilder;
+import kz.hxncus.mc.minesonapi.api.bukkit.inventory.marker.ItemMarker;
+import kz.hxncus.mc.minesonapi.utility.builder.ItemBuilder;
 import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

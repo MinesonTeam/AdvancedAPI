@@ -1,11 +1,11 @@
 package kz.hxncus.mc.minesonapi.bukkit.inventory;
 
-import kz.hxncus.mc.minesonapi.MinesonAPI;
-import kz.hxncus.mc.minesonapi.bukkit.event.EventManager;
-import kz.hxncus.mc.minesonapi.bukkit.inventory.marker.ItemMarker;
+import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.api.bukkit.inventory.marker.ItemMarker;
+import kz.hxncus.mc.minesonapi.bukkit.event.EventService;
 import kz.hxncus.mc.minesonapi.bukkit.inventory.marker.PDCItemMarker;
 import kz.hxncus.mc.minesonapi.bukkit.inventory.marker.UnavailableItemMarker;
-import kz.hxncus.mc.minesonapi.util.VersionUtil;
+import kz.hxncus.mc.minesonapi.utility.VersionUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -26,16 +26,16 @@ import java.util.concurrent.ConcurrentHashMap;
 @EqualsAndHashCode
 public class InventoryManager {
 	protected static final Map<Inventory, SimpleInventory> inventories = new ConcurrentHashMap<>();
-	private final MinesonAPI plugin;
+	private final MinesonAPIPlugin plugin;
 	private final ItemMarker itemMarker;
 	
-	public InventoryManager(final MinesonAPI plugin) {
+	public InventoryManager(final MinesonAPIPlugin plugin) {
 		this.plugin = plugin;
 		this.itemMarker = this.getItemMarker(plugin);
-		this.registerEvents(plugin.getEventManager());
+		this.registerEvents(plugin.getEventService());
 	}
 	
-	private ItemMarker getItemMarker(final MinesonAPI plugin) {
+	private ItemMarker getItemMarker(final MinesonAPIPlugin plugin) {
 		if (VersionUtil.isAfterOrEqual(1140)) {
 			return new PDCItemMarker(plugin);
 		} else {
@@ -43,7 +43,7 @@ public class InventoryManager {
 		}
 	}
 	
-	public void registerEvents(final EventManager eventManager) {
+	public void registerEvents(final EventService eventManager) {
 		eventManager.register(EntityPickupItemEvent.class, event -> {
 			if (this.itemMarker.isItemMarked(event.getItem()
 			                                      .getItemStack())) {

@@ -1,6 +1,7 @@
 package kz.hxncus.mc.minesonapi.color.pattern;
 
-import kz.hxncus.mc.minesonapi.MinesonAPI;
+import kz.hxncus.mc.minesonapi.api.color.pattern.Pattern;
+import kz.hxncus.mc.minesonapi.utility.ColorUtil;
 
 import java.awt.*;
 import java.util.regex.Matcher;
@@ -25,16 +26,27 @@ public class GradientPattern implements Pattern {
 			final String start = matcher.group(1);
 			final String content = matcher.group(2);
 			final String end = matcher.group(4);
-			result = result.replace(
-					matcher
-							.group(),
-					MinesonAPI.getInstance()
-					          .getColorManager()
-					          .color(content, new Color(
-							          
-							          Integer.parseInt(start, 16)), new Color(
-							          Integer.parseInt(end, 16)))
-			);
+			result = result.replace(matcher.group(), ColorUtil.color(content,
+                                                           new Color(Integer.parseInt(start, 16)),
+                                                           new Color(Integer.parseInt(end, 16))));
+		}
+		return result;
+	}
+	
+	public static String test(final String message) {
+		String result = message;
+		final Matcher matcher = PATTERN.matcher(result);
+		while (true) {
+			final boolean ifNotFound = !matcher.find();
+			if (ifNotFound) {
+				break;
+			}
+			final String start = matcher.group(1);
+			final String content = matcher.group(2);
+			final String end = matcher.group(4);
+			result = result.replace(matcher.group(), ColorUtil.color(content,
+                                                           new Color(Integer.parseInt(start, 16)),
+                                                           new Color(Integer.parseInt(end, 16))));
 		}
 		return result;
 	}

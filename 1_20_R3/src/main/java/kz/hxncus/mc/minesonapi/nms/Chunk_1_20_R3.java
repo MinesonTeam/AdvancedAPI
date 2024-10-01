@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.nms;
 
-import kz.hxncus.mc.minesonapi.bukkit.nms.NMSChunk;
+import kz.hxncus.mc.minesonapi.api.bukkit.nms.NMSChunk;
 import lombok.ToString;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

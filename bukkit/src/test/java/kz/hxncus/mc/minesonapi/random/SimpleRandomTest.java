@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 class SimpleRandomTest {
     @Test
     void generateRandomKey() {
-        KeyGenerator<String> generator = new KeyGenerator<>(new SimpleRandom());
+        RandomValueGenerator<String> generator = new RandomValueGenerator<>(new SimpleRandom());
         generator.add("Test1", 1.65, 110)
                  .add("Test2", 0.95, 10)
                  .add("Test3", 2, 4)

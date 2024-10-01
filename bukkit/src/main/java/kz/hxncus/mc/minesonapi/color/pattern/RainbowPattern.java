@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.color.pattern;
 
-import kz.hxncus.mc.minesonapi.MinesonAPI;
+import kz.hxncus.mc.minesonapi.utility.ColorUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * @author Hxncus
  * @since 1.0.0
  */
-public class RainbowPattern implements kz.hxncus.mc.minesonapi.color.pattern.Pattern {
+public class RainbowPattern implements kz.hxncus.mc.minesonapi.api.color.pattern.Pattern {
 	private static final java.util.regex.Pattern PATTERN = Pattern.compile("<RAINBOW(\\d{1,3})>(.*?)</RAINBOW>");
 	
 	public String process(final String message) {
@@ -24,9 +24,7 @@ public class RainbowPattern implements kz.hxncus.mc.minesonapi.color.pattern.Pat
 			}
 			final String saturation = matcher.group(1);
 			final String content = matcher.group(2);
-			result = result.replace(matcher.group(), MinesonAPI.getInstance()
-			                                                       .getColorManager()
-			                                                       .rainbow(content, Float.parseFloat(saturation)));
+			result = result.replace(matcher.group(), ColorUtil.rainbow(content, Float.parseFloat(saturation)));
 		}
 		return result;
 	}

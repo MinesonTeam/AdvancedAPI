@@ -4,7 +4,7 @@ plugins {
 }
 
 // Library versions
-val spigot = "1.20.4-R0.1-SNAPSHOT:remapped-mojang"
+val spigot: String = "1.20.4-R0.1-SNAPSHOT:remapped-mojang"
 // Project version and group
 version = property("projectVersion") as String
 group = "kz.hxncus.mc"

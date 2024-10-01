@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
@@ -14,7 +13,7 @@ import java.util.function.Predicate;
  */
 @Getter
 @ToString
-public final class CommandMeta {
+public class CommandMeta {
 	private final String commandName;
 	@Setter
 	private String permission;
@@ -30,22 +29,6 @@ public final class CommandMeta {
 	private String[] usageDescription;
 	@Setter
 	private String helpTopic;
-	
-	/**
-	 * Instantiates a new Command meta.
-	 *
-	 * @param original the original
-	 */
-	public CommandMeta(final CommandMeta original) {
-		this(original.getCommandName());
-		this.setPermission(original.getPermission());
-		this.setAliases(Arrays.copyOf(original.getAliases(), original.getAliases().length));
-		this.setRequirements(original.getRequirements());
-		this.setShortDescription(original.getShortDescription());
-		this.setFullDescription(original.getFullDescription());
-		this.setUsageDescription(original.getUsageDescription());
-		this.setHelpTopic(original.getHelpTopic());
-	}
 	
 	/**
 	 * Instantiates a new Command meta.

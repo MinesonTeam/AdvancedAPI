@@ -1,8 +1,8 @@
 package kz.hxncus.mc.minesonapi.bukkit.world;
 
-import kz.hxncus.mc.minesonapi.util.FunctionalUtil;
-import kz.hxncus.mc.minesonapi.util.tuples.Pair;
-import kz.hxncus.mc.minesonapi.util.tuples.Triplet;
+import kz.hxncus.mc.minesonapi.utility.FunctionalUtil;
+import kz.hxncus.mc.minesonapi.utility.tuples.Pair;
+import kz.hxncus.mc.minesonapi.utility.tuples.Triplet;
 import lombok.Builder;
 import lombok.ToString;
 import org.bukkit.Difficulty;
@@ -41,8 +41,8 @@ public class WorldSettings {
 	 * @return the simple world
 	 */
 	public SimpleWorld apply(final SimpleWorld world) {
-		FunctionalUtil.ifTrueAccept(() -> this.autoSave != null, worlds -> worlds.setAutoSave(this.autoSave), world);
-		FunctionalUtil.ifTrueAccept(() -> this.tripletBiomeMap != null, consumerWorld -> {
+		FunctionalUtil.ifFalseAccept(() -> this.autoSave == null, worlds -> worlds.setAutoSave(this.autoSave), world);
+		FunctionalUtil.ifFalseAccept(() -> this.tripletBiomeMap == null, consumerWorld -> {
 			for (final Map.Entry<Triplet<Integer, Integer, Integer>, Biome> entry : this.tripletBiomeMap.entrySet()) {
 				final Triplet<Integer, Integer, Integer> key = entry.getKey();
 				consumerWorld.setBiome(key.getLeft(), key.getMiddle(), key.getRight(), entry.getValue());

@@ -1,6 +1,7 @@
 package kz.hxncus.mc.minesonapi.bukkit.nms;
 
-import kz.hxncus.mc.minesonapi.util.VersionUtil;
+import kz.hxncus.mc.minesonapi.api.bukkit.nms.NMSChunk;
+import kz.hxncus.mc.minesonapi.utility.VersionUtil;
 
 import java.lang.reflect.InvocationTargetException;
 

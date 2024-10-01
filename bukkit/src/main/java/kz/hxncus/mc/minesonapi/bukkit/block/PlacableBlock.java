@@ -1,8 +1,8 @@
 package kz.hxncus.mc.minesonapi.bukkit.block;
 
-import kz.hxncus.mc.minesonapi.bukkit.nms.NMSChunk;
+import kz.hxncus.mc.minesonapi.api.bukkit.nms.NMSChunk;
+import kz.hxncus.mc.minesonapi.api.bukkit.workload.Workload;
 import kz.hxncus.mc.minesonapi.bukkit.nms.NMSHandler;
-import kz.hxncus.mc.minesonapi.bukkit.workload.Workload;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import org.bukkit.Bukkit;
@@ -13,6 +13,8 @@ import java.util.UUID;
 
 /**
  * The type-Placable block.
+ * @author Hxncus
+ * @since  1.0.1
  */
 @ToString
 @AllArgsConstructor
