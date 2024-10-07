@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.bukkit.inventory;
 
-import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.api.bukkit.inventory.marker.ItemMarker;
 import kz.hxncus.mc.minesonapi.bukkit.event.EventService;
 import kz.hxncus.mc.minesonapi.bukkit.inventory.marker.PDCItemMarker;
@@ -26,16 +26,16 @@ import java.util.concurrent.ConcurrentHashMap;
 @EqualsAndHashCode
 public class InventoryManager {
 	protected static final Map<Inventory, SimpleInventory> inventories = new ConcurrentHashMap<>();
-	private final MinesonAPIPlugin plugin;
+	private final MinesonAPI plugin;
 	private final ItemMarker itemMarker;
 	
-	public InventoryManager(final MinesonAPIPlugin plugin) {
+	public InventoryManager(final MinesonAPI plugin) {
 		this.plugin = plugin;
 		this.itemMarker = this.getItemMarker(plugin);
 		this.registerEvents(plugin.getEventService());
 	}
 	
-	private ItemMarker getItemMarker(final MinesonAPIPlugin plugin) {
+	private ItemMarker getItemMarker(final MinesonAPI plugin) {
 		if (VersionUtil.isAfterOrEqual(1140)) {
 			return new PDCItemMarker(plugin);
 		} else {

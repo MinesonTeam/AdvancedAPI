@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.bukkit.event;
 
-import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
@@ -140,7 +140,7 @@ public class EventService {
 	 * Unregister all.
 	 */
 	public void unregisterAll() {
-		HandlerList.unregisterAll(MinesonAPIPlugin.getInstance());
+		HandlerList.unregisterAll(MinesonAPI.getInstance());
 	}
 	
 	/**

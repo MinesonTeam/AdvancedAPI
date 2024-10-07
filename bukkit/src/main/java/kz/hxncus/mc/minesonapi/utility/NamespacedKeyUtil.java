@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.utility;
 
-import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import lombok.experimental.UtilityClass;
 import org.bukkit.NamespacedKey;
 
@@ -18,6 +18,6 @@ public class NamespacedKeyUtil {
 	 * @return the namespaced key
 	 */
 	public NamespacedKey create(final String key) {
-		return new NamespacedKey(MinesonAPIPlugin.getInstance(), key);
+		return new NamespacedKey(MinesonAPI.getInstance(), key);
 	}
 }

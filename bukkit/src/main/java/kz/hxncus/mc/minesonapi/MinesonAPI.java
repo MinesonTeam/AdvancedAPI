@@ -1,6 +1,5 @@
 package kz.hxncus.mc.minesonapi;
 
-import kz.hxncus.mc.minesonapi.api.MinesonAPI;
 import kz.hxncus.mc.minesonapi.bukkit.config.ConfigService;
 import kz.hxncus.mc.minesonapi.bukkit.event.EventService;
 import kz.hxncus.mc.minesonapi.bukkit.inventory.InventoryManager;
@@ -18,9 +17,9 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 @Getter
 @ToString
-public class MinesonAPIPlugin extends JavaPlugin implements MinesonAPI {
+public class MinesonAPI extends JavaPlugin {
 	@Getter
-	private static MinesonAPIPlugin instance;
+	private static MinesonAPI instance;
 	private ConfigService configService;
 	private EventService eventService;
 	private InventoryManager inventoryService;
@@ -30,7 +29,7 @@ public class MinesonAPIPlugin extends JavaPlugin implements MinesonAPI {
 	/**
 	 * Instantiates a new Mineson api.
 	 */
-	public MinesonAPIPlugin() {
+	public MinesonAPI() {
 		instance = this;
 	}
 	

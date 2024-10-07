@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.bukkit.server;
 
-import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.Server;
@@ -14,10 +14,10 @@ import java.util.Map;
 @Getter
 @EqualsAndHashCode
 public class ServerService {
-	private static MinesonAPIPlugin plugin;
+	private static MinesonAPI plugin;
 	private final Server server;
 	
-	public ServerService(final MinesonAPIPlugin plugin, final Server server) {
+	public ServerService(final MinesonAPI plugin, final Server server) {
 		ServerService.plugin = plugin;
 		this.server = server;
 	}

@@ -5,8 +5,11 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
@@ -14,26 +17,44 @@ import java.util.*;
 public class CommandUtil {
 	private final String FIELD_COMMAND_MAP = "commandMap";
 	private final String FIELD_KNOWN_COMMANDS = "knownCommands";
-	
 	private final SimpleCommandMap COMMAND_MAP = getCommandMap();
 	
 	private SimpleCommandMap getCommandMap() {
 		return (SimpleCommandMap) ReflectionUtil.getFieldValue(Bukkit.getServer(), FIELD_COMMAND_MAP);
 	}
 	
+	public boolean register(@NonNull JavaPlugin plugin, @NonNull String commandName) {
+		PluginCommand command = plugin.getServer().getPluginCommand(commandName);
+		if (command == null) {
+			return false;
+		}
+		return CommandUtil.register(plugin, command);
+	}
+	
+	public void postRegister(Plugin plugin) {
+		for (Player player : plugin.getServer().getOnlinePlayers()) {
+			player.updateCommands();
+		}
+	}
+	
 	public boolean register(@NonNull Plugin plugin, @NonNull Command command) {
-		return COMMAND_MAP.register(plugin.getName(), command);
+		boolean isRegistered = COMMAND_MAP.register(plugin.getName(), command);
+		postRegister(plugin);
+		return isRegistered;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public boolean unregister(@NonNull String name) {
 		Command command = getCommand(name).orElse(null);
-		if (command == null) return false;
-		
+		if (command == null) {
+			return false;
+		}
 		Map<String, Command> knownCommands = (HashMap<String, Command>) ReflectionUtil.getFieldValue(COMMAND_MAP, FIELD_KNOWN_COMMANDS);
-		if (knownCommands == null) return false;
-		if (!command.unregister(COMMAND_MAP)) return false;
-		
+		if (knownCommands == null) {
+			return false;
+		} else if (!command.unregister(COMMAND_MAP)) {
+			return false;
+		}
 		return knownCommands.keySet().removeIf(key -> key.equalsIgnoreCase(command.getName()) || command.getAliases().contains(key));
 	}
 	

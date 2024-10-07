@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.bukkit.config;
 
-import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.utility.ColorUtil;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -91,9 +91,9 @@ public enum Messages {
 	 * @return the languages
 	 */
 	public YamlConfiguration getLanguages() {
-		return MinesonAPIPlugin.getInstance()
-		                       .getConfigService()
-		                       .getOrCreateConfig("languages.yml");
+		return MinesonAPI.getInstance()
+		                 .getConfigService()
+		                 .getOrCreateConfig("languages.yml");
 	}
 	
 	/**

@@ -1,14 +1,9 @@
 package kz.hxncus.mc.minesonapi.utility;
 
-import lombok.NonNull;
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-
-import java.util.Collection;
 
 /**
  * The type Server util.
@@ -73,25 +68,4 @@ public class ServerUtil {
 	 * The Tree types.
 	 */
 	public final TreeType[] TREE_TYPES = TreeType.values();
-	
-	/**
-	 * Returns online players from Bukkit API.
-	 * This requires reflection, as return type changed in 1.8,
-	 * and we want to avoid errors.
-	 *
-	 * @return  Online players from Bukkit API.
-	 */
-	@SuppressWarnings("unchecked")
-	@SneakyThrows
-	@NonNull
-	public Player[] getOnlinePlayers() {
-		Object players = Bukkit.class.getMethod("getOnlinePlayers").invoke(null);
-		if (players instanceof Player[]) {
-			// 1.7-
-			return (Player[]) players;
-		} else {
-			// 1.8+
-			return ((Collection<Player>)players).toArray(new Player[0]);
-		}
-	}
 }

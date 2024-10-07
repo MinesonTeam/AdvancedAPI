@@ -56,7 +56,7 @@ allprojects {
         testImplementation("org.junit.jupiter:junit-jupiter-api:$junit")
     }
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 

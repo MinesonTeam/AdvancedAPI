@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.bukkit.config;
 
-import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.utility.ColorUtil;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
@@ -66,7 +66,7 @@ public enum Settings {
 	public void setValue(final Object value, final boolean save) {
 		this.getSettings()
 		    .set(this.path, value);
-		final MinesonAPIPlugin plugin = MinesonAPIPlugin.getInstance();
+		final MinesonAPI plugin = MinesonAPI.getInstance();
 		if (save) {
 			try {
 				this.getSettings()
@@ -87,9 +87,9 @@ public enum Settings {
 	 * @return the settings
 	 */
 	public YamlConfiguration getSettings() {
-		return MinesonAPIPlugin.getInstance()
-		                       .getConfigService()
-		                       .getOrCreateConfig("settings.yml");
+		return MinesonAPI.getInstance()
+		                 .getConfigService()
+		                 .getOrCreateConfig("settings.yml");
 	}
 	
 	/**

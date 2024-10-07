@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.bukkit.world;
 
-import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.bukkit.event.EventService;
 import kz.hxncus.mc.minesonapi.utility.FileUtil;
 import lombok.EqualsAndHashCode;
@@ -33,7 +33,7 @@ public class WorldService {
 	 *
 	 * @param plugin the plugin
 	 */
-	public WorldService(final MinesonAPIPlugin plugin) {
+	public WorldService(final MinesonAPI plugin) {
 		final EventService eventManager = plugin.getEventService();
 		this.registerEvents(eventManager);
 		for (final World world : Bukkit.getWorlds()) {

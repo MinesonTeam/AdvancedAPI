@@ -143,9 +143,7 @@ public class SimpleWorld {
 	 */
 	@Nullable
 	public GameMode getGameMode() {
-		return this.world.getPlayers().isEmpty() ? null : this.getWorldPlayers()
-		                                                      .getFirst()
-		                                                      .getGameMode();
+		return this.world.getPlayers().isEmpty() ? null : this.getWorldPlayers().get(0).getGameMode();
 	}
 	
 	/**

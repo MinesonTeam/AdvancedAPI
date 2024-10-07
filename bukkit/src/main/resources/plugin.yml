@@ -7,3 +7,9 @@ depend:
 softdepend:
   - FastAsyncWorldEdit
   - WorldGuard
+commands:
+  basic:
+    description: Hello, this is basic command
+    aliases:
+      - basis
+      - test

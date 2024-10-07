@@ -1,5 +1,7 @@
 package kz.hxncus.mc.minesonapi.utility;
 
+import lombok.NonNull;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockIterator;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -273,5 +276,26 @@ public class VersionUtil {
 				      task.cancel();
 			      }
 		      }, 0L, 10L);
+	}
+	
+	/**
+	 * Returns online players from Bukkit API.
+	 * This requires reflection, as return type changed in 1.8,
+	 * and we want to avoid errors.
+	 *
+	 * @return  Online players from Bukkit API.
+	 */
+	@SuppressWarnings("unchecked")
+	@SneakyThrows
+	@NonNull
+	public Player[] getOnlinePlayers() {
+		Object players = Bukkit.class.getMethod("getOnlinePlayers").invoke(null);
+		if (players instanceof Player[]) {
+			// 1.7-
+			return (Player[]) players;
+		} else {
+			// 1.8+
+			return ((Collection<Player>)players).toArray(new Player[0]);
+		}
 	}
 }

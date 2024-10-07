@@ -28,6 +28,22 @@ public class Pair<L, R> implements Serializable {
 		return right;
 	}
 	
+	public L getFirst() {
+		return left;
+	}
+	
+	public R getSecond() {
+		return right;
+	}
+	
+	public void setFirst(L first) {
+		this.left = first;
+	}
+	
+	public void setSecond(R second) {
+		this.right = second;
+	}
+	
 	@NonNull
 	public Pair<R, L> swap() {
 		return Pair.of(this.right, this.left);

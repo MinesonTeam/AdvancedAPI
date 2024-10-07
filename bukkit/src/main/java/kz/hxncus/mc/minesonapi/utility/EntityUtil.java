@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.utility;
 
-import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.bukkit.server.ServerService;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -34,8 +34,7 @@ public class EntityUtil {
 	@Nullable
 	public ItemStack getBowFromArrow(final Arrow arrow) {
 		final List<MetadataValue> values = arrow.getMetadata("shot-from");
-		final Object value = values.getFirst()
-		                           .value();
+		final Object value = values.get(0).value();
 		if (!(value instanceof ItemStack)) {
 			return null;
 		}
@@ -59,8 +58,8 @@ public class EntityUtil {
 	 * @return the boolean
 	 */
 	public boolean isUnderWater(final Entity entity) {
-		final ServerService serverService = MinesonAPIPlugin.getInstance()
-		                                                    .getServerService();
+		final ServerService serverService = MinesonAPI.getInstance()
+		                                              .getServerService();
 		if (serverService.isPaperServer() && VersionUtil.isAfterOrEqual(1190)) {
 			//            return entity.isUnderWater();
 			return false;
@@ -97,7 +96,7 @@ public class EntityUtil {
 	 * @param cause    the cause
 	 */
 	public void teleport(final Location location, final Entity entity, final PlayerTeleportEvent.TeleportCause cause) {
-		final ServerService serverService = MinesonAPIPlugin.getInstance().getServerService();
+		final ServerService serverService = MinesonAPI.getInstance().getServerService();
 		if (serverService.isPaperServer() || serverService.isFoliaServer() && VersionUtil.isAfterOrEqual(1194)) {
 			//            entity.teleportAsync(location, cause);
 			entity.teleport(location);
@@ -113,8 +112,8 @@ public class EntityUtil {
 	 * @param entity   the entity
 	 */
 	public void teleport(final Location location, final Entity entity) {
-		final ServerService serverService = MinesonAPIPlugin.getInstance()
-		                                                    .getServerService();
+		final ServerService serverService = MinesonAPI.getInstance()
+		                                              .getServerService();
 		if (VersionUtil.isAfterOrEqual(1194) && (serverService.isPaperServer() || serverService.isFoliaServer())) {
 			//            entity.teleportAsync(location);
 			entity.teleport(location);

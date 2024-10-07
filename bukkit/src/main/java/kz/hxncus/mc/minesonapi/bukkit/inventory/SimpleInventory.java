@@ -1,6 +1,6 @@
 package kz.hxncus.mc.minesonapi.bukkit.inventory;
 
-import kz.hxncus.mc.minesonapi.MinesonAPIPlugin;
+import kz.hxncus.mc.minesonapi.MinesonAPI;
 import kz.hxncus.mc.minesonapi.bukkit.scheduler.Scheduler;
 import lombok.Getter;
 import lombok.NonNull;
@@ -44,7 +44,7 @@ public class SimpleInventory {
 	}
 	
 	private void registerInventory() {
-		final MinesonAPIPlugin plugin = MinesonAPIPlugin.getInstance();
+		final MinesonAPI plugin = MinesonAPI.getInstance();
 		
 		plugin.getInventoryService()
 		      .registerInventory(this);
@@ -117,10 +117,10 @@ public class SimpleInventory {
 	
 	@NonNull
 	public SimpleInventory setItem(final int slot, final ItemStack item, final BiConsumer<SimpleInventory, InventoryClickEvent> handler) {
-		this.inventory.setItem(slot, this.marking ? MinesonAPIPlugin.getInstance()
-		                                                            .getInventoryService()
-		                                                            .getItemMarker()
-		                                                            .markItem(item) : item);
+		this.inventory.setItem(slot, this.marking ? MinesonAPI.getInstance()
+		                                                      .getInventoryService()
+		                                                      .getItemMarker()
+		                                                      .markItem(item) : item);
 		if (handler != null) {
 			this.itemHandlers.put(slot, handler);
 		} else {
