@@ -1,6 +1,6 @@
 ## About
 
-MinesonAPI provides a simple code, for example, SimpleItem or SimpleInventory, which can be used to create things faster.
+MinesonAPI provides a simple code, for example, ItemBuilder, SimpleInventory, SimpleCommand which can be used to create things faster.
 
 ## Issues
 
