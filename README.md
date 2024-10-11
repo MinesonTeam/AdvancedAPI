@@ -1,10 +1,10 @@
 ## About
 
-MinesonAPI provides a simple code, for example, ItemBuilder, SimpleInventory, SimpleCommand which can be used to create things faster.
+AdvancedAPI provides a simple code, for example, ItemBuilder, SimpleInventory, SimpleCommand which can be used to create things faster.
 
 ## Issues
 
-The [issues](https://github.com/MinesonTeam/MinesonAPI/issues) section is an issue tracker for all the kinds of
+The [issues](https://github.com/MinesonTeam/AdvancedAPI/issues) section is an issue tracker for all the kinds of
 problems covered in issue templates. When opening an issue, provide as much information as possible. The difference
 between a bug getting fixed in 1 week versus 1 hour is in quality of the report. Bug reports where steps to reproduce are.
 "IDK" have no value and will not help to get the bug fixed at all.
