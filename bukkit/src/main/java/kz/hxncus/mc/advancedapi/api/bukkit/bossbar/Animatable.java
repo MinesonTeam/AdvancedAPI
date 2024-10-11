@@ -1,0 +1,23 @@
+package kz.hxncus.mc.advancedapi.api.bukkit.bossbar;
+
+import kz.hxncus.mc.advancedapi.bukkit.scheduler.Scheduler;
+
+/**
+ * The interface Animatable.
+ * @author Hxncus
+ * @since  1.0.1
+ */
+public interface Animatable {
+	/**
+	 * Stop animation.
+	 */
+	void stopAnimation();
+	
+	/**
+	 * Start animation.
+	 *
+	 * @param scheduler the scheduler
+	 */
+	void startAnimation(Scheduler scheduler);
+	
+}

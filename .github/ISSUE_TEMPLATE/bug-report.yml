@@ -68,7 +68,7 @@ body:
       label: Server logs and config
       description: |
         If you think it will be helpful, please include any server logs.
-        Also please provide the `config.yml` file from `plugins/MinesonAPI/config.yml`.
+        Also please provide the `config.yml` file from `plugins/AdvancedAPI/config.yml`.
       placeholder: Logs and configs (if you think it'll help!)
     validations:
       required: false

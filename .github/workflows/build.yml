@@ -30,7 +30,7 @@ jobs:
       - name: Upload plugin
         uses: actions/upload-artifact@v4.3.5
         with:
-          name: MinesonAPI
+          name: AdvancedAPI
           path: "*/build/libs/*.jar"
       - uses: dev-drprasad/delete-tag-and-release@v1.1
         if: ${{ github.event_name == 'push' }}

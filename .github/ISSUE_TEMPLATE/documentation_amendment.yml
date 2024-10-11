@@ -7,7 +7,7 @@ body:
     attributes:
       label: Documentation URL
       description: Which page of the documentation has an issue?
-      placeholder: 'https://github.com/MinesonTeam/MinesonAPI/wiki'
+      placeholder: 'https://github.com/MinesonTeam/AdvancedAPI/wiki'
     validations:
       required: true
   - type: textarea

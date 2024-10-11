@@ -1,15 +1,6 @@
 name: "$name"
 version: "$version"
-main: kz.hxncus.mc.minesonapi.MinesonAPI
+main: kz.hxncus.mc.advancedapi.AdvancedAPI
 api-version: '1.13'
 depend:
   - ProtocolLib
-softdepend:
-  - FastAsyncWorldEdit
-  - WorldGuard
-commands:
-  basic:
-    description: Hello, this is basic command
-    aliases:
-      - basis
-      - test

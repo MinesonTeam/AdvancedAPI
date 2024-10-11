@@ -5,7 +5,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "MinesonAPI"
+rootProject.name = "AdvancedAPI"
 
 include(
     ":bukkit",
