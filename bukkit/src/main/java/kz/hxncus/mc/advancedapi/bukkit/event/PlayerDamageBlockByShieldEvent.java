@@ -3,7 +3,6 @@ package kz.hxncus.mc.advancedapi.bukkit.event;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.ToString;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -16,7 +15,6 @@ import org.bukkit.inventory.PlayerInventory;
 /**
  * PlayerDamageBlockByShieldEvent
  */
-@ToString
 public class PlayerDamageBlockByShieldEvent extends PlayerEvent implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private final Entity source;

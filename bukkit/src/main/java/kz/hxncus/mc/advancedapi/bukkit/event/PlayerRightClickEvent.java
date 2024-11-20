@@ -3,7 +3,6 @@ package kz.hxncus.mc.advancedapi.bukkit.event;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.ToString;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -25,9 +24,8 @@ import javax.annotation.Nullable;
  */
 @Getter
 @Setter
-@ToString
 public class PlayerRightClickEvent extends PlayerEvent implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList HANDLERS = new HandlerList();
 	@Nullable
 	private ItemStack item;
 	@NonNull
@@ -69,9 +67,8 @@ public class PlayerRightClickEvent extends PlayerEvent implements Cancellable {
 		this.useClickedBlock = clickedBlock == null ? Result.DENY : Result.ALLOW;
 	}
 	
-	@Override
 	public @NonNull HandlerList getHandlers() {
-		return handlers;
+		return HANDLERS;
 	}
 	
 	@Override
@@ -83,5 +80,9 @@ public class PlayerRightClickEvent extends PlayerEvent implements Cancellable {
 	public void setCancelled(final boolean cancel) {
 		this.setUseClickedBlock(cancel ? Result.DENY : this.useClickedBlock == Result.DENY ? Result.DEFAULT : this.useClickedBlock);
 		this.setUseItemInHand(cancel ? Result.DENY : this.useItemInHand == Result.DENY ? Result.DEFAULT : this.useItemInHand);
+	}
+	
+	public static HandlerList getHandlerList() {
+		return HANDLERS;
 	}
 }

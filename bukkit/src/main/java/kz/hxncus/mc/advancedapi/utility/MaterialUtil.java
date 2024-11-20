@@ -5,8 +5,12 @@ import org.bukkit.Material;
 
 @UtilityClass
 public class MaterialUtil {
-	public boolean isLog(Material material) {
-		switch (material) {
+	public boolean isNullOrAir(final Material material) {
+		return material == null || material.isAir();
+	}
+	
+	public boolean isLog(Material log) {
+		switch (log) {
 			//<editor-fold defaultstate="collapsed" desc="isLog">
 			case OAK_LOG:
 			case SPRUCE_LOG:
@@ -24,8 +28,29 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isSword(Material material) {
-		switch (material) {
+	public boolean isLeave(Material leaf) {
+		switch (leaf) {
+			//<editor-fold defaultstate="collapsed" desc="isLeave">
+			case OAK_LEAVES:
+			case SPRUCE_LEAVES:
+			case ACACIA_LEAVES:
+			case BIRCH_LEAVES:
+			case CHERRY_LEAVES:
+			case JUNGLE_LEAVES:
+			case DARK_OAK_LEAVES:
+			case MANGROVE_LEAVES:
+			case AZALEA_LEAVES:
+			case FLOWERING_AZALEA_LEAVES:
+			case LEGACY_LEAVES:
+			case LEGACY_LEAVES_2:
+				return true;
+			default:
+				return false;
+		}
+	}
+	
+	public boolean isSword(Material sword) {
+		switch (sword) {
 			//<editor-fold defaultstate="collapsed" desc="isSword">
 			case LEGACY_WOOD_SWORD:
 			case LEGACY_STONE_SWORD:
@@ -44,8 +69,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isPickaxe(Material material) {
-		switch (material) {
+	public boolean isPickaxe(Material pickaxe) {
+		switch (pickaxe) {
 			//<editor-fold defaultstate="collapsed" desc="isPickaxe">
 			case LEGACY_WOOD_PICKAXE:
 			case LEGACY_STONE_PICKAXE:
@@ -64,8 +89,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isShovel(Material material) {
-		switch (material) {
+	public boolean isShovel(Material shovel) {
+		switch (shovel) {
 			//<editor-fold defaultstate="collapsed" desc="isShovel">
 			case LEGACY_WOOD_SPADE:
 			case LEGACY_STONE_SPADE:
@@ -84,8 +109,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isAxe(Material material) {
-		switch (material) {
+	public boolean isAxe(Material axe) {
+		switch (axe) {
 			//<editor-fold defaultstate="collapsed" desc="isAxe">
 			case LEGACY_WOOD_AXE:
 			case LEGACY_STONE_AXE:
@@ -104,8 +129,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isHoe(Material material) {
-		switch (material) {
+	public boolean isHoe(Material hoe) {
+		switch (hoe) {
 			//<editor-fold defaultstate="collapsed" desc="isHoe">
 			case LEGACY_WOOD_HOE:
 			case LEGACY_STONE_HOE:
@@ -124,8 +149,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isPotion(Material material) {
-		switch (material) {
+	public boolean isPotion(Material potion) {
+		switch (potion) {
 			//<editor-fold defaultstate="collapsed" desc="isPotion">
 			case LEGACY_POTION:
 			case LEGACY_SPLASH_POTION:
@@ -139,8 +164,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isSpawnEgg(Material material) {
-		switch (material) {
+	public boolean isSpawnEgg(Material spawnEgg) {
+		switch (spawnEgg) {
 			//<editor-fold defaultstate="collapsed" desc="isSpawnEgg">
 			case ALLAY_SPAWN_EGG:
 			case AXOLOTL_SPAWN_EGG:
@@ -226,8 +251,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isHead(Material material) {
-		switch (material) {
+	public boolean isHead(Material head) {
+		switch (head) {
 			//<editor-fold defaultstate="collapsed" desc="isHead">
 			case DRAGON_HEAD:
 			case PIGLIN_HEAD:
@@ -245,8 +270,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isMinecart(Material material) {
-		switch (material) {
+	public boolean isMinecart(Material minecart) {
+		switch (minecart) {
 			//<editor-fold defaultstate="collapsed" desc="isMinecart">
 			case CHEST_MINECART:
 			case COMMAND_BLOCK_MINECART:
@@ -266,8 +291,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isBoat(Material material) {
-		switch (material) {
+	public boolean isBoat(Material boat) {
+		switch (boat) {
 			//<editor-fold defaultstate="collapsed" desc="isBoat">
 			case ACACIA_BOAT:
 			case BIRCH_BOAT:
@@ -297,8 +322,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isBanner(Material material) {
-		switch (material) {
+	public boolean isBanner(Material banner) {
+		switch (banner) {
 			//<editor-fold defaultstate="collapsed" desc="isBanner">
 			case BLACK_BANNER:
 			case BLUE_BANNER:
@@ -341,8 +366,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isBed(Material material) {
-		switch (material) {
+	public boolean isBed(Material bed) {
+		switch (bed) {
 			//<editor-fold defaultstate="collapsed" desc="isBed">
 			case BROWN_BED:
 			case BLUE_BED:
@@ -368,8 +393,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isRail(Material material) {
-		switch (material) {
+	public boolean isRail(Material rail) {
+		switch (rail) {
 			//<editor-fold defaultstate="collapsed" desc="isRail">
 			case RAIL:
 			case POWERED_RAIL:
@@ -385,8 +410,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isBucket(Material material) {
-		switch (material) {
+	public boolean isBucket(Material bucket) {
+		switch (bucket) {
 			//<editor-fold defaultstate="collapsed" desc="isBucket">
 			case WATER_BUCKET:
 			case LAVA_BUCKET:
@@ -409,8 +434,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isShulker(Material material) {
-		switch (material) {
+	public boolean isShulker(Material shulker) {
+		switch (shulker) {
 			//<editor-fold defaultstate="collapsed" desc="isShulker">
 			case BLACK_SHULKER_BOX:
 			case BLUE_SHULKER_BOX:
@@ -451,8 +476,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isSign(Material material) {
-		switch (material) {
+	public boolean isSign(Material sign) {
+		switch (sign) {
 			//<editor-fold defaultstate="collapsed" desc="isSign">
 			case ACACIA_HANGING_SIGN:
 			case OAK_SIGN:
@@ -507,8 +532,8 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isArrow(Material material) {
-		switch (material) {
+	public boolean isArrow(Material arrow) {
+		switch (arrow) {
 			//<editor-fold defaultstate="collapsed" desc="isArrow">
 			case ARROW:
 			case TIPPED_ARROW:
@@ -522,14 +547,43 @@ public class MaterialUtil {
 		}
 	}
 	
-	public boolean isHorseArmor(Material material) {
-		switch (material) {
+	public boolean isHorseArmor(Material horseArmor) {
+		switch (horseArmor) {
 			//<editor-fold defaultstate="collapsed" desc="isHorseArmor">
 			case LEATHER_HORSE_ARMOR:
 			case IRON_HORSE_ARMOR:
 			case GOLDEN_HORSE_ARMOR:
 			case DIAMOND_HORSE_ARMOR:
 				return true;
+			default:
+				return false;
+		}
+	}
+	
+	public boolean isPlantable(Material blockMaterial, Material plant) {
+		switch (plant) {
+			//<editor-fold defaultstate="collapsed" desc="isPlantable">
+			case ACACIA_SAPLING:
+			case BIRCH_SAPLING:
+			case DARK_OAK_SAPLING:
+			case JUNGLE_SAPLING:
+			case OAK_SAPLING:
+			case BAMBOO_SAPLING:
+			case CHERRY_SAPLING:
+			case SPRUCE_SAPLING:
+			case LEGACY_SAPLING:
+				return blockMaterial == Material.GRASS_BLOCK || blockMaterial == Material.DIRT || blockMaterial == Material.FARMLAND ||
+						blockMaterial == Material.COARSE_DIRT || blockMaterial == Material.ROOTED_DIRT;
+			case CACTUS:
+				return blockMaterial == Material.SAND;
+			case SUGAR_CANE:
+				return blockMaterial == Material.GRASS_BLOCK || blockMaterial == Material.DIRT || blockMaterial == Material.SAND;
+			case WHEAT:
+			case CARROTS:
+			case POTATOES:
+				return blockMaterial == Material.FARMLAND;
+			case NETHER_WART:
+				return blockMaterial == Material.SOUL_SAND;
 			default:
 				return false;
 		}

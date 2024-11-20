@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 @EqualsAndHashCode(callSuper = false)
 public class ItemBuilder {
 	private final ItemStack itemStack;
-	private final ItemMeta itemMeta;
+	private ItemMeta itemMeta;
 	
 	/**
 	 * Instantiates a new Item builder.
@@ -64,7 +64,7 @@ public class ItemBuilder {
 	}
 	
 	/**
-	 * Display name item builder.
+	 * Display name an item builder.
 	 *
 	 * @param name the name
 	 * @return the item builder
@@ -75,23 +75,12 @@ public class ItemBuilder {
 	}
 	
 	/**
-	 * Lore item builder.
-	 *
-	 * @param lore the lore
-	 * @return the item builder
-	 */
-	public ItemBuilder lore(final String lore) {
-		return this.loreString(Collections.singletonList(lore));
-	}
-	
-	/**
 	 * Lore string item builder.
 	 *
 	 * @param lore the lore
 	 * @return the item builder
 	 */
-	@SuppressWarnings("TypeMayBeWeakened")
-	public ItemBuilder loreString(final List<String> lore) {
+	public ItemBuilder setLore(final List<String> lore) {
 		this.itemMeta.setLore(lore);
 		return this;
 	}
@@ -102,8 +91,20 @@ public class ItemBuilder {
 	 * @param lore the lore
 	 * @return the item builder
 	 */
-	public ItemBuilder lore(final String... lore) {
-		return this.loreString(Arrays.asList(lore));
+	public ItemBuilder setLore(final String lore) {
+		this.itemMeta.setLore(Collections.singletonList(lore));
+		return this;
+	}
+	
+	/**
+	 * Lore item builder.
+	 *
+	 * @param lore the lore
+	 * @return the item builder
+	 */
+	public ItemBuilder setLore(final String... lore) {
+		this.itemMeta.setLore(Arrays.asList(lore));
+		return this;
 	}
 	
 	/**
@@ -113,7 +114,12 @@ public class ItemBuilder {
 	 * @return the item builder
 	 */
 	public ItemBuilder addLore(final String line) {
-		this.addLore(Collections.singletonList(line));
+		final List<String> lore = this.itemMeta.getLore();
+		if (lore == null) {
+			this.itemMeta.setLore(Collections.singletonList(line));
+		} else {
+			lore.add(line);
+		}
 		return this;
 	}
 	
@@ -141,17 +147,9 @@ public class ItemBuilder {
 	 * @return the item builder
 	 */
 	public ItemBuilder addLore(final String... lines) {
-		return this.addLore(Arrays.asList(lines));
-	}
-	
-	/**
-	 * Sets material.
-	 *
-	 * @param material the material
-	 * @return the material
-	 */
-	public ItemBuilder setMaterial(final Material material) {
-		this.itemStack.setType(material);
+		for (String line : lines) {
+			addLore(line);
+		}
 		return this;
 	}
 	
@@ -163,7 +161,20 @@ public class ItemBuilder {
 	 */
 	public ItemBuilder setType(final Material material) {
 		this.itemStack.setType(material);
+		if (this.itemMeta == null) {
+			this.itemMeta = this.itemStack.getItemMeta();
+		}
 		return this;
+	}
+	
+	/**
+	 * Sets material.
+	 *
+	 * @param material the material
+	 * @return the material
+	 */
+	public ItemBuilder setMaterial(final Material material) {
+		return this.setType(material);
 	}
 	
 	/**
@@ -174,6 +185,11 @@ public class ItemBuilder {
 	 */
 	public ItemBuilder setAmount(final int amount) {
 		this.itemStack.setAmount(amount);
+		return this;
+	}
+	
+	public ItemBuilder setQuantity(final int quantity) {
+		this.itemStack.setAmount(quantity);
 		return this;
 	}
 	
@@ -221,21 +237,6 @@ public class ItemBuilder {
 	}
 	
 	/**
-	 * Meta item builder.
-	 *
-	 * @param <T>          the type parameter
-	 * @param metaClass    the meta-class
-	 * @param metaConsumer the meta-consumer
-	 * @return the item builder
-	 */
-	public <T extends ItemMeta> ItemBuilder meta(final Class<T> metaClass, final Consumer<? super T> metaConsumer) {
-		if (metaClass.isInstance(this.itemMeta)) {
-			metaConsumer.accept(metaClass.cast(this.itemMeta));
-		}
-		return this;
-	}
-	
-	/**
 	 * Color item builder.
 	 *
 	 * @param color the color
@@ -250,10 +251,12 @@ public class ItemBuilder {
 	 *
 	 * @param enchantment the enchantment
 	 * @param level       the level
+	 * @param override    the override
 	 * @return the item builder
 	 */
-	public ItemBuilder addEnchant(final Enchantment enchantment, final int level) {
-		return this.addEnchant(enchantment, level, true);
+	public ItemBuilder addEnchant(final Enchantment enchantment, final int level, final boolean override) {
+		this.itemMeta.addEnchant(enchantment, level, override);
+		return this;
 	}
 	
 	/**
@@ -261,12 +264,10 @@ public class ItemBuilder {
 	 *
 	 * @param enchantment the enchantment
 	 * @param level       the level
-	 * @param override    the override
 	 * @return the item builder
 	 */
-	public ItemBuilder addEnchant(final Enchantment enchantment, final int level, final boolean override) {
-		this.itemMeta.addEnchant(enchantment, level, override);
-		return this;
+	public ItemBuilder addEnchant(final Enchantment enchantment, final int level) {
+		return this.addEnchant(enchantment, level, true);
 	}
 	
 	/**
@@ -340,7 +341,7 @@ public class ItemBuilder {
 	 * @param value         the value
 	 * @return the pdc
 	 */
-	public <T> ItemBuilder setPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, T> pdt, final T value) {
+	public <T, Z> ItemBuilder setPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, Z> pdt, final Z value) {
 		this.itemMeta.getPersistentDataContainer()
 		             .set(namespacedKey, pdt, value);
 		return this;
@@ -354,7 +355,7 @@ public class ItemBuilder {
 	 * @param pdt           the pdt
 	 * @return the pdc
 	 */
-	public <T> T getPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, T> pdt) {
+	public <T, Z> Z getPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, Z> pdt) {
 		return this.itemMeta.getPersistentDataContainer()
 		                    .get(namespacedKey, pdt);
 	}
@@ -368,8 +369,8 @@ public class ItemBuilder {
 	 * @param def           the def
 	 * @return the or default pdc
 	 */
-	public <T> T getOrDefaultPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, ? extends T> pdt, final T def) {
-		final T value = this.itemMeta.getPersistentDataContainer()
+	public <T, Z> Z getOrDefaultPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, Z> pdt, final Z def) {
+		final Z value = this.itemMeta.getPersistentDataContainer()
 		                             .get(namespacedKey, pdt);
 		return value == null ? def : value;
 	}
@@ -407,6 +408,21 @@ public class ItemBuilder {
 	public Set<NamespacedKey> getPDCKeys() {
 		return this.itemMeta.getPersistentDataContainer()
 		                    .getKeys();
+	}
+	
+	/**
+	 * Meta item builder.
+	 *
+	 * @param <T>          the type parameter
+	 * @param metaClass    the meta-class
+	 * @param metaConsumer the meta-consumer
+	 * @return the item builder
+	 */
+	public <T extends ItemMeta> ItemBuilder meta(final Class<T> metaClass, final Consumer<? super T> metaConsumer) {
+		if (metaClass.isInstance(this.itemMeta)) {
+			metaConsumer.accept(metaClass.cast(this.itemMeta));
+		}
+		return this;
 	}
 	
 	/**

@@ -18,15 +18,15 @@ import java.util.List;
  */
 @UtilityClass
 public class ReflectionUtil {
-	public static Class<?> getClass(@NonNull String path, @NonNull String name) {
+	public Class<?> getClass(@NonNull String path, @NonNull String name) {
 		return getClass(path + "." + name);
 	}
 	
-	public static Class<?> getInnerClass(@NonNull String path, @NonNull String name) {
+	public Class<?> getInnerClass(@NonNull String path, @NonNull String name) {
 		return getClass(path + "$" + name);
 	}
 	
-	private static Class<?> getClass(@NonNull String path) {
+	private Class<?> getClass(@NonNull String path) {
 		try {
 			return Class.forName(path);
 		}
@@ -36,7 +36,7 @@ public class ReflectionUtil {
 		}
 	}
 	
-	public static Constructor<?> getConstructor(@NonNull Class<?> source, Class<?>... types) {
+	public Constructor<?> getConstructor(@NonNull Class<?> source, Class<?>... types) {
 		try {
 			Constructor<?> constructor = source.getDeclaredConstructor(types);
 			constructor.setAccessible(true);
@@ -48,7 +48,7 @@ public class ReflectionUtil {
 		return null;
 	}
 	
-	public static Object invokeConstructor(@NonNull Constructor<?> constructor, Object... obj) {
+	public Object invokeConstructor(@NonNull Constructor<?> constructor, Object... obj) {
 		try {
 			return constructor.newInstance(obj);
 		}
@@ -59,7 +59,7 @@ public class ReflectionUtil {
 	}
 	
 	@NonNull
-	public static <T> List<T> getFields(@NonNull Class<?> source, @NonNull Class<T> type) {
+	public <T> List<T> getFields(@NonNull Class<?> source, @NonNull Class<T> type) {
 		List<T> list = new ArrayList<>();
 		
 		for (Field field : ReflectionUtil.getFields(source)) {
@@ -82,7 +82,7 @@ public class ReflectionUtil {
 	}
 	
 	@NonNull
-	public static List<Field> getFields(@NonNull Class<?> source) {
+	public List<Field> getFields(@NonNull Class<?> source) {
 		List<Field> result = new ArrayList<>();
 		
 		Class<?> clazz = source;
@@ -99,7 +99,7 @@ public class ReflectionUtil {
 		return result;
 	}
 	
-	public static Field getField(@NonNull Class<?> source, @NonNull String name) {
+	public Field getField(@NonNull Class<?> source, @NonNull String name) {
 		try {
 			return source.getDeclaredField(name);
 		}
@@ -109,7 +109,7 @@ public class ReflectionUtil {
 		}
 	}
 	
-	public static Object getFieldValue(@NonNull Object source, @NonNull String name) {
+	public Object getFieldValue(@NonNull Object source, @NonNull String name) {
 		try {
 			Class<?> clazz = source instanceof Class<?> ? (Class<?>) source : source.getClass();
 			Field field = getField(clazz, name);
@@ -124,7 +124,7 @@ public class ReflectionUtil {
 		return null;
 	}
 	
-	public static boolean setFieldValue(@NonNull Object source, @NonNull String name, @Nullable Object value) {
+	public boolean setFieldValue(@NonNull Object source, @NonNull String name, @Nullable Object value) {
 		try {
 			boolean isStatic = source instanceof Class;
 			Class<?> clazz = isStatic ? (Class<?>) source : source.getClass();
@@ -142,7 +142,7 @@ public class ReflectionUtil {
 		return false;
 	}
 	
-	public static Method getMethod(@NonNull Class<?> source, @NonNull String name, @NonNull Class<?>... params) {
+	public Method getMethod(@NonNull Class<?> source, @NonNull String name, @NonNull Class<?>... params) {
 		try {
 			return source.getDeclaredMethod(name, params);
 		}
@@ -152,7 +152,7 @@ public class ReflectionUtil {
 		}
 	}
 	
-	public static Object invokeMethod(@NonNull Method method, @Nullable Object by, @Nullable Object... param) {
+	public Object invokeMethod(@NonNull Method method, @Nullable Object by, @Nullable Object... param) {
 		method.setAccessible(true);
 		try {
 			return method.invoke(by, param);

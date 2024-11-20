@@ -2,6 +2,7 @@ package kz.hxncus.mc.advancedapi.api.bukkit.command;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	ICommand subcommands(ICommand... command);
 	ICommand execute(kz.hxncus.mc.advancedapi.api.bukkit.command.CommandExecutor executor);
 	ICommand complete(kz.hxncus.mc.advancedapi.api.bukkit.command.TabCompleter executor);
-	void register();
-	void unregister();
+	void register(JavaPlugin plugin);
+	void unregister(JavaPlugin plugin);
 }

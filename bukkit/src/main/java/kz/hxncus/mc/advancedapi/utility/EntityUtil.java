@@ -2,6 +2,7 @@ package kz.hxncus.mc.advancedapi.utility;
 
 import kz.hxncus.mc.advancedapi.AdvancedAPI;
 import kz.hxncus.mc.advancedapi.bukkit.server.ServerService;
+import kz.hxncus.mc.advancedapi.module.ServiceModule;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
@@ -58,9 +59,10 @@ public class EntityUtil {
 	 * @return the boolean
 	 */
 	public boolean isUnderWater(final Entity entity) {
-		final ServerService serverService = AdvancedAPI.getInstance()
-		                                               .getServerService();
-		if (serverService.isPaperServer() && VersionUtil.isAfterOrEqual(1190)) {
+		final AdvancedAPI api = AdvancedAPI.getInstance();
+		final ServiceModule serviceModule = api.getServiceModule();
+		final ServerService service = serviceModule.getService(ServerService.class);
+		if (service.isPaperServer() && VersionUtil.isAfterOrEqual(1190)) {
 			//            return entity.isUnderWater();
 			return false;
 		} else {
@@ -96,8 +98,10 @@ public class EntityUtil {
 	 * @param cause    the cause
 	 */
 	public void teleport(final Location location, final Entity entity, final PlayerTeleportEvent.TeleportCause cause) {
-		final ServerService serverService = AdvancedAPI.getInstance().getServerService();
-		if (serverService.isPaperServer() || serverService.isFoliaServer() && VersionUtil.isAfterOrEqual(1194)) {
+		final AdvancedAPI api = AdvancedAPI.getInstance();
+		final ServiceModule serviceModule = api.getServiceModule();
+		final ServerService service = serviceModule.getService(ServerService.class);
+		if (service.isPaperServer() || service.isFoliaServer() && VersionUtil.isAfterOrEqual(1194)) {
 			//            entity.teleportAsync(location, cause);
 			entity.teleport(location);
 		} else {
@@ -112,9 +116,10 @@ public class EntityUtil {
 	 * @param entity   the entity
 	 */
 	public void teleport(final Location location, final Entity entity) {
-		final ServerService serverService = AdvancedAPI.getInstance()
-		                                               .getServerService();
-		if (VersionUtil.isAfterOrEqual(1194) && (serverService.isPaperServer() || serverService.isFoliaServer())) {
+		final AdvancedAPI api = AdvancedAPI.getInstance();
+		final ServiceModule serviceModule = api.getServiceModule();
+		final ServerService service = serviceModule.getService(ServerService.class);
+		if (VersionUtil.isAfterOrEqual(1194) && (service.isPaperServer() || service.isFoliaServer())) {
 			//            entity.teleportAsync(location);
 			entity.teleport(location);
 		} else {

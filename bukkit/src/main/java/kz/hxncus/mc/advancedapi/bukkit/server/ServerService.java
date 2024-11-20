@@ -1,6 +1,7 @@
 package kz.hxncus.mc.advancedapi.bukkit.server;
 
 import kz.hxncus.mc.advancedapi.AdvancedAPI;
+import kz.hxncus.mc.advancedapi.api.service.AbstractService;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.Server;
@@ -12,14 +13,25 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 @Getter
-@EqualsAndHashCode
-public class ServerService {
-	private static AdvancedAPI plugin;
+@EqualsAndHashCode(callSuper = false)
+public class ServerService extends AbstractService {
+	private static AdvancedAPI api;
 	private final Server server;
 	
-	public ServerService(final AdvancedAPI plugin, final Server server) {
-		ServerService.plugin = plugin;
-		this.server = server;
+	public ServerService(final AdvancedAPI api) {
+		super(api);
+		ServerService.api = api;
+		this.server = api.getServer();
+	}
+	
+	@Override
+	public void register() {
+	
+	}
+	
+	@Override
+	public void unregister() {
+	
 	}
 	
 	public Map<String, Command> getKnownCommands() {
@@ -64,7 +76,6 @@ public class ServerService {
 	}
 	
 	public boolean isFoliaServer() {
-		return "Folia"
-				.equalsIgnoreCase(this.server.getName());
+		return "Folia".equalsIgnoreCase(this.server.getName());
 	}
 }

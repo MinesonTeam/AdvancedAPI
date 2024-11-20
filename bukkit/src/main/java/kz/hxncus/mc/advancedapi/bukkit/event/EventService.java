@@ -1,9 +1,10 @@
 package kz.hxncus.mc.advancedapi.bukkit.event;
 
 import kz.hxncus.mc.advancedapi.AdvancedAPI;
+import kz.hxncus.mc.advancedapi.api.service.AbstractService;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import lombok.ToString;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.Statistic;
@@ -28,10 +29,8 @@ import org.bukkit.plugin.PluginManager;
  * @author Hxncus
  * @since 1.0.
  */
-@ToString
-@EqualsAndHashCode
-public class EventService {
-	private final Plugin plugin;
+@EqualsAndHashCode(callSuper = false)
+public class EventService extends AbstractService {
 	private final PluginManager pluginManager;
 	
 	/**
@@ -40,10 +39,19 @@ public class EventService {
 	 * @param plugin plugin instance
 	 */
 	public EventService(final Plugin plugin) {
-		this.plugin = plugin;
+		super(plugin);
 		final Server server = plugin.getServer();
 		this.pluginManager = server.getPluginManager();
+	}
+	
+	@Override
+	public void register() {
 		this.registerCustomEvents();
+	}
+	
+	@Override
+	public void unregister() {
+		this.unregisterAll();
 	}
 	
 	private void registerCustomEvents() {
@@ -52,28 +60,32 @@ public class EventService {
 			switch (action) {
 				case LEFT_CLICK_BLOCK:
 				case LEFT_CLICK_AIR:
-					this.callEvent(new PlayerLeftClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
-					                                        event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()
-					));
+					PlayerLeftClickEvent leftClickEvent = new PlayerLeftClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
+					                                                                     event.getClickedBlock(), event.getBlockFace(), event.getHand(),
+					                                                                     event.getClickedPosition());
+					this.callEvent(leftClickEvent);
+					event.setCancelled(leftClickEvent.isCancelled());
 					break;
 				case RIGHT_CLICK_BLOCK:
 				case RIGHT_CLICK_AIR:
-					this.callEvent(new PlayerRightClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
-					                                         event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()
-					));
+					PlayerRightClickEvent rightClickEvent = new PlayerRightClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
+					                                                                  event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition());
+					this.callEvent(rightClickEvent);
+					event.setCancelled(rightClickEvent.isCancelled());
 					break;
-				default:
-					this.callEvent(new PlayerPhysicalInteractEvent(event.getPlayer(), event.getAction(), event.getItem(),
-					                                               event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition()
-					));
+				case PHYSICAL:
+					PlayerPhysicalInteractEvent physicalInteractEvent = new PlayerPhysicalInteractEvent(event.getPlayer(), event.getAction(), event.getItem(),
+					                                                                                    event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition());
+					this.callEvent(physicalInteractEvent);
+					event.setCancelled(physicalInteractEvent.isCancelled());
 			}
 		});
 		this.register(PlayerStatisticIncrementEvent.class, event -> {
 			final Statistic statistic = event.getStatistic();
 			final Player player = event.getPlayer();
+			Location location = player.getLocation();
 			if (statistic == Statistic.JUMP) {
-				this.callEvent(new PlayerJumpEvent(player, player.getLocation(), player.getLocation()
-				                                                                       .clone().add(player.getVelocity())));
+				this.callEvent(new PlayerJumpEvent(player, location, location.clone().add(player.getVelocity())));
 			} else if (statistic == Statistic.DAMAGE_BLOCKED_BY_SHIELD) {
 				final EntityDamageEvent lastDamageCause = player.getLastDamageCause();
 				if (lastDamageCause == null) {
@@ -104,11 +116,11 @@ public class EventService {
 	 * Register.
 	 *
 	 * @param <E>      the type parameter
-	 * @param event    the event
-	 * @param consumer the consumer
+	 * @param eventClass    the eventClass
+	 * @param eventConsumer the eventConsumer
 	 */
-	public <E extends Event> void register(@NonNull final Class<E> event, @NonNull final EventConsumer<E> consumer) {
-		this.register(event, EventPriority.NORMAL, consumer);
+	public <E extends Event> void register(@NonNull final Class<E> eventClass, @NonNull final EventConsumer<E> eventConsumer) {
+		this.register(eventClass, EventPriority.NORMAL, eventConsumer);
 	}
 	
 	/**
@@ -133,13 +145,13 @@ public class EventService {
 			if (event.isInstance(events)) {
 				((EventConsumer<E>) listener).accept(event.cast(events));
 			}
-		}, this.plugin);
+		}, this.getPlugin());
 	}
 	
 	/**
 	 * Unregister all.
 	 */
-	public void unregisterAll() {
+	private void unregisterAll() {
 		HandlerList.unregisterAll(AdvancedAPI.getInstance());
 	}
 	

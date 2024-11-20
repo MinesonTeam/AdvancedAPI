@@ -1,6 +1,6 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.bossbar;
 
-import kz.hxncus.mc.advancedapi.bukkit.scheduler.Scheduler;
+import kz.hxncus.mc.advancedapi.bukkit.scheduler.AdvancedScheduler;
 
 /**
  * The interface Animatable.
@@ -16,8 +16,8 @@ public interface Animatable {
 	/**
 	 * Start animation.
 	 *
-	 * @param scheduler the scheduler
+	 * @param advancedScheduler the scheduler
 	 */
-	void startAnimation(Scheduler scheduler);
+	void startAnimation(AdvancedScheduler advancedScheduler);
 	
 }

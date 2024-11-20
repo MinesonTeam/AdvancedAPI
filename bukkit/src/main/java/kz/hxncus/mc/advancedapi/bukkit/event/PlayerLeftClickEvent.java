@@ -16,7 +16,7 @@ import org.bukkit.util.Vector;
 @Getter
 @Setter
 public class PlayerLeftClickEvent extends PlayerEvent implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList HANDLERS = new HandlerList();
 	protected ItemStack item;
 	protected Action action;
 	protected Block blockClicked;
@@ -39,10 +39,6 @@ public class PlayerLeftClickEvent extends PlayerEvent implements Cancellable {
 		this.useClickedBlock = clickedBlock == null ? Result.DENY : Result.ALLOW;
 	}
 	
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
-	
 	@Override
 	public boolean isCancelled() {
 		return this.useClickedBlock == Result.DENY;
@@ -56,6 +52,10 @@ public class PlayerLeftClickEvent extends PlayerEvent implements Cancellable {
 	
 	@Override
 	public HandlerList getHandlers() {
-		return handlers;
+		return HANDLERS;
+	}
+	
+	public static HandlerList getHandlerList() {
+		return HANDLERS;
 	}
 }

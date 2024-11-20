@@ -30,6 +30,14 @@ public class Triplet<L, M, R> extends Pair<L, R> {
 		this.middle = middle;
 	}
 	
+	public M getThird() {
+		return middle;
+	}
+	
+	public void setThird(M third) {
+		this.middle = third;
+	}
+	
 	@NonNull
 	public Triplet<R, M, L> swap() {
 		return Triplet.of(this.right, this.middle, this.left);

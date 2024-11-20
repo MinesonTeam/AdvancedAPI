@@ -2,7 +2,7 @@ package kz.hxncus.mc.advancedapi.utility;
 
 import com.google.common.collect.ImmutableMap;
 import kz.hxncus.mc.advancedapi.api.color.pattern.Pattern;
-import kz.hxncus.mc.advancedapi.caching.LruCache;
+import kz.hxncus.mc.advancedapi.caching.lru.LruCache;
 import kz.hxncus.mc.advancedapi.color.pattern.GradientPattern;
 import kz.hxncus.mc.advancedapi.color.pattern.RainbowPattern;
 import kz.hxncus.mc.advancedapi.color.pattern.SolidPattern;
@@ -34,7 +34,7 @@ public class ColorUtil {
 	private final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile("&\\w{5,8}(:[0-9A-F]{6})?>");
 	private final ReflectMethod methodOf = new ReflectMethod(ChatColor.class, "of", Color.class);
 	private final List<String> specialColors = Arrays.asList("&l", "&n", "&o", "&k", "&m");
-	private final LruCache lruCache = new LruCache(1);
+	private final LruCache lruCache = new LruCache(2);
 	private final ImmutableMap<Object, Object> colors = ImmutableMap.builder()
 	                                                                .put(new Color(0), ChatColor.getByChar('0'))
 	                                                                .put(new Color(170), ChatColor.getByChar('1'))

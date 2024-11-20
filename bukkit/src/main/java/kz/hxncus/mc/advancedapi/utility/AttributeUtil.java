@@ -1,6 +1,7 @@
 package kz.hxncus.mc.advancedapi.utility;
 
 import lombok.experimental.UtilityClass;
+import org.bukkit.Registry;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -104,8 +105,9 @@ public class AttributeUtil {
 	 * @return All attribute instance that attributable has
 	 */
 	public Set<AttributeInstance> getAttributeInstances(final Attributable attributable) {
-		final Set<AttributeInstance> attributeInstances = new HashSet<>(ServerUtil.ATTRIBUTES.length);
-		for (final Attribute attribute : ServerUtil.ATTRIBUTES) {
+		Registry<Attribute> attributes = Registry.ATTRIBUTE;
+		final Set<AttributeInstance> attributeInstances = new HashSet<>((int) attributes.stream().count());
+		for (final Attribute attribute : attributes) {
 			final AttributeInstance attributeInstance = attributable.getAttribute(attribute);
 			if (attributeInstance == null) {
 				continue;

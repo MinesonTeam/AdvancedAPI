@@ -40,9 +40,9 @@ public class WorldSettings {
 	 * @param world the world
 	 * @return the simple world
 	 */
-	public SimpleWorld apply(final SimpleWorld world) {
-		FunctionalUtil.ifFalseAccept(() -> this.autoSave == null, worlds -> worlds.setAutoSave(this.autoSave), world);
-		FunctionalUtil.ifFalseAccept(() -> this.tripletBiomeMap == null, consumerWorld -> {
+	public AdvancedWorld apply(final AdvancedWorld world) {
+		FunctionalUtil.ifFalseAccept(this.autoSave == null, worlds -> worlds.setAutoSave(this.autoSave), world);
+		FunctionalUtil.ifFalseAccept(this.tripletBiomeMap == null, consumerWorld -> {
 			for (final Map.Entry<Triplet<Integer, Integer, Integer>, Biome> entry : this.tripletBiomeMap.entrySet()) {
 				final Triplet<Integer, Integer, Integer> key = entry.getKey();
 				consumerWorld.setBiome(key.getLeft(), key.getMiddle(), key.getRight(), entry.getValue());

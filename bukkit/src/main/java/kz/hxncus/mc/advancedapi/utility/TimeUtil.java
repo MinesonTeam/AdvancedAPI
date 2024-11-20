@@ -24,7 +24,7 @@ public class TimeUtil {
 	 */
 	public final int SECONDS_IN_MINUTE = 60;
 	/**
-	 * The Minutes in hour.
+	 * The Minutes in an hour.
 	 */
 	public final short MINUTES_IN_HOUR = 60;
 	/**

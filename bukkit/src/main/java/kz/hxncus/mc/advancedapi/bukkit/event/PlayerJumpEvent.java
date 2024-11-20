@@ -1,10 +1,8 @@
 package kz.hxncus.mc.advancedapi.bukkit.event;
 
-import kz.hxncus.mc.advancedapi.utility.VectorUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.ToString;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -13,9 +11,8 @@ import org.bukkit.event.player.PlayerEvent;
 
 @Getter
 @Setter
-@ToString
 public class PlayerJumpEvent extends PlayerEvent implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList HANDLERS = new HandlerList();
 	private boolean cancelled = false;
 	private Location from;
 	private Location to;
@@ -35,12 +32,16 @@ public class PlayerJumpEvent extends PlayerEvent implements Cancellable {
 	public void setCancelled(final boolean cancel) {
 		this.cancelled = cancel;
 		if (cancel) {
-			this.player.setVelocity(VectorUtil.ZERO_VECTOR);
+			this.player.setVelocity(player.getVelocity().multiply(-1));
 		}
 	}
 	
 	@Override
 	public @NonNull HandlerList getHandlers() {
-		return handlers;
+		return HANDLERS;
+	}
+	
+	public static HandlerList getHandlerList() {
+		return HANDLERS;
 	}
 }

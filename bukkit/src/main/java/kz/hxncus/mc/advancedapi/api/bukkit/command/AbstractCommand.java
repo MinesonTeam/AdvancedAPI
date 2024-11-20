@@ -1,16 +1,16 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.command;
 
-import kz.hxncus.mc.advancedapi.AdvancedAPI;
 import kz.hxncus.mc.advancedapi.bukkit.command.CommandArguments;
 import kz.hxncus.mc.advancedapi.exception.CommandSyntaxException;
-import kz.hxncus.mc.advancedapi.utility.CommandUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,12 +31,18 @@ public abstract class AbstractCommand implements ICommand {
 		return this.onCommand(1, this, sender, command, label, args);
 	}
 	
-	public boolean onCommand(int index, ICommand iCommand, @NonNull CommandSender sender, Command command, String label, String... args) {
-		for (ICommand subCommand : iCommand.getSubCommands()) {
-			if (args.length > index) {
-				return this.onCommand(index + 1, subCommand, sender, command, label, args);
-			} else if (args.length == index && args[index - 1].equalsIgnoreCase(subCommand.getCommandName())) {
-				return execute(subCommand, sender, command, label, args);
+	private boolean onCommand(int index, ICommand iCommand, @NonNull CommandSender sender, Command command, String label, String... args) {
+		List<ICommand> commandSubCommands = iCommand.getSubCommands();
+		if (commandSubCommands.isEmpty() || args.length == 0) {
+			return execute(iCommand, sender, command, label, args);
+		}
+		for (ICommand subCommand : commandSubCommands) {
+			if (args[index - 1].equalsIgnoreCase(subCommand.getCommandName())) {
+				if (args.length > index) {
+					return this.onCommand(index + 1, subCommand, sender, command, label, args);
+				} else {
+					return execute(subCommand, sender, command, label, args);
+				}
 			} else {
 				return execute(this, sender, command, label, args);
 			}
@@ -44,8 +50,8 @@ public abstract class AbstractCommand implements ICommand {
 		return false;
 	}
 	
-	public boolean execute(ICommand iCommand, CommandSender sender, Command command, String label, String... args) {
-		if (sender.hasPermission(iCommand.getPermission())) {
+	private boolean execute(ICommand iCommand, CommandSender sender, Command command, String label, String... args) {
+		if (iCommand.getPermission() == null || sender.hasPermission(iCommand.getPermission())) {
 			for (CommandExecutor executor : iCommand.getExecutors()) {
 				try {
 					executor.run(sender, command, label, new CommandArguments(args));
@@ -61,34 +67,40 @@ public abstract class AbstractCommand implements ICommand {
 	
 	@Override
 	public List<String> onTabComplete(@NonNull CommandSender sender, @NonNull Command command, @NonNull String alias, String @NonNull ... args) {
-		return filter(onTabComplete(1, this, sender, command, alias, args), args);
+		return filter(onTabComplete(2, this, sender, command, alias, args), args);
 	}
 	
-	public List<String> onTabComplete(int index, ICommand iCommand, @NonNull CommandSender sender, Command command, String alias, String... args) {
+	private List<String> onTabComplete(int index, ICommand iCommand, @NonNull CommandSender sender, Command command, String alias, String... args) {
 		List<String> result = new ArrayList<>();
-		for (ICommand subCommand : iCommand.getSubCommands()) {
-			if (args.length > index) {
-				return this.onTabComplete(index + 1, subCommand, sender, command, alias, args);
-			} else {
-				if (args[index - 1].equalsIgnoreCase(subCommand.getCommandName())) {
-					result.addAll(complete(subCommand.getCompleters(), sender, command, alias, args));
+		List<ICommand> commandSubCommands = iCommand.getSubCommands();
+		for (ICommand subCommand : commandSubCommands) {
+			if (subCommand.getCommandName().equalsIgnoreCase(args[index - 2])) {
+				if (args.length + 1 > index) {
+					return this.onTabComplete(index + 1, subCommand, sender, command, alias, args);
+				} else {
+					result.addAll(complete(subCommand, sender, command, alias, args));
 				}
-				result.addAll(complete(this.completers, sender, command, alias, args));
+			} else {
+				result.add(subCommand.getCommandName());
 			}
-			result.add(subCommand.getCommandName());
 		}
+		result.addAll(complete(iCommand, sender, command, alias, args));
 		return result;
 	}
 	
-	public List<String> complete(List<TabCompleter> completers, CommandSender sender, Command command, String alias, String... args) {
-		List<String> result = new ArrayList<>();
-		for (TabCompleter completer : completers) {
-			try {
-				result.addAll(completer.run(sender, command, alias, new CommandArguments(args)));
-			} catch (CommandSyntaxException ignored) {
+	private List<String> complete(ICommand iCommand, CommandSender sender, Command command, String alias, String... args) {
+		if (iCommand.getPermission() == null || sender.hasPermission(iCommand.getPermission())) {
+			List<String> result = new ArrayList<>();
+			for (TabCompleter completer : iCommand.getCompleters()) {
+				try {
+					result.addAll(completer.run(sender, command, alias, new CommandArguments(args)));
+				} catch (CommandSyntaxException ignored) {
+				}
 			}
+			return result;
+		} else {
+			return Collections.emptyList();
 		}
-		return result;
 	}
 	
 	private List<String> filter(List<String> list, String... args) {
@@ -127,16 +139,19 @@ public abstract class AbstractCommand implements ICommand {
 		return this;
 	}
 	
-	public void register() {
-		PluginCommand pluginCommand = AdvancedAPI.getInstance().getServer().getPluginCommand(this.commandName);
-		if (pluginCommand != null) {
-			pluginCommand.setExecutor(this);
-			pluginCommand.setTabCompleter(this);
+	public void register(JavaPlugin plugin) {
+		PluginCommand command = plugin.getCommand(this.commandName);
+		if (command != null) {
+			command.setExecutor(this);
+			command.setTabCompleter(this);
 		}
-//		CommandUtil.register(plugin, this.commandName);
 	}
 	
-	public void unregister() {
-		CommandUtil.unregister(this.commandName);
+	public void unregister(JavaPlugin plugin) {
+		PluginCommand command = plugin.getCommand(this.commandName);
+		if (command != null) {
+			command.setExecutor(null);
+			command.setTabCompleter(null);
+		}
 	}
 }

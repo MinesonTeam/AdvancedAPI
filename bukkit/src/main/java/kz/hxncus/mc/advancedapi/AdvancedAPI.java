@@ -1,11 +1,8 @@
 package kz.hxncus.mc.advancedapi;
 
-import kz.hxncus.mc.advancedapi.bukkit.config.ConfigService;
-import kz.hxncus.mc.advancedapi.bukkit.event.EventService;
-import kz.hxncus.mc.advancedapi.bukkit.inventory.InventoryManager;
-import kz.hxncus.mc.advancedapi.bukkit.scheduler.Scheduler;
-import kz.hxncus.mc.advancedapi.bukkit.server.ServerService;
-import kz.hxncus.mc.advancedapi.bukkit.world.WorldService;
+import kz.hxncus.mc.advancedapi.bukkit.scheduler.AdvancedScheduler;
+import kz.hxncus.mc.advancedapi.module.ServiceModule;
+import kz.hxncus.mc.advancedapi.service.ModuleService;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,36 +17,47 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class AdvancedAPI extends JavaPlugin {
 	@Getter
 	private static AdvancedAPI instance;
-	private ConfigService configService;
-	private EventService eventService;
-	private InventoryManager inventoryService;
-	private ServerService serverService;
-	private WorldService worldService;
 	
-	/**
-	 * Instantiates a new Mineson api.
-	 */
-	public AdvancedAPI() {
+	private ModuleService moduleService;
+	private ServiceModule serviceModule;
+	
+	private boolean isLoaded = false;
+	
+	@Override
+	public void onLoad() {
+		if (this.isLoaded) {
+			return;
+		}
 		instance = this;
+		
+		this.moduleService = new ModuleService(this);
+		this.serviceModule = new ServiceModule(this);
+		
+		this.isLoaded = true;
 	}
 	
 	@Override
 	public void onEnable() {
-		this.registerServices();
+		if (!this.isLoaded) {
+			throw new RuntimeException("Plugin not loaded yet!");
+		}
+		
+		this.moduleService.addModule(this.serviceModule);
+		this.serviceModule.addService(this.moduleService);
+		
+		this.serviceModule.setEnabled(true);
+		this.moduleService.register();
+		
 	}
 	
 	@Override
 	public void onDisable() {
-		Scheduler.stopTimers();
-		this.inventoryService.closeAll();
-		this.eventService.unregisterAll();
-	}
-	
-	private void registerServices() {
-		this.configService = new ConfigService(this);
-		this.eventService = new EventService(this);
-		this.worldService = new WorldService(this);
-		this.inventoryService = new InventoryManager(this);
-		this.serverService = new ServerService(this, this.getServer());
+		if (!this.isLoaded) {
+			return;
+		}
+		
+		this.moduleService.unregister();
+		this.serviceModule.onDisable();
+		AdvancedScheduler.cancelTasks();
 	}
 }

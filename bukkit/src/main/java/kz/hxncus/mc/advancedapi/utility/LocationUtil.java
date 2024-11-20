@@ -1,12 +1,14 @@
 package kz.hxncus.mc.advancedapi.utility;
 
-import kz.hxncus.mc.advancedapi.random.SimpleRandom;
+import kz.hxncus.mc.advancedapi.random.AdvancedRandom;
 import kz.hxncus.mc.advancedapi.utility.tuples.Pair;
 import kz.hxncus.mc.advancedapi.utility.tuples.Triplet;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Axis;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 
 /**
  * The type Location util.
@@ -15,6 +17,26 @@ import org.bukkit.World;
  */
 @UtilityClass
 public class LocationUtil {
+	public Location floorBlock(Location location) {
+		location.setX(location.getBlockX());
+		location.setY(location.getBlockY());
+		location.setZ(location.getBlockZ());
+		return location;
+	}
+	
+	public Location floorCenterBlock(Location location) {
+		location.setX(location.getBlockX() + 0.5D);
+		location.setY(location.getBlockY());
+		location.setZ(location.getBlockZ() + 0.5D);
+		return location;
+	}
+	
+	public Location resetLook(Location location) {
+		location.setYaw(0.0F);
+		location.setPitch(0.0F);
+		return location;
+	}
+	
 	/**
 	 * Gets random location.
 	 *
@@ -41,7 +63,7 @@ public class LocationUtil {
 	 * @return the random location
 	 */
 	public Location getRandomLocation(final World world, final Triplet<Integer, Integer, Integer> minXYZ, final Triplet<Integer, Integer, Integer> maxXYZ) {
-		final SimpleRandom random = SimpleRandom.get();
+		final AdvancedRandom random = AdvancedRandom.get();
 		final int x = random.nextInt(maxXYZ.getLeft() - minXYZ.getLeft());
 		final int y = random.nextInt(maxXYZ.getMiddle() - minXYZ.getMiddle());
 		final int z = random.nextInt(maxXYZ.getRight() - minXYZ.getRight());
@@ -59,5 +81,58 @@ public class LocationUtil {
 	public Location getRandomLocation(final World world, final Pair<Integer, Integer> minXZ, final Pair<Integer, Integer> maxXZ) {
 		return getRandomLocation(world, new Triplet<>(minXZ.getLeft(), 0, minXZ.getRight()),
 		                               new Triplet<>(maxXZ.getLeft(), 0, maxXZ.getRight()));
+	}
+	
+	public boolean isInChunk(Chunk chunk, Location location) {
+		return chunk.getX() == location.getBlockX() >> 4 && chunk.getZ() == location.getBlockZ() >> 4;
+	}
+	
+	public boolean isInChunk(Chunk chunk, Location ... locations) {
+		for (Location location : locations) {
+			if (!isInChunk(chunk, location)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public Location fixNaN(Location location) {
+		if (Double.isNaN(location.getX()))
+			location.setX(0.0D);
+		if (Double.isNaN(location.getY()))
+			location.setY(0.0D);
+		if (Double.isNaN(location.getZ()))
+			location.setZ(0.0D);
+		if (Float.isNaN(location.getYaw()))
+			location.setYaw(0.0F);
+		if (Float.isNaN(location.getPitch()))
+			location.setPitch(0.0F);
+		return location;
+	}
+	
+	public Location fixAngle(Location location) {
+		float angle = location.getYaw();
+		while (angle < 0.0F) {
+			angle += 360.0F;
+		}
+		while (angle >= 360.0F) {
+			angle -= 360.0F;
+		}
+		location.setYaw(angle);
+		return location;
+	}
+	
+	public BlockFace getDirectionFace(Location location) {
+		fixAngle(location);
+		float yaw = location.getYaw();
+		if (yaw >= 225.0F && yaw <= 315.0F)
+			return BlockFace.EAST;
+		if ((yaw >= 315.0F && yaw <= 360.0F) || (yaw >= 0.0F && yaw <= 45.0F))
+			return BlockFace.SOUTH;
+		if (yaw >= 45.0F && yaw <= 135.0F)
+			return BlockFace.WEST;
+		if (yaw >= 135.0F && yaw <= 225.0F)
+			return BlockFace.NORTH;
+		throw new AssertionError();
 	}
 }

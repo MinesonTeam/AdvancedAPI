@@ -19,9 +19,8 @@ import org.bukkit.inventory.ItemStack;
  */
 @Getter
 @Setter
-@ToString
 public class ArmorEquipEvent extends EntityEvent implements Cancellable {
-	private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList HANDLERS = new HandlerList();
 	private boolean cancelled = false;
 	private final EquipMethod equipMethod;
 	private final ArmorType armorType;
@@ -42,9 +41,10 @@ public class ArmorEquipEvent extends EntityEvent implements Cancellable {
 		this.cancelled = cancel;
 	}
 	
+	@NonNull
 	@Override
-	public @NonNull HandlerList getHandlers() {
-		return handlers;
+	public HandlerList getHandlers() {
+		return HANDLERS;
 	}
 	
 	/**
@@ -102,6 +102,7 @@ public class ArmorEquipEvent extends EntityEvent implements Cancellable {
 			}
 			return armorType;
 		}
+	
 	}
 	
 	@ToString
@@ -139,5 +140,9 @@ public class ArmorEquipEvent extends EntityEvent implements Cancellable {
 		 * When you die, causing all armors to unequip
 		 */
 		DEATH,
+	}
+	
+	public static HandlerList getHandlerList() {
+		return HANDLERS;
 	}
 }

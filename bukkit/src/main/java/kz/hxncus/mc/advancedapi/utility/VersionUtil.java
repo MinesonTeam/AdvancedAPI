@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class VersionUtil {
 	/**
-	 * The Nms version by int.
+	 * The Nms version by an int.
 	 */
 	public final Map<Integer, String> NMS_VERSION_BY_INT = new HashMap<>(64);
 	/**
@@ -259,7 +259,7 @@ public class VersionUtil {
 	}
 	
 	/**
-	 * Remove falling block after land.
+	 * Remove falling block after a land.
 	 *
 	 * @param plugin       the plugin
 	 * @param fallingBlock the falling block
@@ -280,8 +280,8 @@ public class VersionUtil {
 	
 	/**
 	 * Returns online players from Bukkit API.
-	 * This requires reflection, as return type changed in 1.8,
-	 * and we want to avoid errors.
+	 * This requires reflection, as the return type changed in 1.8
+	 * and needs to avoid errors.
 	 *
 	 * @return  Online players from Bukkit API.
 	 */

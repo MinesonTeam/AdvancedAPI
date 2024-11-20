@@ -10,6 +10,7 @@ val jooq = property("jooq") as String
 dependencies {
     compileOnly("org.spigotmc:spigot-api:$spigot")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    compileOnly("com.google.guava:guava:32.1.2-jre")
 
     implementation("org.bstats:bstats-bukkit:$bstats")
     implementation("com.zaxxer:HikariCP:$hikaricp")

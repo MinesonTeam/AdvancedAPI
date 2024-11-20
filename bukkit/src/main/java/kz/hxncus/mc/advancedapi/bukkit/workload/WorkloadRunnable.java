@@ -1,12 +1,12 @@
 package kz.hxncus.mc.advancedapi.bukkit.workload;
 
-import kz.hxncus.mc.advancedapi.bukkit.scheduler.Scheduler;
-
 import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 
 public class WorkloadRunnable implements Runnable {
-	private static final double MAX_MILLIS_PER_TICK = 10;
+	private static final double MAX_MILLIS_PER_TICK = 1;
 	private static final int MAX_NANOS_PER_TICK = (int) (MAX_MILLIS_PER_TICK * 1.0E6);
 	private static WorkloadRunnable instance;
 	private final Deque<Runnable> workloads = new ArrayDeque<>();
@@ -14,7 +14,7 @@ public class WorkloadRunnable implements Runnable {
 	protected WorkloadRunnable() {
 	}
 	
-	public static WorkloadRunnable get() {
+	public static WorkloadRunnable getInstance() {
 		// Техника, которую мы здесь применяем, называется «блокировка с двойной
 		// проверкой» (Double-Checked Locking). Она применяется, чтобы
 		// предотвратить создание нескольких объектов-одиночек, если метод будет
@@ -31,7 +31,7 @@ public class WorkloadRunnable implements Runnable {
 		}
 		synchronized (WorkloadRunnable.class) {
 			if (instance == null) {
-				Scheduler.timer(1L, 1L, instance = new WorkloadRunnable());
+				instance = new WorkloadRunnable();
 			}
 			return instance;
 		}
@@ -39,6 +39,14 @@ public class WorkloadRunnable implements Runnable {
 	
 	public void add(final Runnable runnable) {
 		this.workloads.add(runnable);
+	}
+	
+	public void addAll(Runnable... runnables) {
+		Collections.addAll(this.workloads, runnables);
+	}
+	
+	public void addAll(Collection<Runnable> runnables) {
+		this.workloads.addAll(runnables);
 	}
 	
 	@Override

@@ -2,7 +2,7 @@ package kz.hxncus.mc.advancedapi.bukkit.bossbar;
 
 import kz.hxncus.mc.advancedapi.api.bukkit.bossbar.Animatable;
 import kz.hxncus.mc.advancedapi.api.bukkit.bossbar.AnimationType;
-import kz.hxncus.mc.advancedapi.bukkit.scheduler.Scheduler;
+import kz.hxncus.mc.advancedapi.bukkit.scheduler.AdvancedScheduler;
 import lombok.ToString;
 
 /**
@@ -11,7 +11,7 @@ import lombok.ToString;
  * @since  1.0.1
  */
 @ToString
-public class AnimatedBossBar extends SimpleBossBar implements Animatable {
+public class AnimatedBossBar extends AdvancedBossBar implements Animatable {
 	private final AnimationType animationType;
 	private final long delay;
 	private final long period;
@@ -35,8 +35,8 @@ public class AnimatedBossBar extends SimpleBossBar implements Animatable {
 	}
 	
 	@Override
-	public void startAnimation(final Scheduler scheduler) {
-		Scheduler.timerAsync(this.delay, this.period, () -> {
+	public void startAnimation(final AdvancedScheduler advancedScheduler) {
+		AdvancedScheduler.timerAsync(this.delay, this.period, () -> {
 			switch (this.animationType) {
 				case STATIC:
 					this.startStaticAnimation();

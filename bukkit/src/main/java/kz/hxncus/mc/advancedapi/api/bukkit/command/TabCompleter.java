@@ -6,13 +6,13 @@ import kz.hxncus.mc.advancedapi.exception.CommandSyntaxException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
+import java.util.Collection;
 
 @FunctionalInterface
 public interface TabCompleter {
-	List<String> run(CommandSender sender, Command command, String alias, CommandArguments args) throws CommandSyntaxException;
+	Collection<String> run(CommandSender sender, Command command, String alias, CommandArguments args) throws CommandSyntaxException;
 	
-	default List<String> run(SenderExecutionInfo executionInfo) throws CommandSyntaxException {
+	default Collection<String> run(SenderExecutionInfo executionInfo) throws CommandSyntaxException {
 		return this.run(executionInfo.sender(), executionInfo.command(), executionInfo.label(), new CommandArguments(executionInfo.args().args()));
 	}
 }

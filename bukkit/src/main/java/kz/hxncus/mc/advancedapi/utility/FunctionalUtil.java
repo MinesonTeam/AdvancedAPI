@@ -3,7 +3,6 @@ package kz.hxncus.mc.advancedapi.utility;
 import lombok.experimental.UtilityClass;
 
 import javax.annotation.Nullable;
-import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -18,13 +17,12 @@ public class FunctionalUtil {
 	 * Accept if true boolean.
 	 *
 	 * @param <T>      the type parameter
-	 * @param runnable the runnable
+	 * @param willAccept the willAccept
 	 * @param consumer the consumer
 	 * @param type     the type
 	 * @return the boolean
 	 */
-	public <T> boolean ifTrueAccept(final BooleanSupplier runnable, final Consumer<T> consumer, final T type) {
-		final boolean willAccept = runnable.getAsBoolean();
+	public <T> boolean ifTrueAccept(final boolean willAccept, final Consumer<T> consumer, final T type) {
 		if (willAccept) {
 			consumer.accept(type);
 		}
@@ -36,14 +34,14 @@ public class FunctionalUtil {
 	 *
 	 * @param <T>      the type parameter
 	 * @param <R>      the type parameter
-	 * @param runnable the runnable
+	 * @param willApply the willApply
 	 * @param function the function
 	 * @param type     the type
 	 * @return the r
 	 */
 	@Nullable
-	public <T, R> R ifTrueApply(final BooleanSupplier runnable, final Function<T, R> function, final T type) {
-		if (runnable.getAsBoolean()) {
+	public <T, R> R ifTrueApply(final boolean willApply, final Function<T, R> function, final T type) {
+		if (willApply) {
 			return function.apply(type);
 		}
 		return null;
@@ -53,17 +51,16 @@ public class FunctionalUtil {
 	 * Accept if false boolean.
 	 *
 	 * @param <T>      the type parameter
-	 * @param runnable the runnable
+	 * @param willNotAccept    the willNotAccept
 	 * @param consumer the consumer
 	 * @param type     the type
 	 * @return the boolean
 	 */
-	public <T> boolean ifFalseAccept(final BooleanSupplier runnable, final Consumer<T> consumer, final T type) {
-		final boolean willAccept = !runnable.getAsBoolean();
-		if (willAccept) {
+	public <T> boolean ifFalseAccept(final boolean willNotAccept, final Consumer<T> consumer, final T type) {
+		if (!willNotAccept) {
 			consumer.accept(type);
 		}
-		return willAccept;
+		return willNotAccept;
 	}
 	
 	/**
@@ -71,14 +68,14 @@ public class FunctionalUtil {
 	 *
 	 * @param <T>      the type parameter
 	 * @param <R>      the type parameter
-	 * @param runnable the runnable
+	 * @param willNotApply    it willNotApply
 	 * @param function the function
 	 * @param type     the type
 	 * @return the r
 	 */
 	@Nullable
-	public <T, R> R ifFalseApply(final BooleanSupplier runnable, final Function<T, R> function, final T type) {
-		if (!runnable.getAsBoolean()) {
+	public <T, R> R ifFalseApply(final boolean willNotApply, final Function<T, R> function, final T type) {
+		if (!willNotApply) {
 			return function.apply(type);
 		}
 		return null;

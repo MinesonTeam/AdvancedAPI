@@ -1,5 +1,6 @@
 package kz.hxncus.mc.advancedapi.utility;
 
+import com.google.common.collect.Collections2;
 import kz.hxncus.mc.advancedapi.utility.reflect.ReflectionUtil;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -43,12 +44,15 @@ public class CommandUtil {
 		return isRegistered;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public boolean unregister(@NonNull String name) {
 		Command command = getCommand(name).orElse(null);
 		if (command == null) {
 			return false;
 		}
+		return unregister(command);
+	}
+	
+	public boolean unregister(@NonNull Command command) {
 		Map<String, Command> knownCommands = (HashMap<String, Command>) ReflectionUtil.getFieldValue(COMMAND_MAP, FIELD_KNOWN_COMMANDS);
 		if (knownCommands == null) {
 			return false;
@@ -75,9 +79,11 @@ public class CommandUtil {
 	
 	@NonNull
 	public Optional<Command> getCommand(@NonNull String name) {
-		return COMMAND_MAP.getCommands().stream()
-		                  .filter(command -> command.getName().equalsIgnoreCase(name) || command.getLabel().equalsIgnoreCase(name) || command.getAliases().contains(name))
-		                  .findFirst();
+		Collection<Command> commands = Collections2.filter(COMMAND_MAP.getCommands(), command -> command.getName().equals(name));
+		for (Command command : commands) {
+			return Optional.of(command);
+		}
+		return Optional.empty();
 	}
 	
 //	@NonNull
