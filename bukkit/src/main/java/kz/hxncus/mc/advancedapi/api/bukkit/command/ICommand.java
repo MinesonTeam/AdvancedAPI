@@ -174,6 +174,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 		this.getSubCommands().put(subCommandName, subCommand);
 		this.complete((sender, command, alias, args) -> {
 			if (sender.isOp() || subCommand.hasPermission(sender)) {
+				this.getAliases().add(subCommandName);
 				return Collections.singleton(subCommandName);
 			}
 			return Collections.emptyList();
