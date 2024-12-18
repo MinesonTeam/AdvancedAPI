@@ -13,6 +13,10 @@ public interface Party<P extends Profile> extends Collective<P>, Leader<P> {
 
     void setPublic(boolean isPublic);
 
+    PartyState getState();
+
+    void setState(PartyState state);
+
     /**
      * Удалить игрока из пати
      */

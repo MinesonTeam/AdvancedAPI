@@ -40,4 +40,14 @@ public interface Team<P extends GameProfile> extends Collective<P> {
      * Установить суффикс команды
      */
     void setSuffix(String suffix);
+
+    /**
+     * Получить статус команды
+     */
+    TeamState getState();
+
+    /**
+     * Установить статус команды
+     */
+    void setState(TeamState state);
 }
