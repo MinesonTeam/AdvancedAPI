@@ -8,8 +8,8 @@ public class StringArgument extends AbstractArgument<String> {
     }
 
     @Override
-    public String parse(Object[] args) {
-        return args[-1].toString();
+    public String parse(String arg) {
+        return arg;
     }
 
     @Override

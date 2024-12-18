@@ -11,9 +11,8 @@ public class PlayerArgument extends AbstractArgument<Player> {
     }
 
     @Override
-    public Player parse(Object[] args) {
-        String playerName = args[-1].toString();
-        Player player = Bukkit.getPlayer(playerName);
+    public Player parse(String arg) {
+        Player player = Bukkit.getPlayer((String) arg);
         return player;
     }
 

@@ -7,7 +7,7 @@ public interface Argument<T> {
     String getName();
     Collection<T> getSuggestions();
     Argument<T> setSuggestions(Collection<T> suggestions);
-    T parse(Object[] args);
+    T parse(String arg);
     Class<T> getType();
     default Collection<T> getDefaultSuggestions() {
         return Collections.emptyList();

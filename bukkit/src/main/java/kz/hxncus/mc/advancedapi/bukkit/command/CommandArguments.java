@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 
 import lombok.NonNull;
 
-public record CommandArguments(String[] input, Object[] args) {
+public record CommandArguments(Object[] args, String[] input) {
 	public Object get(final int index) {
 		return this.args[index];
 	}

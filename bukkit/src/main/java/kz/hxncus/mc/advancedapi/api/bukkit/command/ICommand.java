@@ -66,7 +66,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 
 		command.getExecutors().forEach(executor -> {
 			try {
-				executor.run(sender, command.getCommand(), label, new CommandArguments(args, args));
+				executor.run(sender, command.getCommand(), label, new CommandArguments(convertArgs(args), args));
 			} catch (CommandSyntaxException ignored) {
 			}
 		});
@@ -121,7 +121,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 			if (argument == null) {
 				break;
 			}
-			convertedArgs[i] = argument.parse(args);
+			convertedArgs[i] = argument.parse(args[i]);
 		}
 		return convertedArgs;
 	}
