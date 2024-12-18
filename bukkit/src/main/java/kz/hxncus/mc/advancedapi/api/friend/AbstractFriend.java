@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
 @Getter
 public abstract class AbstractFriend implements Friend {
