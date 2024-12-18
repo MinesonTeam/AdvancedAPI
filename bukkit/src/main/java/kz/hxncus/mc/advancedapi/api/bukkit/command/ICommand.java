@@ -63,7 +63,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 			}
 			return false;
 		}
-		
+
 		command.getExecutors().forEach(executor -> {
 			try {
 				executor.run(sender, command.getCommand(), label, new CommandArguments(args, args));
@@ -110,6 +110,24 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 			return Optional.of(current);
 		}
 		return Optional.absent();
+	}
+
+	@NonNull
+	default String[] getArgsWithoutSubCommands(@NonNull final String[] args) {
+		if (args == null || args.length <= 1) {
+			return args;
+		}
+		int count = 1;
+		ICommand current = this;
+		for (String arg : args) {
+			ICommand subCommand = current.getSubCommand(arg.toLowerCase());
+			if (subCommand == null) {
+				break;
+			}
+			current = subCommand;
+			count += 1;
+		}
+		return Arrays.copyOfRange(args, count, args.length);
 	}
 
 	@NonNull
