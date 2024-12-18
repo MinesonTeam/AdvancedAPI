@@ -33,9 +33,13 @@ public class AdvancedProfile extends AbstractProfile {
         Map<String, Object> data = new HashMap<String, Object>();
 
         data.put("player", this.player.getUniqueId().toString());
+
+        Map<String, Object> friends = new HashMap<String, Object>();
         this.friends.forEach(friend -> {
-            data.put(friend.getName(), friend.getUniqueId().toString());
+            friends.put(friend.getName(), friend.getUniqueId().toString());
         });
+
+        data.put("friends", friends);
 
         return data;
     }
@@ -43,7 +47,7 @@ public class AdvancedProfile extends AbstractProfile {
     public static AdvancedProfile deserialize(@NonNull Map<String, Object> data) {
         UUID playerUniqueId = UUID.fromString(data.get("player").toString());
         Set<Friend> friends = new LinkedHashSet<>();
-        data.forEach((name, uuid) -> {
+        ((Map<String, Object>) data.get("friends")).forEach((name, uuid) -> {
             friends.add(new AdvancedFriend(UUID.fromString(uuid.toString()), name));
         });
 
