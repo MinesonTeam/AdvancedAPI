@@ -59,14 +59,13 @@ public class AdvancedAPI extends JavaPlugin {
 			.argument(new StringArgument("test").setSuggestions(List.of("test", "aaa")))
 			.subCommands(new AdvancedCommand("apopa")
 				.complete((sender, command, alias, args) -> {
-					String str = args.getCasted(0);
 					return ArgumentType.ADVANCEMENT.getList((Player) sender);
 				})
 				.execute((sender, command, label, args) -> {
 					sender.sendMessage("apopaaaaaaaa: " + Arrays.toString(args.args()));
 				}),
 			new AdvancedCommand("pipa")
-			    .complete((sender, command, alias, args) -> {
+				.complete((sender, command, alias, args) -> {
 					return Arrays.asList("pipa1", "pipa2");
 				})
 				.execute((sender, command, label, args) -> {
