@@ -21,6 +21,7 @@ public abstract class AbstractTeam<P extends GameProfile> implements Team<P> {
     protected String suffix;
     protected int maxProfiles;
     protected final List<P> profiles;
+    protected TeamState state;
     
     protected AbstractTeam(@NonNull UUID uniqueId, @NonNull ChatColor color, int maxProfiles) {
         this.uniqueId = uniqueId;
@@ -30,5 +31,6 @@ public abstract class AbstractTeam<P extends GameProfile> implements Team<P> {
         this.suffix = "";
         this.maxProfiles = maxProfiles;
         this.profiles = new ArrayList<>();
+        this.state = TeamState.ALIVE;
     }
 }

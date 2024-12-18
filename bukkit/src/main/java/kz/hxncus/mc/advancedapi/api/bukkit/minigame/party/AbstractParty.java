@@ -19,6 +19,7 @@ public abstract class AbstractParty<P extends GameProfile> implements Party<P> {
     protected boolean isPublic;
     protected int maxProfiles;
     protected final List<P> profiles;
+    protected PartyState state;
     
     protected AbstractParty(@NonNull UUID uniqueId, @NonNull String name, @NonNull P leader, int maxProfiles) {
         this.uniqueId = uniqueId;
@@ -28,6 +29,7 @@ public abstract class AbstractParty<P extends GameProfile> implements Party<P> {
         this.profiles = new ArrayList<>();
         this.profiles.add(leader);
         this.maxProfiles = maxProfiles;
+        this.state = PartyState.CLOSED;
     }
 
     @Override
