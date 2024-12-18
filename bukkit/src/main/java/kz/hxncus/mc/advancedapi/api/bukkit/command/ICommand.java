@@ -26,6 +26,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	String getPermission();
 	String getPermissionMessage();
 	@NonNull Command getCommand();
+	@NonNull List<String> getAliases();
 
 	ICommand description(String description);
 	ICommand label(String label);
@@ -42,7 +43,12 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	List<kz.hxncus.mc.advancedapi.api.bukkit.command.TabCompleter> getCompleters();
 	
 	default ICommand getSubCommand(final String subCommandName) {
-		return this.getSubCommands().get(subCommandName);
+		for (ICommand subCommand : this.getSubCommands().values()) {
+			if (subCommand.getName().equals(subCommandName) || subCommand.getAliases().contains(subCommandName)) {
+				return subCommand;
+			}
+		}
+		return null;
 	}
 
 	default Argument<?> getArgument(final String argumentName) {
