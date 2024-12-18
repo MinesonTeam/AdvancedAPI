@@ -39,12 +39,12 @@ public class AdvancedRegion extends AbstractRegion {
     @NonNull
     @SuppressWarnings("unchecked")
     public static Region deserialize(@NonNull Map<String, Object> args) {
-        String name = "" + args.get("name");
-        UUID owner = args.get("owner") == null ? null : UUID.fromString("" + args.get("owner"));
-        UUID uniqueId = UUID.fromString("" + args.get("uniqueId"));
-        World world = Bukkit.getWorld(UUID.fromString("" + args.get("world")));
+        String name = (String) args.get("name");
+        UUID owner = args.get("owner") == null ? null : UUID.fromString((String) args.get("owner"));
+        UUID uniqueId = UUID.fromString((String) args.get("uniqueId"));
+        World world = Bukkit.getWorld(UUID.fromString((String) args.get("world")));
         BoundingBox boundingBox = BoundingBox.deserialize((Map<String, Object>) args.get("boundingBox"));
-        int priority = Integer.parseInt("" + args.get("priority"));
+        int priority = Integer.parseInt((String) args.get("priority"));
         return new AdvancedRegion(name, owner, uniqueId, world, boundingBox, priority);
     }
 }

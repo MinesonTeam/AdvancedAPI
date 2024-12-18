@@ -223,16 +223,16 @@ public class BoundingBox2D implements Cloneable, ConfigurationSerializable {
         double maxZ = 0.0D;
 
         if (args.containsKey("minX")) {
-            minX = Double.parseDouble("" + args.get("minX"));
+            minX = Double.parseDouble((String) args.get("minX"));
         }
         if (args.containsKey("minZ")) {
-            minZ = Double.parseDouble("" + args.get("minZ"));
+            minZ = Double.parseDouble((String) args.get("minZ"));
         }
         if (args.containsKey("maxX")) {
-            maxX = Double.parseDouble("" + args.get("maxX"));
+            maxX = Double.parseDouble((String) args.get("maxX"));
         }
         if (args.containsKey("maxZ")) {
-            maxZ = Double.parseDouble("" + args.get("maxZ"));
+            maxZ = Double.parseDouble((String) args.get("maxZ"));
         }
 
         return new BoundingBox2D(minX, minZ, maxX, maxZ);

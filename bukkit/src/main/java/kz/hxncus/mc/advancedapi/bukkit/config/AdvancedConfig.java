@@ -162,7 +162,7 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 	 */
 	public UUID getUniqueId(@NonNull final String path) {
 		try {
-			return UUID.fromString(this.get(path, "").toString());
+			return UUID.fromString(this.getString(path, ""));
 		} catch (final IllegalArgumentException e) {
 			return UUIDUtil.EMPTY_UNIQUE_ID;
 		}

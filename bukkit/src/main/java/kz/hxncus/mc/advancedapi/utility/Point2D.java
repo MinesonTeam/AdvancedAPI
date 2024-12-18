@@ -195,10 +195,10 @@ public class Point2D implements Cloneable, ConfigurationSerializable {
         double z = 0.0D;
 
         if (args.containsKey("x")) {
-            x = Double.parseDouble("" + args.get("x"));
+            x = Double.parseDouble((String) args.get("x"));
         }
         if (args.containsKey("z")) {
-            z = Double.parseDouble("" + args.get("z"));
+            z = Double.parseDouble((String) args.get("z"));
         }
         return new Point2D(x, z);
     }

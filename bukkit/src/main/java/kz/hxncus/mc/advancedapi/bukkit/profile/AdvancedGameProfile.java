@@ -69,11 +69,11 @@ public class AdvancedGameProfile extends AbstractGameProfile {
     }
 
     public static AdvancedGameProfile deserialize(@NonNull Map<String, Object> data) {
-        UUID playerUniqueId = UUID.fromString(data.get("player").toString());
-        UUID partyUniqueId = data.get("party") != null ? UUID.fromString(data.get("party").toString()) : null;
-        int kills = Integer.parseInt(data.get("kills").toString());
-        int deaths = Integer.parseInt(data.get("deaths").toString());
-        int balance = Integer.parseInt(data.get("balance").toString());
+        UUID playerUniqueId = UUID.fromString((String) data.get("player"));
+        UUID partyUniqueId = data.get("party") != null ? UUID.fromString((String) data.get("party")) : null;
+        int kills = Integer.parseInt((String) data.get("kills"));
+        int deaths = Integer.parseInt((String) data.get("deaths"));
+        int balance = Integer.parseInt((String) data.get("balance"));
 
         Optional<PartyService> partyService = ServiceModule.getService(PartyService.class);
         Party<?> party;

@@ -45,10 +45,10 @@ public class AdvancedProfile extends AbstractProfile {
     }
 
     public static AdvancedProfile deserialize(@NonNull Map<String, Object> data) {
-        UUID playerUniqueId = UUID.fromString(data.get("player").toString());
+        UUID playerUniqueId = UUID.fromString((String) data.get("player"));
         Set<Friend> friends = new LinkedHashSet<>();
         ((Map<String, Object>) data.get("friends")).forEach((name, uuid) -> {
-            friends.add(new AdvancedFriend(UUID.fromString(uuid.toString()), name));
+            friends.add(new AdvancedFriend(UUID.fromString((String) uuid), name));
         });
 
         return new AdvancedProfile(playerUniqueId);

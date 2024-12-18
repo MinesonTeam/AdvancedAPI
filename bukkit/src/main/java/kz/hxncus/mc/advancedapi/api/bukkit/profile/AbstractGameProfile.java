@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import com.sk89q.worldedit.bukkit.fastutil.Hash;
+
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.game.Game;
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.party.Party;
 import lombok.Getter;
@@ -37,10 +39,10 @@ public abstract class AbstractGameProfile implements GameProfile {
         this(Bukkit.getOfflinePlayer(uniqueId));
     }
 
-    protected AbstractGameProfile(@NonNull OfflinePlayer player, @NonNull Party<GameProfile> party, @NonNull Game<GameProfile> game, @NonNull Map<UUID, Long> partyInvites) {
+    protected AbstractGameProfile(@NonNull OfflinePlayer player, @NonNull Party<GameProfile> party, @NonNull Game<GameProfile> game) {
         this.player = player;
         this.party = party;
         this.game = game;
-        this.partyInvites = partyInvites;
+        this.partyInvites = new HashMap<>();
     }
 }

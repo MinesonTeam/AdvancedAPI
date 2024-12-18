@@ -39,9 +39,9 @@ public class AdvancedArena extends AbstractArena {
         final Map<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("name", name);
         result.put("world", world.getUID().toString());
-        result.put("region", region.serialize()); 
+        result.put("region", region.serialize());
         result.put("uniqueId", uniqueId.toString());
-        result.put("creator", creator.toString());
+        result.put("creator", creator == null ? null : creator.toString());
         result.put("creationDate", creationDate);
         result.put("state", state.name());
 
@@ -50,7 +50,7 @@ public class AdvancedArena extends AbstractArena {
         for (int i = 0; i < spawnLocations.size(); i++) {
             final Location location = spawnLocations.get(i);
             if (location != null) {
-                spawnLocationsMap.put("" + i, location.serialize());
+                spawnLocationsMap.put(String.valueOf(i), location.serialize());
             }
         }
 
@@ -61,13 +61,13 @@ public class AdvancedArena extends AbstractArena {
     @NonNull
     @SuppressWarnings("unchecked")
     public static AdvancedArena deserialize(@NonNull Map<String, Object> args) {
-        final UUID uniqueId = UUID.fromString("" + args.get("uniqueId"));
-        final String name = "" + args.get("name");
-        final World world = Bukkit.getWorld(UUID.fromString("" + args.get("world")));
+        final UUID uniqueId = UUID.fromString((String) args.get("uniqueId"));
+        final String name = (String) args.get("name");
+        final World world = Bukkit.getWorld(UUID.fromString((String) args.get("world")));
         final Region region = AdvancedRegion.deserialize((Map<String, Object>) args.get("region"));
-        final UUID creator = args.get("creator") == null ? null : UUID.fromString("" + args.get("creator"));
-        final long creationDate = Long.parseLong("" + args.get("creationDate"));
-        final ArenaState state = ArenaState.valueOf(args.get("state").toString());
+        final UUID creator = args.get("creator") == null ? null : UUID.fromString((String) args.get("creator"));
+        final long creationDate = Long.parseLong((String) args.get("creationDate"));
+        final ArenaState state = ArenaState.valueOf((String) args.get("state"));
 
         final List<Location> spawnLocations = new ArrayList<>();
         for (Object value : ((Map<String, Object>) args.get("spawnLocations")).values()) {

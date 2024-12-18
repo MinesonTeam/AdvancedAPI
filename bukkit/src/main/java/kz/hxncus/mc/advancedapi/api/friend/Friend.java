@@ -4,11 +4,12 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
 import com.google.common.base.Optional;
 
-public interface Friend {
+public interface Friend extends ConfigurationSerializable {
     UUID getUniqueId();
     String getName();
 
