@@ -14,6 +14,7 @@ import kz.hxncus.mc.advancedapi.bukkit.command.exception.CommandSyntaxException;
 import kz.hxncus.mc.advancedapi.utility.CommandUtil;
 import lombok.NonNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -174,8 +175,9 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 		this.getSubCommands().put(subCommandName, subCommand);
 		this.complete((sender, command, alias, args) -> {
 			if (sender.isOp() || subCommand.hasPermission(sender)) {
-				this.getAliases().add(subCommandName);
-				return Collections.singleton(subCommandName);
+				List<String> list = new ArrayList<>(this.getAliases());
+				list.add(subCommandName);
+				return list;
 			}
 			return Collections.emptyList();
 		});
@@ -189,6 +191,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 		
 		this.getSubCommands().putAll(map);
 		this.complete((sender, command, alias, args) -> {
+			
 			return map.keySet().stream().collect(Collectors.toList());
 		});
 
