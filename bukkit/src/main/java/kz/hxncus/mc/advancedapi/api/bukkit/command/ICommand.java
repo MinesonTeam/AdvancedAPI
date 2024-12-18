@@ -82,7 +82,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 		return this.sort(this.filter(tabCommand.transform(icommand -> icommand.getCompleters().stream()
 			.map(completer -> {
 				try {
-					return completer.run(sender, command, alias, new CommandArguments(args, args));
+					return completer.run(sender, command, alias, args);
 				} catch (CommandSyntaxException ignored) {
 				}
 				return Collections.<String>emptyList();
