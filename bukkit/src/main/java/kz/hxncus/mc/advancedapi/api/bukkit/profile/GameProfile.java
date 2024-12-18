@@ -10,10 +10,12 @@ public interface GameProfile extends Profile {
     void setGame(Game<? super GameProfile> game);
 
     default boolean isInParty() {
-        return this.getParty() != null && this.getParty().hasProfile(this);
+        Party<? super GameProfile> party = this.getParty();
+        return party != null && party.hasProfile(this);
     }
 
     default boolean isInGame() {
-        return this.getGame() != null && this.getGame().hasProfile(this);
+        Game<? super GameProfile> game = this.getGame();
+        return game != null && game.hasProfile(this);
     }
 }
