@@ -1,7 +1,9 @@
 package kz.hxncus.mc.advancedapi.bukkit.profile;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
@@ -31,13 +33,20 @@ public class AdvancedProfile extends AbstractProfile {
         Map<String, Object> data = new HashMap<String, Object>();
 
         data.put("player", this.player.getUniqueId().toString());
+        this.friends.forEach(friend -> {
+            data.put(friend.getName(), friend.getUniqueId().toString());
+        });
 
         return data;
     }
 
     public static AdvancedProfile deserialize(@NonNull Map<String, Object> data) {
         UUID playerUniqueId = UUID.fromString(data.get("player").toString());
-        
+        Set<Friend> friends = new LinkedHashSet<>();
+        data.forEach((name, uuid) -> {
+            friends.add(new AdvancedFriend(UUID.fromString(uuid.toString()), name));
+        });
+
         return new AdvancedProfile(playerUniqueId);
     }
 
