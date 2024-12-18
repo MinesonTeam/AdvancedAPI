@@ -2,7 +2,6 @@ package kz.hxncus.mc.advancedapi.utility;
 
 import lombok.experimental.UtilityClass;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -12,7 +11,7 @@ import java.util.function.Function;
  * @since  1.0.1
  */
 @UtilityClass
-public class FunctionalUtil {
+public final class FunctionalUtil {
 	/**
 	 * Accept if true boolean.
 	 *
@@ -39,7 +38,6 @@ public class FunctionalUtil {
 	 * @param type     the type
 	 * @return the r
 	 */
-	@Nullable
 	public <T, R> R ifTrueApply(final boolean willApply, final Function<T, R> function, final T type) {
 		if (willApply) {
 			return function.apply(type);
@@ -73,7 +71,6 @@ public class FunctionalUtil {
 	 * @param type     the type
 	 * @return the r
 	 */
-	@Nullable
 	public <T, R> R ifFalseApply(final boolean willNotApply, final Function<T, R> function, final T type) {
 		if (!willNotApply) {
 			return function.apply(type);

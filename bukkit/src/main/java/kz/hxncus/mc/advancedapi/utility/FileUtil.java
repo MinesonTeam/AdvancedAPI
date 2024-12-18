@@ -14,8 +14,8 @@ import java.io.InputStream;
  * @since  1.0.1
  */
 @UtilityClass
-public class FileUtil {
-	public void copy(@NonNull InputStream inputStream, @NonNull File file) {
+public final class FileUtil {
+	public boolean copy(@NonNull InputStream inputStream, @NonNull File file) {
 		try {
 			FileOutputStream outputStream = new FileOutputStream(file);
 			byte[] array = new byte[1024];
@@ -25,10 +25,10 @@ public class FileUtil {
 			}
 			outputStream.close();
 			inputStream.close();
+		} catch (IOException ignored) {
+			return false;
 		}
-		catch (IOException exception) {
-			exception.printStackTrace();
-		}
+		return true;
 	}
 	
 	/**

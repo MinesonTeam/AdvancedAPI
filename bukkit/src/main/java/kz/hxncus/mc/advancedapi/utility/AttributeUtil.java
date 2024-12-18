@@ -16,7 +16,7 @@ import java.util.Set;
  * @since 1.0.1
  */
 @UtilityClass
-public class AttributeUtil {
+public final class AttributeUtil {
 	/**
 	 * The Generic armor.
 	 */

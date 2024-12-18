@@ -9,9 +9,10 @@ import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.sign.Side;
 import org.bukkit.persistence.PersistentDataType;
 
+import com.google.common.base.Optional;
+
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -22,7 +23,7 @@ import java.util.function.Predicate;
  * @since 1.0.1
  */
 @UtilityClass
-public class BlockUtil {
+public final class BlockUtil {
 	public static final BlockFace[] BLOCK_FACES = BlockFace.values();
 	public static final BlockFace[] SIGN_BLOCK_FACES = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
 			BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST};
@@ -99,15 +100,15 @@ public class BlockUtil {
 		if (block.getState() instanceof Sign sign) {
 			return Optional.of(sign);
 		}
-		return Optional.empty();
+		return Optional.absent();
 	}
 	
 	public boolean setSignLine(Block signBlock, Side side, int line, String text) {
 		return BlockUtil.getSign(signBlock)
-		                .map(sign -> {
+		                .transform(sign -> {
 							sign.getSide(side).setLine(line, text);
 							return true;
-						}).orElse(false);
+						}).or(false);
 	}
 	
 	public boolean setSignLine(Block signBlock, int line, String text) {
@@ -116,9 +117,9 @@ public class BlockUtil {
 	
 	public String getSignLine(Block signBlock, Side side, int line) {
 		return BlockUtil.getSign(signBlock)
-		                .map(sign -> {
+		                .transform(sign -> {
 			                return sign.getSide(side).getLine(line);
-		                }).orElse("");
+		                }).or("");
 	}
 	
 	public String getSignLine(Block signBlock, int line) {
@@ -127,9 +128,9 @@ public class BlockUtil {
 	
 	public String[] getSignLines(Block signBlock, Side side) {
 		return BlockUtil.getSign(signBlock)
-		                .map(sign -> {
+		                .transform(sign -> {
 			                return sign.getSide(side).getLines();
-		                }).orElse(new String[4]);
+		                }).or(new String[4]);
 	}
 	
 	public String[] getSignLines(Block signBlock) {

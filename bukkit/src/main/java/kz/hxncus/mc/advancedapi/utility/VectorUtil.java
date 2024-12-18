@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
  * @since  1.0.1
  */
 @UtilityClass
-public class VectorUtil {
+public final class VectorUtil {
 	/**
 	 * The zero vector.
 	 * Don't modify it.

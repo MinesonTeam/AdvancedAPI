@@ -1,9 +1,17 @@
 package kz.hxncus.mc.advancedapi.bukkit.bossbar;
 
+import lombok.NonNull;
 import lombok.ToString;
+
+import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
+import kz.hxncus.mc.advancedapi.utility.ColorUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,24 +21,61 @@ import java.util.List;
  */
 @ToString
 public class AdvancedBossBar {
-	private List<BossBar> bossBarList;
-	private List<Player> playerList;
+	private final List<BossBar> bossBars = new ArrayList<>();
+	private final List<Player> players = new ArrayList<>();
+	private int currentIndex = 0;
 	
 	/**
-	 * Add player.
-	 *
-	 * @param player the player
+	 * Создает новый BossBar
+	 * @param title заголовок
+	 * @param color цвет
+	 * @param style стиль
+	 * @return созданный BossBar
 	 */
-	public void addPlayer(final Player player) {
-	
+	public BossBar createBossBar(@NonNull String title, @NonNull BarColor color, @NonNull BarStyle style) {
+		BossBar bossBar = Bukkit.createBossBar(ColorUtil.process(title), color, style);
+		this.bossBars.add(bossBar);
+		this.players.forEach(bossBar::addPlayer);
+		return bossBar;
 	}
 	
 	/**
-	 * Remove player.
-	 *
-	 * @param player the player
+	 * Добавляет игрока
+	 * @param player игрок
 	 */
-	public void removePlayer(final Player player) {
+	public void addPlayer(@NonNull Player player) {
+		if (!this.players.contains(player)) {
+			this.players.add(player);
+			this.bossBars.forEach(bar -> bar.addPlayer(player));
+		}
+	}
 	
+	/**
+	 * Удаляет игрока
+	 * @param player игрок
+	 */
+	public void removePlayer(@NonNull Player player) {
+		this.players.remove(player);
+		this.bossBars.forEach(bar -> bar.removePlayer(player));
+	}
+	
+	/**
+	 * Обновляет заголовок текущего BossBar
+	 * @param title новый заголовок
+	 */
+	public void updateTitle(@NonNull String title) {
+		if (!this.bossBars.isEmpty()) {
+			this.bossBars.get(currentIndex).setTitle(ColorUtil.process(title));
+		}
+	}
+	
+	/**
+	 * Обновляет прогресс текущего BossBar
+	 * @param progress новый прогресс (0.0 - 1.0)
+	 */
+	public void updateProgress(double progress) {
+		if (!this.bossBars.isEmpty()) {
+			this.bossBars.get(currentIndex).setProgress(Math.min(1.0, Math.max(0.0, progress)));
+		}
 	}
 }

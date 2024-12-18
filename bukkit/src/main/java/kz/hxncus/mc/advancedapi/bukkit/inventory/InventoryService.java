@@ -8,7 +8,7 @@ import kz.hxncus.mc.advancedapi.api.service.AbstractService;
 import kz.hxncus.mc.advancedapi.bukkit.event.EventService;
 import kz.hxncus.mc.advancedapi.bukkit.inventory.marker.PDCItemMarker;
 import kz.hxncus.mc.advancedapi.bukkit.inventory.marker.UnavailableItemMarker;
-import kz.hxncus.mc.advancedapi.module.ServiceModule;
+import kz.hxncus.mc.advancedapi.service.ServiceModule;
 import kz.hxncus.mc.advancedapi.utility.VersionUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,6 +23,8 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import com.google.common.base.Optional;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,8 +45,12 @@ public class InventoryService extends AbstractService {
 	
 	@Override
 	public void register() {
-		ServiceModule serviceModule = plugin.getServiceModule();
-		this.registerEvents(serviceModule.getService(EventService.class));
+		final Optional<EventService> eventServiceOptional = ServiceModule.getService(EventService.class);
+		if (eventServiceOptional.isPresent()) {
+			this.registerEvents(eventServiceOptional.get());
+		} else {
+			throw new IllegalStateException("EventService is not registered");
+		}
 	}
 	
 	@Override
@@ -71,7 +77,7 @@ public class InventoryService extends AbstractService {
 				event.setCancelled(true);
 				event.getItem()
 				     .remove();
-				this.plugin.getLogger()
+				InventoryService.plugin.getLogger()
 				           .info("Someone picked up a Custom Inventory item. Removing it.");
 			}
 		});
@@ -81,19 +87,19 @@ public class InventoryService extends AbstractService {
 				event.setCancelled(true);
 				event.getItemDrop()
 				     .remove();
-				this.plugin.getLogger()
+				InventoryService.plugin.getLogger()
 				           .info("Someone dropped a Custom Inventory item. Removing it.");
 			}
 		});
-		eventManager.register(PlayerLoginEvent.class, event -> this.plugin.getServer()
+		eventManager.register(PlayerLoginEvent.class, event -> InventoryService.plugin.getServer()
 	        .getScheduler()
-	        .runTaskLater(this.plugin, () -> {
+	        .runTaskLater(InventoryService.plugin, () -> {
 	            final PlayerInventory inventory = event.getPlayer()
 	                                                   .getInventory();
 	            for (final ItemStack item : inventory) {
 	                if (item != null && this.itemMarker.isItemMarked(item)) {
 	                    inventory.remove(item);
-	                    this.plugin.getLogger()
+	                    InventoryService.plugin.getLogger()
 	                               .info("Player logged in with a Custom Inventory item in their inventory. Removing it.");
 	                }
 	            }
@@ -126,7 +132,8 @@ public class InventoryService extends AbstractService {
 			                                        .getTopInventory())) {
 				      player.closeInventory();
 			      }
-		      });
+		      }
+		);
 	}
 	
 	public void registerInventory(final AdvancedInventory inventory) {

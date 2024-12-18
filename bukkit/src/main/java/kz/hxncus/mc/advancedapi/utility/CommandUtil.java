@@ -1,115 +1,124 @@
 package kz.hxncus.mc.advancedapi.utility;
 
-import com.google.common.collect.Collections2;
-import kz.hxncus.mc.advancedapi.utility.reflect.ReflectionUtil;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.command.CommandMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import kz.hxncus.mc.advancedapi.utility.reflection.ReflectionUtil;
 
 import java.util.*;
 
 @UtilityClass
-public class CommandUtil {
-	private final String FIELD_COMMAND_MAP = "commandMap";
-	private final String FIELD_KNOWN_COMMANDS = "knownCommands";
-	private final SimpleCommandMap COMMAND_MAP = getCommandMap();
-	
-	private SimpleCommandMap getCommandMap() {
-		return (SimpleCommandMap) ReflectionUtil.getFieldValue(Bukkit.getServer(), FIELD_COMMAND_MAP);
-	}
-	
-	public boolean register(@NonNull JavaPlugin plugin, @NonNull String commandName) {
-		PluginCommand command = plugin.getServer().getPluginCommand(commandName);
-		if (command == null) {
-			return false;
-		}
-		return CommandUtil.register(plugin, command);
-	}
-	
-	public void postRegister(Plugin plugin) {
-		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			player.updateCommands();
-		}
-	}
-	
-	public boolean register(@NonNull Plugin plugin, @NonNull Command command) {
-		boolean isRegistered = COMMAND_MAP.register(plugin.getName(), command);
-		postRegister(plugin);
-		return isRegistered;
-	}
-	
-	public boolean unregister(@NonNull String name) {
-		Command command = getCommand(name).orElse(null);
-		if (command == null) {
-			return false;
-		}
-		return unregister(command);
-	}
-	
-	public boolean unregister(@NonNull Command command) {
-		Map<String, Command> knownCommands = (HashMap<String, Command>) ReflectionUtil.getFieldValue(COMMAND_MAP, FIELD_KNOWN_COMMANDS);
-		if (knownCommands == null) {
-			return false;
-		} else if (!command.unregister(COMMAND_MAP)) {
-			return false;
-		}
-		return knownCommands.keySet().removeIf(key -> key.equalsIgnoreCase(command.getName()) || command.getAliases().contains(key));
-	}
-	
-	@NonNull
-	public Set<String> getAliases(@NonNull String name) {
-		return getAliases(name, false);
-	}
-	
-	@NonNull
-	public Set<String> getAliases(@NonNull String name, boolean inclusive) {
-		Command command = getCommand(name).orElse(null);
-		if (command == null) return Collections.emptySet();
-		
-		Set<String> aliases = new HashSet<>(command.getAliases());
-		if (inclusive) aliases.add(command.getName());
-		return aliases;
-	}
-	
-	@NonNull
-	public Optional<Command> getCommand(@NonNull String name) {
-		Collection<Command> commands = Collections2.filter(COMMAND_MAP.getCommands(), command -> command.getName().equals(name));
-		for (Command command : commands) {
-			return Optional.of(command);
-		}
-		return Optional.empty();
-	}
-	
-//	@NonNull
-//	public String getCommandName(@NonNull String str) {
-//		String name = ColorService.strip(str).split(" ")[0].substring(1);
-//
-//		String[] pluginPrefix = name.split(":");
-//		if (pluginPrefix.length == 2) {
-//			name = pluginPrefix[1];
-//		}
-//
-//		return name;
-//	}
-//
-//	public Player getPlayerOrSender(@NonNull CommandContext context, @NonNull ParsedArguments arguments, @NonNull String name) {
-//		Player player;
-//		if (arguments.hasArgument(name)) {
-//			player = arguments.getPlayerArgument(name);
-//		}
-//		else {
-//			if (context.getExecutor() == null) {
-//				context.errorPlayerOnly();
-//				return null;
-//			}
-//			player = context.getExecutor();
-//		}
-//		return player;
-//	}
+public final class CommandUtil {
+	private final Logger LOGGER = LoggerFactory.getLogger(CommandUtil.class);
+    @Getter
+    private final CommandMap commandMap = ReflectionUtil.getFieldValue(Bukkit.getServer(), "commandMap");
+    @Getter
+    private final Map<String, Command> knownCommands = ReflectionUtil.getFieldValue(CommandUtil.getCommandMap(), "knownCommands");
+    @Getter
+    private final List<String> myCommands = new ArrayList<>();
+
+    /**
+     * Получить команду по названию
+     * @param commandName название команды
+     * @return команду
+     */
+    public Command getCommand(String commandName) {
+        return CommandUtil.knownCommands.get(commandName);
+    }
+
+    public void updatePlayersCommands() {
+        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.updateCommands());
+    }
+
+    /**
+     * Получить алиасы команды
+     * @param name название команды
+     * @param inclusive включать ли название команды в алиасы
+     * @return алиасы команды
+     */
+    @NonNull
+    public Set<String> getAliases(@NonNull String name, boolean inclusive) {
+        return CommandUtil.getAliases(CommandUtil.getCommand(name), inclusive);
+    }
+    
+    /**
+     * Получить алиасы команды
+     * @param command команда
+     * @param inclusive включать ли название команды в алиасы
+     * @return алиасы команды
+     */
+    @NonNull
+    public Set<String> getAliases(@NonNull Command command, boolean inclusive) {
+        Set<String> aliases = new HashSet<>(command.getAliases());
+        if (inclusive) {
+            aliases.add(command.getName());
+        }
+        return aliases;
+    }
+
+    /**
+     * Получить алиасы команды
+     * @param name название команды
+     * @return алиасы команды
+     */
+    @NonNull
+    public Set<String> getAliases(@NonNull String name) {
+        return CommandUtil.getAliases(name, false);
+    }
+
+    /**
+     * Удалить команду
+     * @param command имя команды, которую надо удалить
+     */
+    public void unregisterCommand(String commandName) {
+        CommandUtil.unregisterCommand(CommandUtil.getCommand(commandName));
+    }
+    
+    /**
+     * Зарегистировать команду
+     * @param command регистрируемая команда
+     */
+    public void registerCommand(Command command, boolean registerPlayerCommands) {
+        CommandUtil.unregisterCommand(command);
+
+        Set<String> aliases = CommandUtil.getAliases(command, true);
+        aliases.forEach(alias -> CommandUtil.knownCommands.put(alias.toLowerCase(), command));
+        aliases.forEach(alias -> CommandUtil.myCommands.add(alias.toLowerCase()));
+
+        if (registerPlayerCommands) {
+            updatePlayersCommands();
+        }
+        LOGGER.info(String.format("Регистрируем команду %s. Класс %s", command.getName(), command.getClass().getName()));
+    }
+
+    /**
+     * Удалить команду
+     * @param command команда, которую надо удалить
+     */
+    public void unregisterCommand(Command command) {
+        command.getAliases().forEach(CommandUtil.knownCommands::remove);
+        command.getAliases().forEach(CommandUtil.myCommands::remove);
+    }
+
+    /**
+     * Удалить команду по классу
+     * @param commandClass класс команды
+     */
+    public void unregisterCommand(Class<? extends Command> commandClass) {
+        CommandUtil.knownCommands.values().removeIf(commandClass::isInstance);
+    }
+
+    /**
+     * Удалить все команды плагина
+     */
+    public void unregisterMyCommands() {
+        CommandUtil.myCommands.forEach(CommandUtil::unregisterCommand);
+        CommandUtil.myCommands.clear();
+    }
 }

@@ -14,8 +14,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import javax.annotation.Nullable;
-
 /**
  * Class Player right-click event.
  *
@@ -25,12 +23,10 @@ import javax.annotation.Nullable;
 @Getter
 @Setter
 public class PlayerRightClickEvent extends PlayerEvent implements Cancellable {
-	private static final HandlerList HANDLERS = new HandlerList();
-	@Nullable
+	private static final HandlerList HANDLERS = new HandlerList();	
 	private ItemStack item;
 	@NonNull
 	private Action action;
-	@Nullable
 	private Block blockClicked;
 	@NonNull
 	private BlockFace blockFace;
@@ -38,9 +34,7 @@ public class PlayerRightClickEvent extends PlayerEvent implements Cancellable {
 	private Result useClickedBlock;
 	@NonNull
 	private Result useItemInHand;
-	@Nullable
 	private EquipmentSlot hand;
-	@Nullable
 	private Vector clickedPosition;
 	
 	/**
@@ -54,7 +48,7 @@ public class PlayerRightClickEvent extends PlayerEvent implements Cancellable {
 	 * @param hand            the hand
 	 * @param clickedPosition the clicked position
 	 */
-	public PlayerRightClickEvent(@NonNull final Player who, @NonNull final Action action, @Nullable final ItemStack item, @Nullable final Block clickedBlock, @NonNull final BlockFace clickedFace, @Nullable final EquipmentSlot hand, @Nullable final Vector clickedPosition) {
+	public PlayerRightClickEvent(@NonNull final Player who, @NonNull final Action action, final ItemStack item, final Block clickedBlock, @NonNull final BlockFace clickedFace, final EquipmentSlot hand, final Vector clickedPosition) {
 		super(who);
 		this.action = action;
 		this.item = item;

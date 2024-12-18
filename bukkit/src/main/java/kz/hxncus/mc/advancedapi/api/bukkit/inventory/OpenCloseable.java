@@ -1,32 +1,63 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.inventory;
 
-import kz.hxncus.mc.advancedapi.bukkit.inventory.AdvancedInventory;
 import lombok.NonNull;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public interface OpenCloseable {
 	@NonNull
-	AdvancedInventory addOpenHandler(final Consumer<InventoryOpenEvent> openHandler);
+	Inventory getInventory();
+
+	@NonNull
+	List<Consumer<InventoryOpenEvent>> getOpenHandlers();
+
+	@NonNull
+	List<Consumer<InventoryCloseEvent>> getCloseHandlers();
+
+	@NonNull
+	default OpenCloseable addOpenHandler(final Consumer<InventoryOpenEvent> openHandler) {
+		this.getOpenHandlers().add(openHandler);
+		return this;
+	}
 	
 	@NonNull
-	AdvancedInventory addCloseHandler(final Consumer<InventoryCloseEvent> closeHandler);
+	default OpenCloseable addCloseHandler(final Consumer<InventoryCloseEvent> closeHandler) {
+		this.getCloseHandlers().add(closeHandler);
+		return this;
+	}
 	
 	@NonNull
-	AdvancedInventory setCloseFilter(final Predicate<Player> closeFilter);
+	Predicate<Player> getCloseFilter();
 	
-	AdvancedInventory open(final HumanEntity humanEntity);
+	@NonNull
+	OpenCloseable setCloseFilter(final Predicate<Player> closeFilter);
 	
-	void handleOpen(final InventoryOpenEvent event);
+	default OpenCloseable open(final HumanEntity humanEntity) {
+		humanEntity.openInventory(this.getInventory());
+		return this;
+	}
 	
-	boolean handleClose(final InventoryCloseEvent event);
+	default void handleOpen(final InventoryOpenEvent openEvent) {
+		this.onOpen(openEvent);
+		this.getOpenHandlers().forEach(open -> open.accept(openEvent));
+	}
 	
-	void onOpen(final InventoryOpenEvent event);
+	default boolean handleClose(final InventoryCloseEvent closeEvent) {
+		this.onClose(closeEvent);
+		this.getCloseHandlers().forEach(close -> close.accept( closeEvent));
+		return this.getCloseFilter() != null && this.getCloseFilter().test((Player) closeEvent.getPlayer());
+	}
 	
-	void onClose(final InventoryCloseEvent event);
+	default void onOpen(final InventoryOpenEvent event) {
+	}
+	
+	default void onClose(final InventoryCloseEvent event) {
+	}
 }

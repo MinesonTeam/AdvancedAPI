@@ -10,7 +10,7 @@ import org.bukkit.NamespacedKey;
  * @since  1.0.1
  */
 @UtilityClass
-public class NamespacedKeyUtil {
+public final class NamespacedKeyUtil {
 	/**
 	 * Create a namespaced key.
 	 *

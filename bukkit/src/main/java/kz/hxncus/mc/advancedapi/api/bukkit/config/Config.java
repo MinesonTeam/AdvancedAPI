@@ -5,12 +5,17 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
 import java.io.IOException;
 
 public interface Config extends ConfigurationSection {
-	boolean createNewFile() throws IOException;
+	File getFile();
+
+	String getFileName();
+
+	boolean isFileExists();
 	
-	boolean createNewFileIfNotExists() throws IOException;
+	boolean createFile() throws IOException;
 	
 	boolean load() throws IOException, InvalidConfigurationException;
 	

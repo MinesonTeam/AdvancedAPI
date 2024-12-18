@@ -1,12 +1,14 @@
 package kz.hxncus.mc.advancedapi.utility;
 
 import com.google.common.collect.ImmutableMap;
-import kz.hxncus.mc.advancedapi.api.color.pattern.Pattern;
-import kz.hxncus.mc.advancedapi.caching.lru.LruCache;
-import kz.hxncus.mc.advancedapi.color.pattern.GradientPattern;
-import kz.hxncus.mc.advancedapi.color.pattern.RainbowPattern;
-import kz.hxncus.mc.advancedapi.color.pattern.SolidPattern;
-import kz.hxncus.mc.advancedapi.utility.reflect.ReflectMethod;
+
+import kz.hxncus.mc.advancedapi.api.bukkit.color.pattern.Pattern;
+import kz.hxncus.mc.advancedapi.bukkit.color.pattern.AltColorCodesPattern;
+import kz.hxncus.mc.advancedapi.bukkit.color.pattern.GradientPattern;
+import kz.hxncus.mc.advancedapi.bukkit.color.pattern.RainbowPattern;
+import kz.hxncus.mc.advancedapi.bukkit.color.pattern.SolidPattern;
+import kz.hxncus.mc.advancedapi.data.caching.lru.LruCache;
+import kz.hxncus.mc.advancedapi.utility.reflection.ReflectionObject;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
@@ -26,13 +28,13 @@ import java.util.List;
 @ToString
 @UtilityClass
 @EqualsAndHashCode
-public class ColorUtil {
+public final class ColorUtil {
 	/**
 	 * The constant BUKKIT_COLOR_CHAR.
 	 */
 	public final char BUKKIT_COLOR_CHAR = '&';
 	private final java.util.regex.Pattern PATTERN = java.util.regex.Pattern.compile("&\\w{5,8}(:[0-9A-F]{6})?>");
-	private final ReflectMethod methodOf = new ReflectMethod(ChatColor.class, "of", Color.class);
+	private final ReflectionObject methodOf = new ReflectionObject(ChatColor.class);
 	private final List<String> specialColors = Arrays.asList("&l", "&n", "&o", "&k", "&m");
 	private final LruCache lruCache = new LruCache(2);
 	private final ImmutableMap<Object, Object> colors = ImmutableMap.builder()
@@ -53,9 +55,34 @@ public class ColorUtil {
 	                                                                .put(new Color(16777045), ChatColor.getByChar('e'))
 	                                                                .put(new Color(16777215), ChatColor.getByChar('f'))
 	                                                                .build();
+	private final List<Pattern> patterns = Arrays.asList(new AltColorCodesPattern(), new GradientPattern(), new SolidPattern(), new RainbowPattern());
 	
-	private final List<Pattern> patterns = Arrays.asList(new GradientPattern(), new SolidPattern(), new RainbowPattern());
-	
+	/**
+	 * Translate alternate color codes.
+	 *
+	 * @param textToTranslate the text to translate
+	 * @return the string
+	 */
+	@NonNull
+	public String translateAlternateColorCodes(@NonNull final String textToTranslate) {
+		return ChatColor.translateAlternateColorCodes(BUKKIT_COLOR_CHAR, textToTranslate);
+	}
+
+	/**
+	 * Process patterns.
+	 *
+	 * @param message the message
+	 * @return the message
+	 */
+	@NonNull
+	public String processPatterns(@NonNull final String message) {
+		String processed = message;
+		for (final Pattern pattern : ColorUtil.patterns) {
+			processed = pattern.process(processed);
+		}
+		return processed;
+	}
+
 	/**
 	 * Process list.
 	 *
@@ -76,16 +103,11 @@ public class ColorUtil {
 	 */
 	@NonNull
 	public String process(@NonNull final String message) {
-		String str = message;
-		final String result = ColorUtil.lruCache.getResult(str);
+		final String result = ColorUtil.lruCache.getResult(message);
 		if (result == null) {
-			final String input = str;
-			for (final Pattern pattern : ColorUtil.patterns) {
-				str = pattern.process(str);
-			}
-			str = ChatColor.translateAlternateColorCodes(BUKKIT_COLOR_CHAR, str);
-			ColorUtil.lruCache.put(input, str);
-			return str;
+			final String processed = ColorUtil.processPatterns(message);
+			ColorUtil.lruCache.put(message, processed);
+			return processed;
 		}
 		return result;
 	}
@@ -99,7 +121,7 @@ public class ColorUtil {
 	 */
 	@NonNull
 	public String color(@NonNull final String message, @NonNull final Color color) {
-		return (VersionUtil.IS_HEX_VERSION ? (String) ColorUtil.methodOf.invokeStatic(color) : ColorUtil.getClosestColor(color)) + message;
+		return (VersionUtil.IS_HEX_VERSION ? ColorUtil.methodOf.invokeMethod("of", color).getObject() : ColorUtil.getClosestColor(color)) + message;
 	}
 	
 	@NonNull
@@ -159,7 +181,7 @@ public class ColorUtil {
 		for (int i = 0; i < step; i++) {
 			final Color color = new Color(start.getRed() + stepR * i * direction[0], start.getGreen() + stepG * i * direction[1], start.getBlue() + stepB * i * direction[2]);
 			if (VersionUtil.IS_HEX_VERSION) {
-				chatColors[i] = ColorUtil.methodOf.invokeStatic(color);
+				chatColors[i] = ColorUtil.methodOf.invokeMethod("of", color).getObject();
 			} else {
 				chatColors[i] = ColorUtil.getClosestColor(color);
 			}
@@ -203,7 +225,7 @@ public class ColorUtil {
 		for (int i = 0; i < step; i++) {
 			final Color color = Color.getHSBColor((float) (colorStep * i), saturation, saturation);
 			if (VersionUtil.IS_HEX_VERSION) {
-				chatColors[i] = ColorUtil.methodOf.invokeStatic(color);
+				chatColors[i] = ColorUtil.methodOf.invokeMethod("of", color).getObject();
 			} else {
 				chatColors[i] = ColorUtil.getClosestColor(color);
 			}
@@ -219,7 +241,7 @@ public class ColorUtil {
 	 */
 	@NonNull
 	public ChatColor getColor(@NonNull final String message) {
-		return VersionUtil.IS_HEX_VERSION ? (ChatColor) ColorUtil.methodOf.invokeStatic(new Color(Integer.parseInt(message, 16))) : ColorUtil.getClosestColor(new Color(Integer.parseInt(message, 16)));
+		return VersionUtil.IS_HEX_VERSION ? ColorUtil.methodOf.invokeMethod("of", new Color(Integer.parseInt(message, 16))).getObject() : ColorUtil.getClosestColor(new Color(Integer.parseInt(message, 16)));
 	}
 	
 	/**

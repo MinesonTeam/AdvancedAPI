@@ -40,6 +40,7 @@ public class PlayerDamageBlockByShieldEvent extends PlayerEvent implements Cance
 	}
 	
 	@Override
+	@SuppressWarnings("deprecation")
 	public void setCancelled(final boolean cancel) {
 		this.cancelled = cancel;
 		if (cancel) {
@@ -55,7 +56,7 @@ public class PlayerDamageBlockByShieldEvent extends PlayerEvent implements Cance
 			} else {
 				return;
 			}
-			item.setDurability((short) 1);
+			item.setDurability((short) (item.getDurability() + 1));
 		}
 	}
 	

@@ -306,14 +306,14 @@ public class AdvancedWorld {
 		return this;
 	}
 	
-	public AdvancedWorld setGameRules(final boolean value, final GameRule<Boolean>... gameRules) {
+	public AdvancedWorld setGameRules(final boolean value, final GameRule<Boolean>[] gameRules) {
 		for (GameRule<Boolean> gameRule : gameRules) {
 			this.setGameRule(gameRule, value);
 		}
 		return this;
 	}
 	
-	public AdvancedWorld setGameRules(final int value, final GameRule<Integer>... gameRules) {
+	public AdvancedWorld setGameRules(final int value, final GameRule<Integer>[] gameRules) {
 		for (GameRule<Integer> gameRule : gameRules) {
 			this.setGameRule(gameRule, value);
 		}

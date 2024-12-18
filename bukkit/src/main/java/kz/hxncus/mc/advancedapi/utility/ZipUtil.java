@@ -13,7 +13,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @UtilityClass
-public class ZipUtil {
+public final class ZipUtil {
 	public byte[] zipWorld(File worldFolder) throws IOException {
 		byte[] buffer = new byte[1024];
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream)) {

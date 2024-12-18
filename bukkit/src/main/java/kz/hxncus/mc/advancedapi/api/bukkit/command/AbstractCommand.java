@@ -1,157 +1,94 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.command;
 
-import kz.hxncus.mc.advancedapi.bukkit.command.CommandArguments;
-import kz.hxncus.mc.advancedapi.exception.CommandSyntaxException;
 import lombok.Getter;
 import lombok.NonNull;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
+
+import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.Argument;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 @Getter
-public abstract class AbstractCommand implements ICommand {
-	private final String commandName;
-	private String permission;
-	private final List<ICommand> subCommands = new ArrayList<>();
-	private final List<CommandExecutor> executors = new ArrayList<>();
-	private final List<TabCompleter> completers = new ArrayList<>();
-	
-	protected AbstractCommand(String commandName) {
-		this.commandName = commandName;
+public abstract class AbstractCommand extends Command implements ICommand {
+	protected final Map<String, ICommand> subCommands = new HashMap<>();
+	protected final List<Argument<?>> arguments = new ArrayList<>();
+	protected final List<CommandExecutor> executors = new ArrayList<>();
+	protected final List<TabCompleter> completers = new ArrayList<>();
+
+	protected AbstractCommand(final String name) {
+		super(name.toLowerCase());
 	}
-	
+
+	protected AbstractCommand(@NonNull String name, @NonNull String description, @NonNull String usageMessage, @NonNull List<String> aliases) {
+		super(name.toLowerCase(), description, usageMessage, aliases);
+	}
+
 	@Override
-	public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String @NonNull... args) {
-		return this.onCommand(1, this, sender, command, label, args);
-	}
-	
-	private boolean onCommand(int index, ICommand iCommand, @NonNull CommandSender sender, Command command, String label, String... args) {
-		List<ICommand> commandSubCommands = iCommand.getSubCommands();
-		if (commandSubCommands.isEmpty() || args.length == 0) {
-			return execute(iCommand, sender, command, label, args);
+	public boolean execute(@NonNull CommandSender sender, @NonNull String label, @NonNull String[] args) {
+		if (this.onCommand(sender, this, label, args)) {
+            return true;
 		}
-		for (ICommand subCommand : commandSubCommands) {
-			if (args[index - 1].equalsIgnoreCase(subCommand.getCommandName())) {
-				if (args.length > index) {
-					return this.onCommand(index + 1, subCommand, sender, command, label, args);
-				} else {
-					return execute(subCommand, sender, command, label, args);
-				}
-			} else {
-				return execute(this, sender, command, label, args);
-			}
-		}
-		return false;
+		sender.sendMessage(ChatColor.RED + getUsage());
+        return false;
 	}
-	
-	private boolean execute(ICommand iCommand, CommandSender sender, Command command, String label, String... args) {
-		if (iCommand.getPermission() == null || sender.hasPermission(iCommand.getPermission())) {
-			for (CommandExecutor executor : iCommand.getExecutors()) {
-				try {
-					executor.run(sender, command, label, new CommandArguments(args));
-				} catch (CommandSyntaxException ignored) {
-				}
-			}
-			return true;
-		} else {
-			sender.sendMessage("§cYou don't have permission to execute this command!");
-			return false;
-		}
-	}
-	
+
+	@NonNull
 	@Override
-	public List<String> onTabComplete(@NonNull CommandSender sender, @NonNull Command command, @NonNull String alias, String @NonNull ... args) {
-		return filter(onTabComplete(2, this, sender, command, alias, args), args);
-	}
-	
-	private List<String> onTabComplete(int index, ICommand iCommand, @NonNull CommandSender sender, Command command, String alias, String... args) {
-		List<String> result = new ArrayList<>();
-		List<ICommand> commandSubCommands = iCommand.getSubCommands();
-		for (ICommand subCommand : commandSubCommands) {
-			if (subCommand.getCommandName().equalsIgnoreCase(args[index - 2])) {
-				if (args.length + 1 > index) {
-					return this.onTabComplete(index + 1, subCommand, sender, command, alias, args);
-				} else {
-					result.addAll(complete(subCommand, sender, command, alias, args));
-				}
-			} else {
-				result.add(subCommand.getCommandName());
-			}
-		}
-		result.addAll(complete(iCommand, sender, command, alias, args));
-		return result;
-	}
-	
-	private List<String> complete(ICommand iCommand, CommandSender sender, Command command, String alias, String... args) {
-		if (iCommand.getPermission() == null || sender.hasPermission(iCommand.getPermission())) {
-			List<String> result = new ArrayList<>();
-			for (TabCompleter completer : iCommand.getCompleters()) {
-				try {
-					result.addAll(completer.run(sender, command, alias, new CommandArguments(args)));
-				} catch (CommandSyntaxException ignored) {
-				}
-			}
-			return result;
-		} else {
-			return Collections.emptyList();
-		}
-	}
-	
-	private List<String> filter(List<String> list, String... args) {
-		String last = args[args.length - 1];
-		List<String> result = new ArrayList<>();
-		for (final String arg : list) {
-			if (arg.toLowerCase(Locale.ENGLISH).startsWith(last.toLowerCase(Locale.ENGLISH))) {
-				result.add(arg);
-			}
-		}
-		return result;
-	}
-	
-	public ICommand subcommand(ICommand command) {
-		this.subCommands.add(command);
+    public List<String> tabComplete(@NonNull CommandSender sender, @NonNull String alias, @NonNull String[] args) throws IllegalArgumentException {
+		return this.onTabComplete(sender, this, alias, args);
+    }
+
+	@Override
+	public Command getCommand() {
 		return this;
 	}
-	
-	public ICommand subcommands(ICommand... command) {
-		this.subCommands.addAll(List.of(command));
+
+	@Override
+	public ICommand description(String description) {
+		this.setDescription(description);
 		return this;
 	}
-	
-	public ICommand execute(CommandExecutor executor) {
-		this.executors.add(executor);
+
+	@Override
+	public ICommand label(String label) {
+		this.setLabel(label);
 		return this;
 	}
-	
-	public ICommand complete(TabCompleter completer) {
-		this.completers.add(completer);
-		return this;
-	}
-	
+
+	@Override
 	public ICommand permission(String permission) {
-		this.permission = permission;
+		this.setPermission(permission);
 		return this;
 	}
-	
-	public void register(JavaPlugin plugin) {
-		PluginCommand command = plugin.getCommand(this.commandName);
-		if (command != null) {
-			command.setExecutor(this);
-			command.setTabCompleter(this);
-		}
+
+	@Override
+	public ICommand permissionMessage(String permission) {
+		this.setPermissionMessage(permission);
+		return this;
 	}
-	
-	public void unregister(JavaPlugin plugin) {
-		PluginCommand command = plugin.getCommand(this.commandName);
-		if (command != null) {
-			command.setExecutor(null);
-			command.setTabCompleter(null);
-		}
+
+	@Override
+	public ICommand usage(String permission) {
+		this.setUsage(permission);
+		return this;
+	}
+
+	@Override
+	public ICommand addAliases(String... aliases) {
+		Collections.addAll(super.getAliases(), aliases);
+		return this;
+	}
+
+	@Override
+	public ICommand addAlias(String alias) {
+		super.getAliases().add(alias);
+		return this;
 	}
 }

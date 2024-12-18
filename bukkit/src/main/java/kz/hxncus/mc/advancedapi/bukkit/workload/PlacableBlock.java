@@ -20,7 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class PlacableBlock implements Workload {
 	private final NMSChunk chunk = NMSHandler.getChunk();
-	private final UUID worldUuid;
+	private final UUID worldUniqueId;
 	private final int blockX;
 	private final int blockY;
 	private final int blockZ;
@@ -28,7 +28,7 @@ public class PlacableBlock implements Workload {
 	
 	@Override
 	public void compute() {
-		final World world = Bukkit.getWorld(this.worldUuid);
+		final World world = Bukkit.getWorld(this.worldUniqueId);
 		if (world == null) {
 			return;
 		}

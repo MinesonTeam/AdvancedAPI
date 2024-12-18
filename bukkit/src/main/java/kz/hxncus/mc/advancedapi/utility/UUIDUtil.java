@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * The type Uuid util.
@@ -12,31 +13,31 @@ import java.util.UUID;
  * @since  1.0.0
  */
 @UtilityClass
-public class UUIDUtil {
+public final class UUIDUtil {
 	/**
-	 * The constant EMPTY_UUID.
+	 * The constant EMPTY_UNIQUE_ID.
 	 */
-	public final UUID EMPTY_UUID = new UUID(0, 0);
+	public final UUID EMPTY_UNIQUE_ID = new UUID(0, 0);
 	
 	/**
-	 * Uuid from an int array uuid.
+	 * Unique id from an int array unique id.
 	 *
 	 * @param array the array
-	 * @return the uuid
+	 * @return the unique id
 	 */
-	public UUID uuidFromIntArray(final int[] array) {
+	public UUID uniqueIdFromIntArray(final int[] array) {
 		return new UUID((long) array[0] << 32 | array[1] & 4294967295L, (long) array[2] << 32 | array[3] & 4294967295L);
 	}
 	
 	/**
-	 * Uuid to int array int [ ].
+	 * Unique id to int array int [ ].
 	 *
-	 * @param uuid the uuid
+	 * @param uniqueId the unique id
 	 * @return the int [ ]
 	 */
-	public int[] uuidToIntArray(final UUID uuid) {
-		final long l = uuid.getMostSignificantBits();
-		final long m = uuid.getLeastSignificantBits();
+	public int[] uniqueIdToIntArray(final UUID uniqueId) {
+		final long l = uniqueId.getMostSignificantBits();
+		final long m = uniqueId.getLeastSignificantBits();
 		return leastMostToIntArray(l, m);
 	}
 	
@@ -45,17 +46,35 @@ public class UUIDUtil {
 	}
 	
 	/**
-	 * Uuid to byte array byte [ ].
+	 * Unique id to byte array byte [ ].
 	 *
-	 * @param uuid the uuid
+	 * @param uniqueId the unique id
 	 * @return the byte [ ]
 	 */
-	public byte[] uuidToByteArray(final UUID uuid) {
+	public byte[] uniqueIdToByteArray(final UUID uniqueId) {
 		final byte[] bs = new byte[16];
 		ByteBuffer.wrap(bs)
 		          .order(ByteOrder.BIG_ENDIAN)
-		          .putLong(uuid.getMostSignificantBits())
-		          .putLong(uuid.getLeastSignificantBits());
+		          .putLong(uniqueId.getMostSignificantBits())
+		          .putLong(uniqueId.getLeastSignificantBits());
 		return bs;
+	}
+	
+	/**
+	 * Generate unique id until unique id.
+	 *
+	 * @param until the until
+	 * @return the unique id
+	 */
+	public UUID generateUniqueIdUntil(Predicate<UUID> until) {
+		UUID uniqueId;
+		do {
+			uniqueId = UUID.randomUUID();
+		} while (until.test(uniqueId));
+		return uniqueId;
+	}
+
+	public UUID generateUniqueId() {
+		return UUIDUtil.generateUniqueIdUntil(uniqueId -> false);
 	}
 }

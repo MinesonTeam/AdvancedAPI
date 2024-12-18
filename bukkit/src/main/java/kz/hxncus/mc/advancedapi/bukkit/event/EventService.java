@@ -1,25 +1,13 @@
 package kz.hxncus.mc.advancedapi.bukkit.event;
 
-import kz.hxncus.mc.advancedapi.AdvancedAPI;
 import kz.hxncus.mc.advancedapi.api.service.AbstractService;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.Statistic;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockDispenseArmorEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerStatisticIncrementEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
@@ -46,70 +34,12 @@ public class EventService extends AbstractService {
 	
 	@Override
 	public void register() {
-		this.registerCustomEvents();
+		new CustomEvents(this).registerEvents();
 	}
 	
 	@Override
 	public void unregister() {
 		this.unregisterAll();
-	}
-	
-	private void registerCustomEvents() {
-		this.register(PlayerInteractEvent.class, event -> {
-			final Action action = event.getAction();
-			switch (action) {
-				case LEFT_CLICK_BLOCK:
-				case LEFT_CLICK_AIR:
-					PlayerLeftClickEvent leftClickEvent = new PlayerLeftClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
-					                                                                     event.getClickedBlock(), event.getBlockFace(), event.getHand(),
-					                                                                     event.getClickedPosition());
-					this.callEvent(leftClickEvent);
-					event.setCancelled(leftClickEvent.isCancelled());
-					break;
-				case RIGHT_CLICK_BLOCK:
-				case RIGHT_CLICK_AIR:
-					PlayerRightClickEvent rightClickEvent = new PlayerRightClickEvent(event.getPlayer(), event.getAction(), event.getItem(),
-					                                                                  event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition());
-					this.callEvent(rightClickEvent);
-					event.setCancelled(rightClickEvent.isCancelled());
-					break;
-				case PHYSICAL:
-					PlayerPhysicalInteractEvent physicalInteractEvent = new PlayerPhysicalInteractEvent(event.getPlayer(), event.getAction(), event.getItem(),
-					                                                                                    event.getClickedBlock(), event.getBlockFace(), event.getHand(), event.getClickedPosition());
-					this.callEvent(physicalInteractEvent);
-					event.setCancelled(physicalInteractEvent.isCancelled());
-			}
-		});
-		this.register(PlayerStatisticIncrementEvent.class, event -> {
-			final Statistic statistic = event.getStatistic();
-			final Player player = event.getPlayer();
-			Location location = player.getLocation();
-			if (statistic == Statistic.JUMP) {
-				this.callEvent(new PlayerJumpEvent(player, location, location.clone().add(player.getVelocity())));
-			} else if (statistic == Statistic.DAMAGE_BLOCKED_BY_SHIELD) {
-				final EntityDamageEvent lastDamageCause = player.getLastDamageCause();
-				if (lastDamageCause == null) {
-					return;
-				}
-				this.callEvent(new PlayerDamageBlockByShieldEvent(player, lastDamageCause.getEntity(), event.getNewValue() - event.getPreviousValue()));
-			}
-		});
-		this.register(InventoryClickEvent.class, event -> {
-		
-		});
-		this.register(BlockDispenseArmorEvent.class, event -> {
-			final ArmorEquipEvent.ArmorType armorType = ArmorEquipEvent.ArmorType.matchType(event.getItem());
-			if (armorType == null) {
-				return;
-			}
-			final ArmorEquipEvent armorEquipEvent = new ArmorEquipEvent(event.getTargetEntity(),
-			                                                            ArmorEquipEvent.EquipMethod.DISPENSER, armorType,
-			                                                            new ItemStack(Material.AIR), event.getItem());
-			this.callEvent(armorEquipEvent);
-			if (armorEquipEvent.isCancelled()) {
-				event.setCancelled(true);
-			}
-		});
 	}
 	
 	/**
@@ -152,7 +82,7 @@ public class EventService extends AbstractService {
 	 * Unregister all.
 	 */
 	private void unregisterAll() {
-		HandlerList.unregisterAll(AdvancedAPI.getInstance());
+		HandlerList.unregisterAll(this.getPlugin());
 	}
 	
 	/**

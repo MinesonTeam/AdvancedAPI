@@ -14,7 +14,7 @@ import java.util.List;
  * @since  1.0.1
  */
 @UtilityClass
-public class CoordinateUtil {
+public final class CoordinateUtil {
 	/**
 	 * Validates the range of coordinates.
 	 *

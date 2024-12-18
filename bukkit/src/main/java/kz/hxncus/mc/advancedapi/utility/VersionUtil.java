@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 @UtilityClass
-public class VersionUtil {
+public final class VersionUtil {
 	/**
 	 * The Nms version by an int.
 	 */
@@ -249,6 +249,7 @@ public class VersionUtil {
 	 * @param enchantment the enchantment
 	 * @return the enchantment name
 	 */
+	@SuppressWarnings("deprecation")
 	public String getEnchantmentName(final Enchantment enchantment) {
 		if (IS_NAMESPACED_KEY_VERSION) {
 			return enchantment.getKey()

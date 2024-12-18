@@ -7,12 +7,10 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import javax.annotation.Nullable;
-
 @UtilityClass
-public class InventoryUtil {
+public final class InventoryUtil {
 	@NonNull
-	public Inventory createInventory(@Nullable final InventoryHolder inventoryHolder, @Nullable final InventoryType inventoryType, int size, @Nullable String title) {
+	public Inventory createInventory(final InventoryHolder inventoryHolder, final InventoryType inventoryType, int size, String title) {
 		if (inventoryType != null && size == 0 && title == null) {
 			return Bukkit.createInventory(inventoryHolder, inventoryType);
 		} else if (inventoryType != null && title != null && size == 0) {

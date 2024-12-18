@@ -4,11 +4,36 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
 
 @UtilityClass
-public class MaterialUtil {
+public final class MaterialUtil {
 	public boolean isNullOrAir(final Material material) {
 		return material == null || material.isAir();
 	}
 	
+	public boolean isWool(Material wool) {
+		switch (wool) {
+			case WHITE_WOOL:
+			case ORANGE_WOOL:
+			case MAGENTA_WOOL:
+			case LIGHT_BLUE_WOOL:
+			case YELLOW_WOOL:
+			case LIME_WOOL:
+			case PINK_WOOL:
+			case GRAY_WOOL:
+			case LIGHT_GRAY_WOOL:
+			case CYAN_WOOL:
+			case PURPLE_WOOL:
+			case BLUE_WOOL:
+			case BROWN_WOOL:
+			case GREEN_WOOL:
+			case RED_WOOL:
+			case BLACK_WOOL:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	@SuppressWarnings("deprecation")
 	public boolean isLog(Material log) {
 		switch (log) {
 			//<editor-fold defaultstate="collapsed" desc="isLog">
@@ -28,6 +53,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isLeave(Material leaf) {
 		switch (leaf) {
 			//<editor-fold defaultstate="collapsed" desc="isLeave">
@@ -49,6 +75,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isSword(Material sword) {
 		switch (sword) {
 			//<editor-fold defaultstate="collapsed" desc="isSword">
@@ -69,6 +96,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isPickaxe(Material pickaxe) {
 		switch (pickaxe) {
 			//<editor-fold defaultstate="collapsed" desc="isPickaxe">
@@ -89,6 +117,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isShovel(Material shovel) {
 		switch (shovel) {
 			//<editor-fold defaultstate="collapsed" desc="isShovel">
@@ -109,6 +138,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isAxe(Material axe) {
 		switch (axe) {
 			//<editor-fold defaultstate="collapsed" desc="isAxe">
@@ -129,6 +159,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isHoe(Material hoe) {
 		switch (hoe) {
 			//<editor-fold defaultstate="collapsed" desc="isHoe">
@@ -149,6 +180,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isPotion(Material potion) {
 		switch (potion) {
 			//<editor-fold defaultstate="collapsed" desc="isPotion">
@@ -270,6 +302,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isMinecart(Material minecart) {
 		switch (minecart) {
 			//<editor-fold defaultstate="collapsed" desc="isMinecart">
@@ -291,6 +324,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isBoat(Material boat) {
 		switch (boat) {
 			//<editor-fold defaultstate="collapsed" desc="isBoat">
@@ -322,6 +356,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isBanner(Material banner) {
 		switch (banner) {
 			//<editor-fold defaultstate="collapsed" desc="isBanner">
@@ -366,6 +401,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isBed(Material bed) {
 		switch (bed) {
 			//<editor-fold defaultstate="collapsed" desc="isBed">
@@ -393,6 +429,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isRail(Material rail) {
 		switch (rail) {
 			//<editor-fold defaultstate="collapsed" desc="isRail">
@@ -410,6 +447,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isBucket(Material bucket) {
 		switch (bucket) {
 			//<editor-fold defaultstate="collapsed" desc="isBucket">
@@ -434,6 +472,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isShulker(Material shulker) {
 		switch (shulker) {
 			//<editor-fold defaultstate="collapsed" desc="isShulker">
@@ -476,6 +515,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isSign(Material sign) {
 		switch (sign) {
 			//<editor-fold defaultstate="collapsed" desc="isSign">
@@ -532,6 +572,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isArrow(Material arrow) {
 		switch (arrow) {
 			//<editor-fold defaultstate="collapsed" desc="isArrow">
@@ -560,6 +601,7 @@ public class MaterialUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isPlantable(Material blockMaterial, Material plant) {
 		switch (plant) {
 			//<editor-fold defaultstate="collapsed" desc="isPlantable">

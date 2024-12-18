@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 @UtilityClass
-public class TimeUtil {
+public final class TimeUtil {
 	private final Pattern PATTERN = Pattern.compile("(?<=\\\\D)(?=\\\\d)|(?<=\\\\d)(?=\\\\D)");
 	/**
 	 * The Milliseconds in second.

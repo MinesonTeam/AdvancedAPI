@@ -1,6 +1,6 @@
 package kz.hxncus.mc.advancedapi.utility;
 
-import kz.hxncus.mc.advancedapi.random.AdvancedRandom;
+import kz.hxncus.mc.advancedapi.utility.random.AdvancedRandom;
 import kz.hxncus.mc.advancedapi.utility.tuples.Pair;
 import kz.hxncus.mc.advancedapi.utility.tuples.Triplet;
 import lombok.experimental.UtilityClass;
@@ -8,6 +8,7 @@ import org.bukkit.Axis;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 /**
@@ -16,7 +17,7 @@ import org.bukkit.block.BlockFace;
  * @since 1.0.0
  */
 @UtilityClass
-public class LocationUtil {
+public final class LocationUtil {
 	public Location floorBlock(Location location) {
 		location.setX(location.getBlockX());
 		location.setY(location.getBlockY());
@@ -134,5 +135,32 @@ public class LocationUtil {
 		if (yaw >= 135.0F && yaw <= 225.0F)
 			return BlockFace.NORTH;
 		throw new AssertionError();
+	}
+	
+	// Добавить метод для проверки безопасности локации
+	public static boolean isSafeLocation(Location location) {
+		Block feet = location.getBlock();
+		Block head = feet.getRelative(BlockFace.UP);
+		Block ground = feet.getRelative(BlockFace.DOWN);
+		return !feet.getType().isSolid() 
+			&& !head.getType().isSolid()
+			&& ground.getType().isSolid();
+	}
+	
+	// Добавить метод для поиска ближайшей безопасной локации
+	public static Location findSafeLocation(Location location, int radius) {
+		World world = location.getWorld();
+		int startX = location.getBlockX() - radius;
+		int startZ = location.getBlockZ() - radius;
+		
+		for (int x = startX; x <= startX + radius * 2; x++) {
+			for (int z = startZ; z <= startZ + radius * 2; z++) {
+				Location loc = world.getHighestBlockAt(x, z).getLocation();
+				if (isSafeLocation(loc)) {
+					return loc.add(0.5, 0, 0.5);
+				}
+			}
+		}
+		return null;
 	}
 }

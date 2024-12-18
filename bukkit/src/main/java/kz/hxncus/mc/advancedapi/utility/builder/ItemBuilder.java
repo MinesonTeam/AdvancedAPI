@@ -14,11 +14,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import com.google.common.base.Optional;
+
+import kz.hxncus.mc.advancedapi.utility.MaterialUtil;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Class Item builder.
@@ -113,7 +120,7 @@ public class ItemBuilder {
 	 * @param line the line
 	 * @return the item builder
 	 */
-	public ItemBuilder addLore(final String line) {
+	public ItemBuilder addLoreLine(final String line) {
 		final List<String> lore = this.itemMeta.getLore();
 		if (lore == null) {
 			this.itemMeta.setLore(Collections.singletonList(line));
@@ -129,8 +136,7 @@ public class ItemBuilder {
 	 * @param lines the lines
 	 * @return the item builder
 	 */
-	@SuppressWarnings("TypeMayBeWeakened")
-	public ItemBuilder addLore(final List<String> lines) {
+	public ItemBuilder addLoreLines(final List<String> lines) {
 		final List<String> lore = this.itemMeta.getLore();
 		if (lore == null) {
 			this.itemMeta.setLore(lines);
@@ -146,13 +152,31 @@ public class ItemBuilder {
 	 * @param lines the lines
 	 * @return the item builder
 	 */
-	public ItemBuilder addLore(final String... lines) {
+	public ItemBuilder addLoreLines(final String... lines) {
 		for (String line : lines) {
-			addLore(line);
+			addLoreLine(line);
 		}
 		return this;
 	}
 	
+	/**
+	 * Get type.
+	 *
+	 * @return the type
+	 */
+	public Material getType() {
+		return this.itemStack.getType();
+	}
+
+	/**
+	 * Get material.
+	 *
+	 * @return the material
+	 */
+	public Material getMaterial() {
+		return this.getType();
+	}
+
 	/**
 	 * Sets material.
 	 *
@@ -160,8 +184,8 @@ public class ItemBuilder {
 	 * @return the material
 	 */
 	public ItemBuilder setType(final Material material) {
-		this.itemStack.setType(material);
-		if (this.itemMeta == null) {
+		if (this.getMaterial() != material) {
+			this.itemStack.setType(material);
 			this.itemMeta = this.itemStack.getItemMeta();
 		}
 		return this;
@@ -199,8 +223,8 @@ public class ItemBuilder {
 	 * @param color the color
 	 * @return the item builder
 	 */
-	public ItemBuilder color(final int color) {
-		return this.color(Color.fromRGB(color));
+	public ItemBuilder setColor(final int color) {
+		return this.setColor(Color.fromRGB(color));
 	}
 	
 	/**
@@ -209,17 +233,15 @@ public class ItemBuilder {
 	 * @param color the color
 	 * @return the item builder
 	 */
-	public ItemBuilder color(@NonNull final Color color) {
+	@SuppressWarnings("deprecation")
+	public ItemBuilder setColor(@NonNull final Color color) {
 		if (this.itemMeta instanceof LeatherArmorMeta) {
 			((LeatherArmorMeta) this.itemMeta).setColor(color);
-		} else if (this.itemStack.getType()
-		                         .name()
-		                         .endsWith("_wool")) {
+		} else if (MaterialUtil.isWool(this.getMaterial())) {
 			final DyeColor dyeColor = DyeColor.getByColor(color);
-			if (dyeColor == null) {
-				return this;
+			if (dyeColor != null) {
+				this.setData(dyeColor.getWoolData());
 			}
-			this.setData(dyeColor.getWoolData());
 		}
 		return this;
 	}
@@ -231,6 +253,7 @@ public class ItemBuilder {
 	 * @param data the data
 	 * @return the data
 	 */
+	@SuppressWarnings("deprecation")
 	public ItemBuilder setData(final int data) {
 		this.itemStack.setDurability((short) data);
 		return this;
@@ -243,7 +266,7 @@ public class ItemBuilder {
 	 * @return the item builder
 	 */
 	public ItemBuilder color(@NonNull final DyeColor color) {
-		return this.color(color.getColor());
+		return this.setColor(color.getColor());
 	}
 	
 	/**
@@ -270,6 +293,20 @@ public class ItemBuilder {
 		return this.addEnchant(enchantment, level, true);
 	}
 	
+	public ItemBuilder addEnchant(final Enchantment enchantment) {
+		return this.addEnchant(enchantment, 1, true);
+	}
+
+	public ItemBuilder addEnchants(final Map<Enchantment, Integer> enchants) {
+		enchants.forEach(this::addEnchant);
+		return this;
+	}
+
+	public ItemBuilder removeEnchantsIf(final Predicate<Enchantment> predicate) {
+		this.itemMeta.getEnchants().entrySet().removeIf(entry -> predicate.test(entry.getKey()));
+		return this;
+	}
+
 	/**
 	 * Remove enchant item builder.
 	 *
@@ -332,6 +369,26 @@ public class ItemBuilder {
 		return this;
 	}
 	
+	public ItemBuilder removeFlagsIf(final Predicate<ItemFlag> predicate) {
+		this.itemMeta.getItemFlags().removeIf(predicate);
+		return this;
+	}
+
+	public int getCustomModelData() {
+		return this.itemMeta.getCustomModelData();
+	}
+
+	/**
+	 * Custom model data item builder.
+	 *
+	 * @param data the data
+	 * @return the item builder
+	 */
+	public ItemBuilder setCustomModelData(int data) {
+		this.itemMeta.setCustomModelData(data);
+		return this;
+	}
+	
 	/**
 	 * Sets pdc.
 	 *
@@ -343,7 +400,7 @@ public class ItemBuilder {
 	 */
 	public <T, Z> ItemBuilder setPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, Z> pdt, final Z value) {
 		this.itemMeta.getPersistentDataContainer()
-		             .set(namespacedKey, pdt, value);
+		.set(namespacedKey, pdt, value);
 		return this;
 	}
 	
@@ -369,7 +426,7 @@ public class ItemBuilder {
 	 * @param def           the def
 	 * @return the or default pdc
 	 */
-	public <T, Z> Z getOrDefaultPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, Z> pdt, final Z def) {
+	public <T, Z> Z getPDCOrDefault(final NamespacedKey namespacedKey, final PersistentDataType<T, Z> pdt, final Z def) {
 		final Z value = this.itemMeta.getPersistentDataContainer()
 		                             .get(namespacedKey, pdt);
 		return value == null ? def : value;
@@ -410,6 +467,32 @@ public class ItemBuilder {
 		                    .getKeys();
 	}
 	
+	public <T extends ItemMeta> boolean isInstance(final Class<T> metaClass) {
+		return metaClass.isInstance(this.itemMeta);
+	}
+
+	/**
+	 * Получает мета данные
+	 * @param metaClass класс мета данных
+	 * @return мета данные
+	 */
+	public <T extends ItemMeta> T getMeta(final Class<T> metaClass) {
+		return metaClass.cast(this.itemMeta);
+	}
+
+	/**
+	 * Получает мета данные
+	 * @param metaClass класс мета данных
+	 * @param metaFunction функция для получения мета данных
+	 * @return мета данные
+	 */
+	public <T extends ItemMeta, R> Optional<R> meta(final Class<T> metaClass, final Function<T, R> metaFunction) {
+		if (this.isInstance(metaClass)) {
+			return Optional.fromNullable(metaFunction.apply(this.getMeta(metaClass)));
+		}
+		return Optional.absent();
+	}
+
 	/**
 	 * Meta item builder.
 	 *
@@ -419,7 +502,7 @@ public class ItemBuilder {
 	 * @return the item builder
 	 */
 	public <T extends ItemMeta> ItemBuilder meta(final Class<T> metaClass, final Consumer<? super T> metaConsumer) {
-		if (metaClass.isInstance(this.itemMeta)) {
+		if (this.isInstance(metaClass)) {
 			metaConsumer.accept(metaClass.cast(this.itemMeta));
 		}
 		return this;

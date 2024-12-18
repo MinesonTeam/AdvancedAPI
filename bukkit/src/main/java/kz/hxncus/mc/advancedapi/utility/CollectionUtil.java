@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.Collection;
 
 @UtilityClass
-public class CollectionUtil {
+public final class CollectionUtil {
 	public <T> T next(Collection<T> types, T from) {
 		int index = indexOf(types, from);
 		return get(types, (index + 1) % types.size());

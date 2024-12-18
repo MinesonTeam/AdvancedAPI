@@ -17,8 +17,10 @@ import java.util.Map;
  * @since  1.0.0
  */
 @UtilityClass
-public class ItemUtil {
+public final class ItemUtil {
+	@SuppressWarnings("deprecation")
 	private final YamlConstructor YAML_CONSTRUCTOR = new YamlConstructor();
+	@SuppressWarnings("deprecation")
 	private final YamlRepresenter YAML_REPRESENTER = new YamlRepresenter();
 	private final DumperOptions DUMPER_OPTIONS = new DumperOptions();
 	private final Yaml yaml = new Yaml(YAML_CONSTRUCTOR, YAML_REPRESENTER, DUMPER_OPTIONS);

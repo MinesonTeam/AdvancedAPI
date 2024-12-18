@@ -3,7 +3,7 @@ package kz.hxncus.mc.advancedapi.bukkit.world;
 import kz.hxncus.mc.advancedapi.AdvancedAPI;
 import kz.hxncus.mc.advancedapi.api.service.AbstractService;
 import kz.hxncus.mc.advancedapi.bukkit.event.EventService;
-import kz.hxncus.mc.advancedapi.module.ServiceModule;
+import kz.hxncus.mc.advancedapi.service.ServiceModule;
 import kz.hxncus.mc.advancedapi.utility.FileUtil;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -12,6 +12,8 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
+
+import com.google.common.base.Optional;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +30,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class WorldService extends AbstractService {
-	private static AdvancedAPI api;
-	private final List<AdvancedWorld> advancedWorlds = new ArrayList<>(16);
+	protected static final List<AdvancedWorld> advancedWorlds = new ArrayList<>(16);
 	
 	/**
 	 * Instantiates a new World manager.
@@ -38,16 +39,16 @@ public class WorldService extends AbstractService {
 	 */
 	public WorldService(final AdvancedAPI api) {
 		super(api);
-		WorldService.api = api;
 	}
 	
 	@Override
 	public void register() {
-		final ServiceModule serviceModule = api.getServiceModule();
-		final EventService service = serviceModule.getService(EventService.class);
-		this.registerEvents(service);
+		final Optional<EventService> eventServiceOptional = ServiceModule.getService(EventService.class);
+		if (eventServiceOptional.isPresent()) {
+			this.registerEvents(eventServiceOptional.get());
+		}
 		for (final World world : Bukkit.getWorlds()) {
-			this.advancedWorlds.add(new AdvancedWorld(world));
+			WorldService.advancedWorlds.add(new AdvancedWorld(world));
 		}
 	}
 	
@@ -59,25 +60,18 @@ public class WorldService extends AbstractService {
 	private void registerEvents(final EventService eventManager) {
 		eventManager.register(WorldInitEvent.class, event -> {
 			final World world = event.getWorld();
-			if (this.advancedWorlds.stream()
-			                       .noneMatch(sw -> {
-				                     final World swWorld = sw.getWorld();
-				                     return swWorld.equals(world);
-			                     })) {
-				this.advancedWorlds.add(new AdvancedWorld(world));
-			}
-		});
-		eventManager.register(WorldInitEvent.class, event -> {
-			final World world = event.getWorld();
-			if (this.advancedWorlds.stream()
-			                       .noneMatch(sw -> sw.getWorld()
-			                                        .equals(world))) {
-				this.advancedWorlds.add(new AdvancedWorld(world));
+			if (WorldService.advancedWorlds.stream()
+			                            .noneMatch(sw -> {
+				                          final World swWorld = sw.getWorld();
+				                          return swWorld.equals(world);
+			                     }
+			                     )) {
+				WorldService.advancedWorlds.add(new AdvancedWorld(world));
 			}
 		});
 		eventManager.register(WorldUnloadEvent.class, event -> {
 			final World world = event.getWorld();
-			this.advancedWorlds.removeIf(sw -> sw.getWorld()
+			WorldService.advancedWorlds.removeIf(sw -> sw.getWorld()
 			                                     .equals(world));
 		});
 	}
@@ -88,9 +82,9 @@ public class WorldService extends AbstractService {
 	 * @param worldCreator the world creator
 	 * @return the simple world
 	 */
-	public AdvancedWorld createWorld(final WorldCreator worldCreator) {
+	public static AdvancedWorld createWorld(final WorldCreator worldCreator) {
 		final AdvancedWorld advancedWorld = new AdvancedWorld(worldCreator);
-		this.advancedWorlds.add(advancedWorld);
+		WorldService.advancedWorlds.add(advancedWorld);
 		return advancedWorld;
 	}
 	
@@ -100,11 +94,11 @@ public class WorldService extends AbstractService {
 	 * @param name the name
 	 * @return the simple world
 	 */
-	public AdvancedWorld loadWorld(final String name) {
+	public static AdvancedWorld loadWorld(final String name) {
 		final World world = Bukkit.getWorld(name);
 		if (world != null) {
 			final AdvancedWorld advancedWorld = new AdvancedWorld(world);
-			this.advancedWorlds.add(advancedWorld);
+			WorldService.advancedWorlds.add(advancedWorld);
 			return advancedWorld;
 		}
 		return null;
@@ -117,8 +111,8 @@ public class WorldService extends AbstractService {
 	 * @return the boolean
 	 */
 	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-	public boolean deleteWorld(final String name) {
-		if (this.unloadWorld(name)) {
+	public static boolean deleteWorld(final String name) {
+		if (WorldService.unloadWorld(name)) {
 			final File worldFolder = new File(Bukkit.getWorldContainer(), name);
 			try {
 				FileUtil.deleteFolder(worldFolder);
@@ -137,10 +131,10 @@ public class WorldService extends AbstractService {
 	 * @return the boolean
 	 */
 	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-	public boolean unloadWorld(final String name) {
+	public static boolean unloadWorld(final String name) {
 		final World world = Bukkit.getWorld(name);
 		if (world != null && Bukkit.unloadWorld(world, true)) {
-			this.advancedWorlds.removeIf(sw -> sw.getWorld()
+			WorldService.advancedWorlds.removeIf(sw -> sw.getWorld()
 			                                     .equals(world));
 			return true;
 		}
@@ -152,7 +146,7 @@ public class WorldService extends AbstractService {
 	 *
 	 * @return the worlds
 	 */
-	public List<World> getWorlds() {
+	public static List<World> getWorlds() {
 		return Bukkit.getWorlds();
 	}
 	
@@ -161,8 +155,8 @@ public class WorldService extends AbstractService {
 	 *
 	 * @return the simple worlds
 	 */
-	public List<AdvancedWorld> getAdvancedWorlds() {
-		return Collections.unmodifiableList(this.advancedWorlds);
+	public static List<AdvancedWorld> getAdvancedWorlds() {
+		return Collections.unmodifiableList(WorldService.advancedWorlds);
 	}
 	
 	/**
@@ -170,8 +164,8 @@ public class WorldService extends AbstractService {
 	 *
 	 * @param settings the settings
 	 */
-	public void applySettingsToAllWorlds(final WorldSettings settings) {
-		for (final AdvancedWorld advancedWorld : this.advancedWorlds) {
+	public static void applySettingsToAllWorlds(final WorldSettings settings) {
+		for (final AdvancedWorld advancedWorld : WorldService.advancedWorlds) {
 			settings.apply(advancedWorld);
 		}
 	}

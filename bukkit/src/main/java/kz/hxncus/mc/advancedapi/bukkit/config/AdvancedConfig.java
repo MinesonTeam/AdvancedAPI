@@ -70,16 +70,20 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 	public AdvancedConfig(final URI uri){
 		this.file = new File(uri);
 	}
-	
-	public boolean createNewFile() throws IOException {
-		return this.file.getParentFile().mkdirs() && this.file.createNewFile();
+
+	@Override
+	public String getFileName() {
+		return this.file.getName();
 	}
-	
-	/**
-	 * Create a file.
-	 */
-	public boolean createNewFileIfNotExists() throws IOException {
-		return !this.file.exists() && this.createNewFile();
+
+	@Override
+	public boolean isFileExists() {
+		return this.file.exists();
+	}
+
+	@Override
+	public boolean createFile() throws IOException {
+		return this.file.getParentFile().mkdirs() && this.file.createNewFile();
 	}
 	
 	/**
@@ -88,16 +92,19 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 	 * @throws IOException      the io exception
 	 * @throws InvalidConfigurationException the invalid configuration exception
 	 */
+	@Override
 	public boolean load() throws IOException, InvalidConfigurationException {
-		if (this.file.exists()) {
+		this.createFile();
+		if (this.isFileExists()) {
 			this.load(this.file);
 			return true;
 		}
 		return false;
 	}
 	
+	@Override
 	public boolean loadDefaults(Plugin plugin) throws IOException {
-		if (!this.file.exists()) {
+		if (!this.isFileExists()) {
 			String fileName = this.file.getName();
 			InputStream resource = plugin.getResource(fileName);
 			if (resource != null) {
@@ -111,6 +118,7 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 		return false;
 	}
 	
+	@Override
 	public boolean load(Plugin plugin) throws  IOException, InvalidConfigurationException {
 		return !this.loadDefaults(plugin) && this.load();
 	}
@@ -118,10 +126,15 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 	/**
 	 * Save.
 	 */
+	@Override
 	public void save() throws IOException {
-		this.save(this.file);
+		this.createFile();
+		if (this.isFileExists()) {
+			this.save(this.file);
+		}
 	}
 	
+	@Override
 	public void setAndSave(@NonNull final String path, @NonNull final Object value) {
 		this.set(path, value);
 		try {
@@ -130,29 +143,28 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 			throw new RuntimeException();
 		}
 	}
-	
+
 	/**
-	 * Is uuid boolean.
+	 * Is unique id boolean.
 	 *
 	 * @param path the path
 	 * @return the boolean
 	 */
-	public boolean isUuid(@NonNull final String path) {
-		return this.getUuid(path) != UUIDUtil.EMPTY_UUID;
+	public boolean isUniqueId(@NonNull final String path) {
+		return this.getUniqueId(path) != UUIDUtil.EMPTY_UNIQUE_ID;
 	}
 	
 	/**
-	 * Gets uuid.
+	 * Gets unique id.
 	 *
 	 * @param path the path
-	 * @return the uuid
+	 * @return the unique id
 	 */
-	public UUID getUuid(@NonNull final String path) {
+	public UUID getUniqueId(@NonNull final String path) {
 		try {
-			return UUID.fromString(this.get(path, "")
-			                           .toString());
+			return UUID.fromString(this.get(path, "").toString());
 		} catch (final IllegalArgumentException e) {
-			return UUIDUtil.EMPTY_UUID;
+			return UUIDUtil.EMPTY_UNIQUE_ID;
 		}
 	}
 	
@@ -229,7 +241,7 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 	 */
 	@NonNull
 	public Entity getEntity(@NonNull final String path, @NonNull final Entity def) {
-		final Entity entity = Bukkit.getEntity(this.getUuid(path));
+		final Entity entity = Bukkit.getEntity(this.getUniqueId(path));
 		return entity == null ? def : entity;
 	}
 	
@@ -250,7 +262,7 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 	 * @return the entity
 	 */
 	public Entity getEntity(@NonNull final String path) {
-		return Bukkit.getEntity(this.getUuid(path));
+		return Bukkit.getEntity(this.getUniqueId(path));
 	}
 	
 	/**
@@ -282,14 +294,12 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 	}
 	
 	@Override
-	@NonNull
 	public OfflinePlayer getOfflinePlayer(@NonNull final String path) {
-		final UUID uuid = this.getUuid(path);
-		if (uuid == UUIDUtil.EMPTY_UUID) {
-			return Bukkit.getOfflinePlayer(this.getString(path, ""));
-		} else {
-			return Bukkit.getOfflinePlayer(uuid);
+		final UUID uniqueId = this.getUniqueId(path);
+		if (uniqueId != UUIDUtil.EMPTY_UNIQUE_ID) {
+			return Bukkit.getOfflinePlayer(uniqueId);
 		}
+		return null;
 	}
 	
 	/**
@@ -312,11 +322,11 @@ public class AdvancedConfig extends YamlConfiguration implements Config {
 	 * @return the online player
 	 */
 	public Player getOnlinePlayer(@NonNull final String path) {
-		final UUID uuid = this.getUuid(path);
-		if (uuid == UUIDUtil.EMPTY_UUID) {
+		final UUID uniqueId = this.getUniqueId(path);
+		if (uniqueId == UUIDUtil.EMPTY_UNIQUE_ID) {
 			return Bukkit.getPlayer(this.getString(path, ""));
 		} else {
-			return Bukkit.getPlayer(uuid);
+			return Bukkit.getPlayer(uniqueId);
 		}
 	}
 	
