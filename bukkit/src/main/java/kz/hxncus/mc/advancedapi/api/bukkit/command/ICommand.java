@@ -16,7 +16,7 @@ import lombok.NonNull;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;	
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,7 +43,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	
 	default ICommand getSubCommand(final String subCommandName) {
 		return this.getSubCommands().get(subCommandName);
-	} 
+	}
 
 	default Argument<?> getArgument(final String argumentName) {
 		return this.getArguments().stream().filter(argument -> argument.getName().equals(argumentName)).findAny().get();
