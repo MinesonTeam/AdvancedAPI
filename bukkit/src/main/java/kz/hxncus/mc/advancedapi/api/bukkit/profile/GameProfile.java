@@ -13,6 +13,10 @@ public interface GameProfile extends Profile {
     void setGame(Game<? super GameProfile> game);
     Map<UUID, Long> getPartyInvites();
 
+    default Long getPartyInviteTime(UUID inviter) {
+        return this.getPartyInvites().get(inviter);
+    }
+
     default Long addPartyInvite(UUID inviter, long timestamp) {
         return this.getPartyInvites().put(inviter, timestamp);
     }
@@ -26,7 +30,7 @@ public interface GameProfile extends Profile {
     }
 
     default boolean isPartyInviteExpired(UUID inviter) {
-        return this.isInvited(inviter) && this.getPartyInvites().get(inviter) < System.currentTimeMillis();
+        return this.isInvited(inviter) && this.getPartyInviteTime(inviter) < System.currentTimeMillis();
     }
 
     default boolean isPartyOwner() {
