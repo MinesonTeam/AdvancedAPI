@@ -8,8 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.bukkit.fastutil.Hash;
-
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.game.Game;
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.party.Party;
 import lombok.Getter;
