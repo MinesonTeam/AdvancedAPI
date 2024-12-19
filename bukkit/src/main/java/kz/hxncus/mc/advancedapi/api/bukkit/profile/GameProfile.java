@@ -14,28 +14,28 @@ public interface GameProfile extends Profile {
     void setGame(Game<? super GameProfile> game);
     Map<UUID, Long> getPartyInvites();
 
-    default Long getPartyInviteTime(UUID inviter) {
-        return this.getPartyInvites().get(inviter);
+    default Long getPartyInviteTime(UUID partyUniqueId) {
+        return this.getPartyInvites().get(partyUniqueId);
     }
 
-    default Long addPartyInvite(UUID inviter, long timestamp) {
-        return this.addPartyInvite(inviter, timestamp, TimeUnit.MILLISECONDS);
+    default Long addPartyInvite(UUID partyUniqueId, long timestamp) {
+        return this.addPartyInvite(partyUniqueId, timestamp, TimeUnit.MILLISECONDS);
     }
 
-    default Long addPartyInvite(UUID inviter, long timestamp, TimeUnit unit) {
-        return this.getPartyInvites().put(inviter, System.currentTimeMillis() + unit.toMillis(timestamp));
+    default Long addPartyInvite(UUID partyUniqueId, long timestamp, TimeUnit unit) {
+        return this.getPartyInvites().put(partyUniqueId, System.currentTimeMillis() + unit.toMillis(timestamp));
     }
 
-    default Long removePartyInvite(UUID inviter) {
-        return this.getPartyInvites().remove(inviter);
+    default Long removePartyInvite(UUID partyUniqueId) {
+        return this.getPartyInvites().remove(partyUniqueId);
     }
 
-    default boolean isInvited(UUID inviter) {
-        return this.getPartyInvites().containsKey(inviter);
+    default boolean isInvited(UUID partyUniqueId) {
+        return this.getPartyInvites().containsKey(partyUniqueId);
     }
 
-    default boolean isPartyInviteExpired(UUID inviter) {
-        return this.isInvited(inviter) && this.getPartyInviteTime(inviter) < System.currentTimeMillis();
+    default boolean isPartyInviteExpired(UUID partyUniqueId) {
+        return this.isInvited(partyUniqueId) && this.getPartyInviteTime(partyUniqueId) < System.currentTimeMillis();
     }
 
     default boolean isPartyOwner() {
