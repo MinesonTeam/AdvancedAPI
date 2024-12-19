@@ -19,7 +19,7 @@ public interface GameProfile extends Profile {
     }
 
     default Long addPartyInvite(UUID inviter, long timestamp) {
-        return this.getPartyInvites().put(inviter, System.currentTimeMillis() + timestamp);
+        return this.addPartyInvite(inviter, timestamp, TimeUnit.MILLISECONDS);
     }
 
     default Long addPartyInvite(UUID inviter, long timestamp, TimeUnit unit) {
