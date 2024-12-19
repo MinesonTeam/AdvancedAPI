@@ -2,7 +2,6 @@ package kz.hxncus.mc.advancedapi.api.bukkit.minigame.party;
 
 import lombok.NonNull;
 import kz.hxncus.mc.advancedapi.api.bukkit.profile.GameProfile;
-import kz.hxncus.mc.advancedapi.api.bukkit.profile.Profile;
 import kz.hxncus.mc.advancedapi.api.collective.Collective;
 import kz.hxncus.mc.advancedapi.api.leader.Leader;
 
@@ -40,7 +39,7 @@ public interface Party<P extends GameProfile> extends Collective<P>, Leader<P> {
         return false;
     }
 
-    default void removeAll() {
+    default void removeAllProfiles() {
         this.getProfiles().forEach(profile -> {
             if (!this.isLeader(profile)) {
                 profile.setParty(null);
@@ -51,11 +50,6 @@ public interface Party<P extends GameProfile> extends Collective<P>, Leader<P> {
     }
 
     default void disband() {
-        this.getProfiles().forEach(profile -> {
-            if (!this.isLeader(profile)) {
-                profile.setParty(null);
-            }
-        });
         this.getProfiles().clear();
         this.setState(PartyState.DISBANDED);
         this.setPublic(false);
