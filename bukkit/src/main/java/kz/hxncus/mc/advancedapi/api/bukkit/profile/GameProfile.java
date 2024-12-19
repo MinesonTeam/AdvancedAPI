@@ -2,6 +2,7 @@ package kz.hxncus.mc.advancedapi.api.bukkit.profile;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.game.Game;
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.party.Party;
@@ -18,11 +19,15 @@ public interface GameProfile extends Profile {
     }
 
     default Long addPartyInvite(UUID inviter, long timestamp) {
-        return this.getPartyInvites().put(inviter, timestamp);
+        return this.getPartyInvites().put(inviter, System.currentTimeMillis() + timestamp);
     }
 
-    default void removePartyInvite(UUID inviter) {
-        this.getPartyInvites().remove(inviter);
+    default Long addPartyInvite(UUID inviter, long timestamp, TimeUnit unit) {
+        return this.getPartyInvites().put(inviter, System.currentTimeMillis() + unit.toMillis(timestamp));
+    }
+
+    default Long removePartyInvite(UUID inviter) {
+        return this.getPartyInvites().remove(inviter);
     }
 
     default boolean isInvited(UUID inviter) {
