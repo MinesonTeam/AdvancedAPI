@@ -33,7 +33,6 @@ public interface Party<P extends GameProfile> extends Collective<P>, Leader<P> {
                     return true;
                 }
             }
-            profile.setParty(null);
             return true;
         }
         return false;
