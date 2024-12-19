@@ -191,8 +191,12 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 		
 		this.getSubCommands().putAll(map);
 		this.complete((sender, command, alias, args) -> {
-			
-			return map.keySet().stream().collect(Collectors.toList());
+			if (sender.isOp() || Arrays.stream(subCommands).anyMatch(subCommand -> subCommand.hasPermission(sender))) {
+				List<String> list = new ArrayList<>(this.getAliases());
+				list.addAll(map.keySet());
+				return list;
+			}
+			return Collections.emptyList();
 		});
 
 		return this;
