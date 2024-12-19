@@ -14,6 +14,10 @@ public interface GameProfile extends Profile {
     void setGame(Game<? super GameProfile> game);
     Map<UUID, Long> getPartyInvites();
 
+    default void clearExpiredPartyInvites() {
+        this.getPartyInvites().entrySet().removeIf(entry -> entry.getValue() < System.currentTimeMillis());
+    }
+
     default Long getPartyInviteTime(UUID partyUniqueId) {
         return this.getPartyInvites().get(partyUniqueId);
     }
