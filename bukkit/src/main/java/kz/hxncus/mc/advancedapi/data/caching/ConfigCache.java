@@ -21,7 +21,7 @@ public class ConfigCache<K, V extends ConfigurationSerializable> extends Advance
 	private final Function<ConfigurationSection, V> sectionConverter;
 
     public ConfigCache(final String path, final ConfigurationSection section, final Function<K, String> keyConverter,
-						 final Function<String, K> stringConverter, final Function<ConfigurationSection, V> sectionConverter) {
+			final Function<String, K> stringConverter, final Function<ConfigurationSection, V> sectionConverter) {
 		super();
 		this.path = path;
 		this.section = section;
@@ -54,7 +54,7 @@ public class ConfigCache<K, V extends ConfigurationSerializable> extends Advance
 
     public V loadFromConfig(final K key) {
 		ConfigurationSection section = this.getSection();
-		ConfigurationSection subSection = section.getConfigurationSection(this.getPath());
+		ConfigurationSection subSection = section.getConfigurationSection(this.getPath() + "." + key.toString());
         final V valueConverted = subSection == null ? null : this.getSectionConverter().apply(subSection);
         if (valueConverted == null) {
             return null;
