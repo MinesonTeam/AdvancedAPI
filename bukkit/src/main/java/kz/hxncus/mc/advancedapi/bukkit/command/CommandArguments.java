@@ -29,7 +29,7 @@ public class CommandArguments {
 		return obj == null ? def : obj;
 	}
 
-	public <T> Object get(final int index, final Class<T> clazz) {
+	public <T> T get(final int index, final Class<T> clazz) {
 		return this.cast(this.get(index), clazz);
 	}
 
