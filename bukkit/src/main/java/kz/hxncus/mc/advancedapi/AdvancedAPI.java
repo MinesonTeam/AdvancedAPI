@@ -38,7 +38,7 @@ public class AdvancedAPI extends JavaPlugin {
 		if (this.isLoaded) {
 			return;
 		}
-		instance = this;
+		AdvancedAPI.instance = this;
 		
 		this.moduleService = new ModuleService(this);
 		this.serviceModule = new ServiceModule(this);
