@@ -11,7 +11,11 @@ public class UUIDArgument extends AbstractArgument<UUID> {
 
     @Override
     public UUID parse(String arg) {
-        return UUID.fromString(arg);
+        try {
+            return UUID.fromString(arg);
+        } catch (IllegalArgumentException e) {
+        }
+        return null;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package kz.hxncus.mc.advancedapi.bukkit.command.argument;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -12,7 +14,13 @@ public class PlayerArgument extends AbstractArgument<Player> {
 
     @Override
     public Player parse(String arg) {
-        Player player = Bukkit.getPlayer((String) arg);
+        Player player;
+        try {
+            UUID uniqueId = UUID.fromString(arg);
+            player = Bukkit.getPlayer(uniqueId);
+        } catch (IllegalArgumentException e) {
+            player = Bukkit.getPlayer(arg);
+        }
         return player;
     }
 
