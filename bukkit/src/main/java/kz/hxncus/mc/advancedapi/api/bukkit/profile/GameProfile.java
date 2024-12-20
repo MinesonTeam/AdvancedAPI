@@ -12,34 +12,34 @@ public interface GameProfile extends Profile {
     void setParty(Party<? super GameProfile> party);
     Game<? super GameProfile> getGame();
     void setGame(Game<? super GameProfile> game);
-    Map<UUID, Long> getPartyInvites();
+    Map<String, Long> getPartyInvites();
 
     default void clearExpiredPartyInvites() {
         this.getPartyInvites().entrySet().removeIf(entry -> entry.getValue() < System.currentTimeMillis());
     }
 
-    default Long getPartyInviteTime(UUID partyUniqueId) {
-        return this.getPartyInvites().get(partyUniqueId);
+    default Long getPartyInviteTime(String partyName) {
+        return this.getPartyInvites().get(partyName);
     }
 
-    default Long addPartyInvite(UUID partyUniqueId, long timestamp) {
-        return this.addPartyInvite(partyUniqueId, timestamp, TimeUnit.MILLISECONDS);
+    default Long addPartyInvite(String partyName, long timestamp) {
+        return this.addPartyInvite(partyName, timestamp, TimeUnit.MILLISECONDS);
     }
 
-    default Long addPartyInvite(UUID partyUniqueId, long timestamp, TimeUnit unit) {
-        return this.getPartyInvites().put(partyUniqueId, System.currentTimeMillis() + unit.toMillis(timestamp));
+    default Long addPartyInvite(String partyName, long timestamp, TimeUnit unit) {
+        return this.getPartyInvites().put(partyName, System.currentTimeMillis() + unit.toMillis(timestamp));
     }
 
-    default Long removePartyInvite(UUID partyUniqueId) {
-        return this.getPartyInvites().remove(partyUniqueId);
+    default Long removePartyInvite(String partyName) {
+        return this.getPartyInvites().remove(partyName);
     }
 
-    default boolean isInvited(UUID partyUniqueId) {
-        return this.getPartyInvites().containsKey(partyUniqueId);
+    default boolean isInvited(String partyName) {
+        return this.getPartyInvites().containsKey(partyName);
     }
 
-    default boolean isPartyInviteExpired(UUID partyUniqueId) {
-        return this.isInvited(partyUniqueId) && this.getPartyInviteTime(partyUniqueId) < System.currentTimeMillis();
+    default boolean isPartyInviteExpired(String partyName) {
+        return this.isInvited(partyName) && this.getPartyInviteTime(partyName) < System.currentTimeMillis();
     }
 
     default boolean isPartyOwner() {
