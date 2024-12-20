@@ -73,9 +73,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 
 		command.getExecutors().forEach(executor -> {
 			try {
-				System.out.println("Executing command " + label + " " + Arrays.toString(this.getArgsWithoutSubCommands(args)));
-				System.out.println("Executing command " + label + " " + Arrays.toString(this.convertArgs(this.getArgsWithoutSubCommands(args))));
-				executor.run(sender, command.getCommand(), label, new CommandArguments(this.convertArgs(this.getArgsWithoutSubCommands(args)), args));
+				executor.run(sender, command.getCommand(), label, new CommandArguments(this.convertArgs(command.getArguments(), this.getArgsWithoutSubCommands(args)), args));
 			} catch (CommandSyntaxException ignored) {
 			}
 		});
@@ -122,13 +120,12 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	}
 
 	@NonNull
-	default Object[] convertArgs(String[] args) {
+	default Object[] convertArgs(List<Argument<?>> arguments, String[] args) {
 		Object[] convertedArgs = new Object[args.length];
-		List<Argument<?>> arguments = this.getArguments();
-		if (arguments.isEmpty()) {
-			return convertedArgs;
-		}
 		for (int i = 0; i < args.length; i++) {
+			if (i >= arguments.size()) {
+				break;
+			}
 			Argument<?> argument = arguments.get(i);
 			if (argument == null) {
 				break;
