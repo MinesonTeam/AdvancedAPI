@@ -137,7 +137,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 
 	@NonNull
 	default String[] getArgsWithoutSubCommands(@NonNull final String[] args) {
-		if (args == null || args.length <= 1) {
+		if (args.length <= 1) {
 			return args;
 		}
 		int count = 0;
