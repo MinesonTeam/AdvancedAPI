@@ -18,7 +18,11 @@ public class CommandArguments {
 	}
 
 	public Object get(final int index) {
-		return this.args[index];
+		try {
+			return this.args[index];
+		} catch (IndexOutOfBoundsException e) {
+		}
+		return null;
 	}
 	
 	/**
