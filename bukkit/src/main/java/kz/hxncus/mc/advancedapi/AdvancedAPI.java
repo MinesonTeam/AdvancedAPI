@@ -46,6 +46,9 @@ public class AdvancedAPI extends JavaPlugin {
 		this.moduleService.addModule(this.serviceModule);
 		this.serviceModule.addService(this.moduleService);
 
+		this.serviceModule.setEnabled(true);
+		this.moduleService.register();
+		
 		this.isLoaded = true;
 	}
 	
@@ -79,9 +82,6 @@ public class AdvancedAPI extends JavaPlugin {
 				sender.sendMessage("jopa: " + Arrays.toString(args.getArgs()));
 			})
 			.register();
-		
-		this.serviceModule.setEnabled(true);
-		this.moduleService.register();
 	}
 	
 	@Override
