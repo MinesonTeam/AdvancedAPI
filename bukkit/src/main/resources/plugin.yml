@@ -2,5 +2,6 @@ name: "$name"
 version: "$version"
 main: kz.hxncus.mc.advancedapi.AdvancedAPI
 api-version: '1.13'
+
 depend:
   - ProtocolLib
