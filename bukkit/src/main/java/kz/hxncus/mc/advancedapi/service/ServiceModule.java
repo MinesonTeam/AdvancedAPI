@@ -42,8 +42,8 @@ public class ServiceModule extends AbstractModule {
 	}
 	
 	private void addDefaultServices() {
-		this.addServices(Arrays.asList(() -> new EventService(plugin), () -> new WorldService(plugin), () -> new InventoryService(plugin),
-		() -> new PartyService(plugin)));
+		this.addServices(new EventService(plugin), new WorldService(plugin), new InventoryService(plugin), 
+		    new PartyService(plugin));
 	}
 	
 	private void sortServices(final boolean isReversed) {
@@ -103,15 +103,15 @@ public class ServiceModule extends AbstractModule {
 		ServiceModule.services.add(service);
 	}
 	
-	public void addServices(@NonNull List<Supplier<? extends Service>> services) {
-		for (Supplier<? extends Service> service : services) {
-			this.addService(service.get());
+	public void addServices(@NonNull List<? extends Service> services) {
+		for (Service service : services) {
+			this.addService(service);
 		}
 	}
 	
-	public void addServices(@NonNull Supplier<? extends Service>[] services) {
-		for (Supplier<? extends Service> service : services) {
-			this.addService(service.get());
+	public void addServices(@NonNull Service... services) {
+		for (Service service : services) {
+			this.addService(service);
 		}
 	}
 	
