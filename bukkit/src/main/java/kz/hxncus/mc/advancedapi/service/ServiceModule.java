@@ -30,7 +30,7 @@ public class ServiceModule extends AbstractModule {
 	@Override
 	public void onEnable() {
 		this.addDefaultServices();
-		this.registerServices();
+		this.registerServices(plugin);
 	}
 	
 	@Override
