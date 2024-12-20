@@ -20,11 +20,6 @@ public class CommandArguments {
 	public Object get(final int index) {
 		return this.args[index];
 	}
-
-	public <T> T getCasted(final int index) {
-		Object obj = this.get(index);
-		return obj == null ? null : (T) obj;
-	}
 	
 	/**
 	 * Получаем аргумент по индексу и значению по умолчанию
@@ -44,11 +39,6 @@ public class CommandArguments {
 	@NonNull
 	public Optional<Object> getOptional(final int index) {
 		return Optional.fromNullable(this.get(index));
-	}
-
-	@NonNull
-	public <T> Optional<T> getOptionalCasted(final int index) {
-		return Optional.fromNullable(this.getCasted(index));
 	}
 
 	/**
