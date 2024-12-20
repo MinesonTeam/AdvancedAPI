@@ -144,7 +144,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 		if (args.length <= 1) {
 			return args;
 		}
-		int count = 1;
+		int count = 0;
 		ICommand current = this;
 		for (String arg : args) {
 			ICommand subCommand = current.getSubCommand(arg.toLowerCase());
