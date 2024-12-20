@@ -154,6 +154,8 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 			count += 1;
 			current = subCommand;
 		}
+		System.out.println(args.length);
+		System.out.println(count);
 		return Arrays.copyOfRange(args, count, args.length);
 	}
 
