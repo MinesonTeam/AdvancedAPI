@@ -20,7 +20,7 @@ public abstract class AbstractGameProfile implements GameProfile {
     protected final OfflinePlayer player;
     protected Party<? super GameProfile> party;
     protected Game<? super GameProfile> game;
-    protected Map<UUID, Long> partyInvites;
+    protected Map<String, Long> partyInvites;
 
     protected AbstractGameProfile(@NonNull OfflinePlayer player) {
         this.player = player;
