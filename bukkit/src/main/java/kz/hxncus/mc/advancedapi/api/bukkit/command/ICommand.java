@@ -75,8 +75,6 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 			try {
 				String[] argsWithoutSubCommand = this.getArgsWithoutSubCommands(args);
 				Object[] convertedArgs = this.convertArgs(command.getArguments(), argsWithoutSubCommand);
-				System.out.println(Arrays.toString(argsWithoutSubCommand));
-				System.out.println(Arrays.toString(convertedArgs));
 				executor.run(sender, command.getCommand(), label, new CommandArguments(convertedArgs, args));
 			} catch (CommandSyntaxException ignored) {
 			}
@@ -141,7 +139,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 
 	@NonNull
 	default String[] getArgsWithoutSubCommands(@NonNull final String[] args) {
-		if (args.length <= 1) {
+		if (args.length < 1) {
 			return args;
 		}
 		int count = 0;
@@ -154,8 +152,6 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 			count += 1;
 			current = subCommand;
 		}
-		System.out.println(args.length);
-		System.out.println(count);
 		return Arrays.copyOfRange(args, count, args.length);
 	}
 
