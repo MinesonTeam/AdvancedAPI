@@ -12,10 +12,8 @@ import lombok.NonNull;
 import org.bukkit.plugin.Plugin;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Supplier;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
