@@ -12,8 +12,10 @@ import lombok.NonNull;
 import org.bukkit.plugin.Plugin;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -40,8 +42,8 @@ public class ServiceModule extends AbstractModule {
 	}
 	
 	private void addDefaultServices() {
-		this.addServices(new EventService(plugin), new WorldService(plugin), new InventoryService(plugin),
-		    new PartyService(plugin));
+		this.addServices(Arrays.asList(() -> new EventService(plugin), () -> new WorldService(plugin), () -> new InventoryService(plugin),
+		() -> new PartyService(plugin)));
 	}
 	
 	private void sortServices(final boolean isReversed) {
@@ -101,15 +103,15 @@ public class ServiceModule extends AbstractModule {
 		ServiceModule.services.add(service);
 	}
 	
-	public void addServices(@NonNull List<Service> services) {
-		for (Service service : services) {
-			this.addService(service);
+	public void addServices(@NonNull List<Supplier<? extends Service>> services) {
+		for (Supplier<? extends Service> service : services) {
+			this.addService(service.get());
 		}
 	}
 	
-	public void addServices(@NonNull Service... services) {
-		for (Service service : services) {
-			this.addService(service);
+	public void addServices(@NonNull Supplier<? extends Service>[] services) {
+		for (Supplier<? extends Service> service : services) {
+			this.addService(service.get());
 		}
 	}
 	
@@ -121,11 +123,11 @@ public class ServiceModule extends AbstractModule {
 		ServiceModule.services.clear();
 	}
 	
-	public List<Service> getServices(Plugin plugin) {
+	public List<? extends Service> getServices(Plugin plugin) {
 		return ServiceModule.services.stream().filter(service -> service.getPlugin() == plugin).toList();
 	}
 	
-	public List<Service> getServices() {
+	public List<? extends Service> getServices() {
 		return Collections.unmodifiableList(ServiceModule.services);
 	}
 	

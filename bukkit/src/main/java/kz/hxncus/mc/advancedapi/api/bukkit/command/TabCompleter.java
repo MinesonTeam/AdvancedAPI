@@ -15,6 +15,6 @@ public interface TabCompleter {
 	
 	@NonNull
 	default Collection<String> run(SenderExecutionInfo executionInfo) throws CommandSyntaxException {
-		return this.run(executionInfo.sender(), executionInfo.command(), executionInfo.label(), executionInfo.args().input());
+		return this.run(executionInfo.sender(), executionInfo.command(), executionInfo.label(), executionInfo.args().getInput());
 	}
 }

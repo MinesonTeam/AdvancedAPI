@@ -2,9 +2,21 @@ package kz.hxncus.mc.advancedapi.bukkit.command;
 
 import com.google.common.base.Optional;
 
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
-public record CommandArguments(Object[] args, String[] input) {
+@Getter
+@Setter
+public class CommandArguments {
+	private Object[] args;
+	private String[] input;
+
+	public CommandArguments(final Object[] args, final String[] input) {
+		this.args = args;
+		this.input = input;
+	}
+
 	public Object get(final int index) {
 		return this.args[index];
 	}
