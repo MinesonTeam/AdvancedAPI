@@ -65,7 +65,7 @@ public class AdvancedAPI extends JavaPlugin {
 					return ArgumentType.ADVANCEMENT.getList((Player) sender);
 				})
 				.execute((sender, command, label, args) -> {
-					sender.sendMessage("apopaaaaaaaa: " + Arrays.toString(args.getArgs()));
+					sender.sendMessage(Arrays.toString(args.getArgs()));
 				}),
 			new AdvancedCommand("pipa")
 				.complete((sender, command, alias, args) -> {
