@@ -123,8 +123,11 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 
 	@NonNull
 	default Object[] convertArgs(String[] args) {
-		List<Argument<?>> arguments = this.getArguments();
 		Object[] convertedArgs = new Object[args.length];
+		List<Argument<?>> arguments = this.getArguments();
+		if (arguments.isEmpty()) {
+			return convertedArgs;
+		}
 		for (int i = 0; i < args.length; i++) {
 			Argument<?> argument = arguments.get(i);
 			if (argument == null) {
