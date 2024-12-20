@@ -98,11 +98,7 @@ public class ConfigCache<K, V extends ConfigurationSerializable> extends Advance
 			section.set(keyPath, null);
 			return false;
 		}
-		ConfigurationSection subSection = section.getConfigurationSection(keyPath);
-		if (subSection == null) {
-			subSection = section.createSection(keyPath);
-		}
-		subSection.set(keyConverted, value.serialize());
+		section.set(keyPath, value.serialize());
 		return true;
 	}
 
