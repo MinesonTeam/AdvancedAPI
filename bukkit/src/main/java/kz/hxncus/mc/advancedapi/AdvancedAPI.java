@@ -45,9 +45,6 @@ public class AdvancedAPI extends JavaPlugin {
 		
 		this.moduleService.addModule(this.serviceModule);
 		this.serviceModule.addService(this.moduleService);
-
-		this.serviceModule.setEnabled(true);
-		this.moduleService.register();
 		
 		this.isLoaded = true;
 	}
@@ -57,6 +54,9 @@ public class AdvancedAPI extends JavaPlugin {
 		if (!this.isLoaded) {
 			throw new RuntimeException("Plugin not loaded yet!");
 		}
+
+		this.serviceModule.setEnabled(true);
+		this.moduleService.register();
 
 		new AdvancedCommand("ebat")
 			.argument(new StringArgument("test").setSuggestions(List.of("test", "aaa")))
