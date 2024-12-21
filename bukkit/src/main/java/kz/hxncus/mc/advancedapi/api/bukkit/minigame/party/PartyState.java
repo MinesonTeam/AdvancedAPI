@@ -4,6 +4,5 @@ public enum PartyState {
     OPEN,
     INVITE_ONLY,
     CLOSED,
-    DISBANDED,
     IN_GAME
 }

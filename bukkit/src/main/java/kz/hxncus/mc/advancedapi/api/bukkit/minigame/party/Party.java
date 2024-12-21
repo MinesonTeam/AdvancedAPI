@@ -50,8 +50,7 @@ public interface Party<P extends GameProfile> extends Collective<P>, Leader<P> {
 
     default void disband() {
         this.getProfiles().clear();
-        this.setState(PartyState.DISBANDED);
+        this.setState(PartyState.CLOSED);
         this.setPublic(false);
-        this.setLeader(null);
     }
 }
