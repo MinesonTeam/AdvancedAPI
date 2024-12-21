@@ -9,10 +9,6 @@ import kz.hxncus.mc.advancedapi.api.leader.Leader;
  * Интерфейс для работы с пати игроков
  */
 public interface Party<P extends GameProfile> extends Collective<P>, Leader<P> { 
-    boolean isPublic();
-
-    void setPublic(boolean isPublic);
-
     PartyState getState();
 
     void setState(PartyState state);
@@ -51,6 +47,5 @@ public interface Party<P extends GameProfile> extends Collective<P>, Leader<P> {
     default void disband() {
         this.getProfiles().clear();
         this.setState(PartyState.CLOSED);
-        this.setPublic(false);
     }
 }
