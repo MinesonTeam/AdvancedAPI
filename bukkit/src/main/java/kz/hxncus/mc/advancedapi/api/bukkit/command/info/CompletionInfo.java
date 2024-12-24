@@ -5,8 +5,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 public interface CompletionInfo {
-	CommandSender sender();
-	Command command();
-	String alias();
-	CommandArguments args();
+	CommandSender getSender();
+	Command getCommand();
+	String getAlias();
+	CommandArguments getArgs();
 }

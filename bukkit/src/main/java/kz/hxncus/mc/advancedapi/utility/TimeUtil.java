@@ -75,13 +75,23 @@ public final class TimeUtil {
 			return parsedLong;
 		}
 		final String lowerCase = splitted[1].toLowerCase(Locale.ENGLISH);
-		return switch (lowerCase) {
-			case "tick", "ticks", "t" -> ticksToMillis(parsedLong);
-			case "seconds", "second", "s" -> secondsToMillis(parsedLong);
-			case "minutes", "minute", "m" -> minutesToMillis(parsedLong);
-			case "fps", "framepersecond" -> fpsToMillis(Double.parseDouble(splitted[0]));
-			default -> parsedLong;
-		};
+		switch (lowerCase) {
+			case "tick": return ticksToMillis(parsedLong);
+			case "t": return ticksToMillis(parsedLong);
+			case "ticks": return ticksToMillis(parsedLong);
+			case "seconds": return secondsToMillis(parsedLong);
+			case "second": return secondsToMillis(parsedLong);
+			case "s": return secondsToMillis(parsedLong);
+			case "minutes": return minutesToMillis(parsedLong);
+			case "minute": return minutesToMillis(parsedLong);
+			case "m": return minutesToMillis(parsedLong);
+			case "hours": return hoursToMillis(parsedLong);
+			case "hour": return hoursToMillis(parsedLong);
+			case "h": return hoursToMillis(parsedLong);
+			case "fps": return fpsToMillis(Double.parseDouble(splitted[0]));
+			case "framespersecond": return fpsToMillis(Double.parseDouble(splitted[0]));
+			default: return parsedLong;
+		}
 	}
 	
 	/**

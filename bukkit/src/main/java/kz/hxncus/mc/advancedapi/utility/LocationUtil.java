@@ -48,11 +48,12 @@ public final class LocationUtil {
 	 * @return the random location
 	 */
 	public Location getRandomLocation(final World world, final int min, final int max, final Axis axis) {
-		return switch (axis) {
-			case X -> getRandomLocation(world, new Triplet<>(min, 0, 0), new Triplet<>(max, 0, 0));
-			case Y -> getRandomLocation(world, new Triplet<>(0, min, 0), new Triplet<>(0, max, 0));
-			case Z -> getRandomLocation(world, new Triplet<>(0, 0, min), new Triplet<>(0, 0, max));
-		};
+		switch (axis) {
+			case X: return getRandomLocation(world, new Triplet<>(min, 0, 0), new Triplet<>(max, 0, 0));
+			case Y: return getRandomLocation(world, new Triplet<>(0, min, 0), new Triplet<>(0, max, 0));
+			case Z: return getRandomLocation(world, new Triplet<>(0, 0, min), new Triplet<>(0, 0, max));
+			default: throw new AssertionError();
+		}
 	}
 	
 	/**
@@ -81,7 +82,7 @@ public final class LocationUtil {
 	 */
 	public Location getRandomLocation(final World world, final Pair<Integer, Integer> minXZ, final Pair<Integer, Integer> maxXZ) {
 		return getRandomLocation(world, new Triplet<>(minXZ.getLeft(), 0, minXZ.getRight()),
-		                               new Triplet<>(maxXZ.getLeft(), 0, maxXZ.getRight()));
+										new Triplet<>(maxXZ.getLeft(), 0, maxXZ.getRight()));
 	}
 	
 	public boolean isInChunk(Chunk chunk, Location location) {

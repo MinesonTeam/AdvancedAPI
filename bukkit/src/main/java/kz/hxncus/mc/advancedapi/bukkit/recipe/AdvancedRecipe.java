@@ -48,23 +48,24 @@ public class AdvancedRecipe {
 	}
 	
 	private Recipe createRecipe(NamespacedKey namespacedKey) {
-		 return switch (this.recipeType) {
-			case ANVIL -> new AnvilRecipe(namespacedKey, this.result, this.base, this.addition);
-			case BLASTING -> new BlastingRecipe(namespacedKey, this.result, source, experience, recipeTime);
+		switch (this.recipeType) {
+			case ANVIL: return new AnvilRecipe(namespacedKey, this.result, this.base, this.addition);
+			case BLASTING: return new BlastingRecipe(namespacedKey, this.result, source, experience, recipeTime);
 //			case BREWERY -> new BreweryRecipe(namespacedKey, this.result);
 //			case CAMPFIRE -> new CampfireRecipe(namespacedKey, this.result, source, experience, recipeTime);
 //			case ENCHANT -> new EnchantRecipe(namespacedKey, this.result);
 //			case GRINDSTONE -> new GrindstoneRecipe(namespacedKey, this.result);
 //			case MERCHANT -> new MerchantRecipe(this.result, uses, maxUses, experienceReward, villagerExperience, priceMultiplier, demand, specialPrice, ignoreDiscounts);
-			case SHAPED -> createShapedRecipe(namespacedKey);
-			case SHAPELESS -> createShapelessRecipe(namespacedKey);
-			case SMELTING, FURNACE -> new FurnaceRecipe(namespacedKey, this.result, source, experience, recipeTime);
-			case SMITHING_TRIM -> new SmithingTrimRecipe(namespacedKey, template, base, addition);
-			case SMITHING_TRANSFORM -> new SmithingTransformRecipe(namespacedKey, this.result, template, base, addition);
-			case SMOKING -> new SmokingRecipe(namespacedKey, this.result, source, experience, recipeTime);
-			case STONECUTTING -> new StonecuttingRecipe(namespacedKey, this.result, source);
-			default -> null;
-		};
+			case SHAPED: return createShapedRecipe(namespacedKey);
+			case SHAPELESS: return createShapelessRecipe(namespacedKey);
+			case SMELTING: return new FurnaceRecipe(namespacedKey, this.result, source, experience, recipeTime);
+			case FURNACE: return new FurnaceRecipe(namespacedKey, this.result, source, experience, recipeTime);
+			case SMITHING_TRIM: return new SmithingTrimRecipe(namespacedKey, template, base, addition);
+			case SMITHING_TRANSFORM: return new SmithingTransformRecipe(namespacedKey, this.result, template, base, addition);
+			case SMOKING: return new SmokingRecipe(namespacedKey, this.result, source, experience, recipeTime);
+			case STONECUTTING: return new StonecuttingRecipe(namespacedKey, this.result, source);
+			default: return null;
+		}
 	}
 	
 	private ShapedRecipe createShapedRecipe(NamespacedKey namespacedKey) {

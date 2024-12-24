@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ServiceModule extends AbstractModule {
 	private static AdvancedAPI plugin;
@@ -41,7 +42,7 @@ public class ServiceModule extends AbstractModule {
 	
 	private void addDefaultServices() {
 		this.addServices(new EventService(plugin), new WorldService(plugin), new InventoryService(plugin), 
-		    new PartyService(plugin));
+							new PartyService(plugin));
 	}
 	
 	private void sortServices(final boolean isReversed) {
@@ -122,7 +123,7 @@ public class ServiceModule extends AbstractModule {
 	}
 	
 	public List<? extends Service> getServices(Plugin plugin) {
-		return ServiceModule.services.stream().filter(service -> service.getPlugin() == plugin).toList();
+		return ServiceModule.services.stream().filter(service -> service.getPlugin() == plugin).collect(Collectors.toList());
 	}
 	
 	public List<? extends Service> getServices() {

@@ -3,10 +3,8 @@ package kz.hxncus.mc.advancedapi.utility.random;
 import lombok.ToString;
 
 import java.io.NotSerializableException;
-import java.io.Serial;
 import java.util.Random;
 import java.util.SplittableRandom;
-import java.util.random.RandomGenerator;
 
 /**
  * The type Simple random.
@@ -15,7 +13,6 @@ import java.util.random.RandomGenerator;
  */
 @ToString
 public class AdvancedRandom extends Random {
-	@Serial
 	private static final long serialVersionUID = 1L;
 	private static final long[] JUMP = {-2337365368286915419L, 1659688472399708668L};
 	private static final long[] LONG_JUMP = {-3266927057705177477L, -2459076376072127807L};
@@ -38,7 +35,7 @@ public class AdvancedRandom extends Random {
 	 * Instantiates a new Simple random.
 	 */
 	protected AdvancedRandom() {
-		this(RandomGenerator.getDefault().nextLong());
+		this(new SplittableRandom(0L).nextLong());
 	}
 	
 	/**
@@ -51,7 +48,7 @@ public class AdvancedRandom extends Random {
 	}
 	
 	public void setSeed(final long seed) {
-		final RandomGenerator random = new SplittableRandom(seed);
+		final SplittableRandom random = new SplittableRandom(seed);
 		this.s0 = random.nextLong();
 		this.s1 = random.nextLong();
 	}
@@ -104,11 +101,6 @@ public class AdvancedRandom extends Random {
 	
 	public double nextDouble() {
 		return (this.nextLong() >>> 11) * 1.1102230246251565E-16;
-	}
-	
-	@Override
-	public int nextInt(final int origin, final int bound) {
-		return super.nextInt(bound - origin) + origin;
 	}
 	
 	public long nextLong(final long bound) {
@@ -226,12 +218,10 @@ public class AdvancedRandom extends Random {
 		}
 	}
 	
-	@Serial
 	private void readObject(final java.io.ObjectInputStream in) throws ClassNotFoundException, NotSerializableException {
 		throw new NotSerializableException("kz.hxncus.mc.minesonapi.random.SimpleRandom");
 	}
 	
-	@Serial
 	private void writeObject(final java.io.ObjectOutputStream out) throws NotSerializableException {
 		throw new NotSerializableException("kz.hxncus.mc.minesonapi.random.SimpleRandom");
 	}

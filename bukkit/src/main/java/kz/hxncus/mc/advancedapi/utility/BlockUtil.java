@@ -97,7 +97,8 @@ public final class BlockUtil {
 	}
 	
 	public Optional<Sign> getSign(final Block block) {
-		if (block.getState() instanceof Sign sign) {
+		if (block.getState() instanceof Sign) {
+			Sign sign = (Sign) block.getState();
 			return Optional.of(sign);
 		}
 		return Optional.absent();
@@ -105,7 +106,7 @@ public final class BlockUtil {
 	
 	public boolean setSignLine(Block signBlock, Side side, int line, String text) {
 		return BlockUtil.getSign(signBlock)
-		                .transform(sign -> {
+						.transform(sign -> {
 							sign.getSide(side).setLine(line, text);
 							return true;
 						}).or(false);
@@ -117,9 +118,9 @@ public final class BlockUtil {
 	
 	public String getSignLine(Block signBlock, Side side, int line) {
 		return BlockUtil.getSign(signBlock)
-		                .transform(sign -> {
-			                return sign.getSide(side).getLine(line);
-		                }).or("");
+						.transform(sign -> {
+							return sign.getSide(side).getLine(line);
+						}).or("");
 	}
 	
 	public String getSignLine(Block signBlock, int line) {
@@ -128,9 +129,9 @@ public final class BlockUtil {
 	
 	public String[] getSignLines(Block signBlock, Side side) {
 		return BlockUtil.getSign(signBlock)
-		                .transform(sign -> {
-			                return sign.getSide(side).getLines();
-		                }).or(new String[4]);
+						.transform(sign -> {
+							return sign.getSide(side).getLines();
+						}).or(new String[4]);
 	}
 	
 	public String[] getSignLines(Block signBlock) {
