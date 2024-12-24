@@ -6,11 +6,11 @@ import lombok.Getter;
 
 @Getter
 public abstract class AbstractArgument<T> implements Argument<T> {
-    protected final String name;
+    protected final String nodeName;
     protected Collection<T> suggestions;
 
-    protected AbstractArgument(String name) {
-        this.name = name;
+    protected AbstractArgument(String nodeName) {
+        this.nodeName = nodeName;
     }
 
     @Override

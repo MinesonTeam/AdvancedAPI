@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public interface Argument<T> {
-    String getName();
+    String getNodeName();
     Collection<T> getSuggestions();
     Argument<T> setSuggestions(Collection<T> suggestions);
     T parse(String arg);
