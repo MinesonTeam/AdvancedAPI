@@ -7,14 +7,14 @@ import lombok.Getter;
 @Getter
 public abstract class AbstractArgument<T> implements Argument<T> {
     protected final String nodeName;
-    protected Collection<T> suggestions;
+    protected Collection<String> suggestions;
 
     protected AbstractArgument(String nodeName) {
         this.nodeName = nodeName;
     }
 
     @Override
-    public Argument<T> setSuggestions(Collection<T> suggestions) {
+    public Argument<T> setSuggestions(Collection<String> suggestions) {
         this.suggestions = suggestions;
         return this;
     }

@@ -5,11 +5,11 @@ import java.util.Collections;
 
 public interface Argument<T> {
     String getNodeName();
-    Collection<T> getSuggestions();
-    Argument<T> setSuggestions(Collection<T> suggestions);
+    Collection<String> getSuggestions();
+    Argument<T> setSuggestions(Collection<String> suggestions);
     T parse(String arg);
     Class<T> getType();
-    default Collection<T> getDefaultSuggestions() {
+    default Collection<String> getDefaultSuggestions() {
         return Collections.emptyList();
     }
 }
