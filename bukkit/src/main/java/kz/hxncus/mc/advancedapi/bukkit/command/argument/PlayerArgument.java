@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.AbstractArgument;
 
 public class PlayerArgument extends AbstractArgument<Player> {
-    public PlayerArgument(final String name) {
-        super(name);
+    public PlayerArgument(final String nodeName) {
+        super(nodeName);
     }
 
     @Override

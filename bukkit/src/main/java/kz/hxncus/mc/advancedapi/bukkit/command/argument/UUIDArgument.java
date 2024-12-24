@@ -5,8 +5,8 @@ import java.util.UUID;
 import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.AbstractArgument;
 
 public class UUIDArgument extends AbstractArgument<UUID> {
-    public UUIDArgument(String name) {
-        super(name);
+    public UUIDArgument(String nodeName) {
+        super(nodeName);
     }
 
     @Override

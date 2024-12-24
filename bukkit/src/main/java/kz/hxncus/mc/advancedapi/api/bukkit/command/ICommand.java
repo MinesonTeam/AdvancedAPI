@@ -53,7 +53,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	}
 
 	default Argument<?> getArgument(final String argumentName) {
-		return this.getArguments().stream().filter(argument -> argument.getName().equals(argumentName)).findAny().get();
+		return this.getArguments().stream().filter(argument -> argument.getNodeName().equals(argumentName)).findAny().get();
 	}
 
 	default boolean hasPermission(CommandSender sender) {

@@ -9,22 +9,17 @@ public class BooleanArgument extends AbstractArgument<Boolean> {
 
     @Override
     public Boolean parse(String arg) {
-        return this.parseBoolean(arg);
-    }
-
-    @Override
-    public Class getType() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getType'");
-    }
-
-    private boolean parseBoolean(String arg) {
         String lowerCaseArg = arg.toLowerCase();
         if (lowerCaseArg.equals("true") || lowerCaseArg.equals("1") || lowerCaseArg.equals("yes")) {
             return true;
         } else if (lowerCaseArg.equals("false") || lowerCaseArg.equals("0") || lowerCaseArg.equals("no")) {
             return false;
         }
-        return false;
+        return null;
+    }
+
+    @Override
+    public Class<Boolean> getType() {
+        return Boolean.class;
     }
 }
