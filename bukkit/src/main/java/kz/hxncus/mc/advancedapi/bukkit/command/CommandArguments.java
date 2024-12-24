@@ -1,7 +1,10 @@
 package kz.hxncus.mc.advancedapi.bukkit.command;
 
+import java.util.List;
+
 import com.google.common.base.Optional;
 
+import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.Argument;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -11,10 +14,12 @@ import lombok.Setter;
 public class CommandArguments {
 	private Object[] args;
 	private String[] input;
+	private List<Argument<?>> arguments;
 
-	public CommandArguments(final Object[] args, final String[] input) {
+	public CommandArguments(final Object[] args, final String[] input, final List<Argument<?>> arguments) {
 		this.args = args;
 		this.input = input;
+		this.arguments = arguments;
 	}
 
 	public Object get(final int index) {
@@ -35,6 +40,16 @@ public class CommandArguments {
 
 	public <T> T get(final int index, final Class<T> clazz) {
 		return this.cast(this.get(index), clazz);
+	}
+
+	public Object get(final String nodeName) {
+		for (int i = 0; i < this.arguments.size(); i++) {
+			Argument<?> arg = this.arguments.get(i);
+			if (arg.getNodeName().equals(nodeName)) {
+				return this.cast(this.args[i], arg.getType());
+			}
+		}
+		return null;
 	}
 
 	/**

@@ -75,7 +75,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 			try {
 				String[] argsWithoutSubCommand = this.getArgsWithoutSubCommands(args);
 				Object[] convertedArgs = this.convertArgs(command.getArguments(), argsWithoutSubCommand);
-				executor.run(sender, command.getCommand(), label, new CommandArguments(convertedArgs, args));
+				executor.run(sender, command.getCommand(), label, new CommandArguments(convertedArgs, args, command.getArguments()));
 			} catch (CommandSyntaxException ignored) {
 			}
 		});
