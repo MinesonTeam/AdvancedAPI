@@ -6,6 +6,9 @@ import java.util.List;
 import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.AbstractArgument;
 
 public class BooleanArgument extends AbstractArgument<Boolean> {
+    private static final Collection<String> TRUE_CASES = List.of("true", "yes", "on", "enable", "accept", "confirm", "agree", "allow", "1");
+    private static final Collection<String> DEFAULT_SUGGESTIONS = List.of("true", "false");
+
     public BooleanArgument(final String nodeName) {
         super(nodeName);
     }
@@ -23,7 +26,7 @@ public class BooleanArgument extends AbstractArgument<Boolean> {
 
     @Override
     public Collection<String> getDefaultSuggestions() {
-        return List.of("true", "false", "yes", "no");
+        return BooleanArgument.DEFAULT_SUGGESTIONS;
     }
 
     @Override
