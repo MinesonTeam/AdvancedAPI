@@ -1,6 +1,6 @@
 ## About
 
-AdvancedAPI provides a simple code, for example, ItemBuilder, SimpleInventory, SimpleCommand which can be used to create things faster.
+AdvancedAPI provides for example, ItemBuilder, AdvancedInventory, AdvancedCommand which can be used to create things faster.
 
 ## Issues
 
