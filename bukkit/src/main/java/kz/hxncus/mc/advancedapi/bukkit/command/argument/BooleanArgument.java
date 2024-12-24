@@ -7,6 +7,7 @@ import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.AbstractArgument;
 
 public class BooleanArgument extends AbstractArgument<Boolean> {
     private static final Collection<String> TRUE_CASES = List.of("true", "yes", "on", "enable", "accept", "confirm", "agree", "allow", "1");
+    private static final Collection<String> FALSE_CASES = List.of("false", "no", "off", "disable", "reject", "deny", "disagree", "disallow", "0");
     private static final Collection<String> DEFAULT_SUGGESTIONS = List.of("true", "false");
 
     public BooleanArgument(final String nodeName) {
@@ -16,9 +17,9 @@ public class BooleanArgument extends AbstractArgument<Boolean> {
     @Override
     public Boolean parse(String arg) {
         String lowerCaseArg = arg.toLowerCase();
-        if (lowerCaseArg.equals("true") || lowerCaseArg.equals("1") || lowerCaseArg.equals("yes")) {
+        if (TRUE_CASES.contains(lowerCaseArg)) {
             return true;
-        } else if (lowerCaseArg.equals("false") || lowerCaseArg.equals("0") || lowerCaseArg.equals("no")) {
+        } else if (FALSE_CASES.contains(lowerCaseArg)) {
             return false;
         }
         return null;
