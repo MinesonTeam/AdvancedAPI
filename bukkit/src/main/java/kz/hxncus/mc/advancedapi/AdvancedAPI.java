@@ -12,10 +12,11 @@ import lombok.NonNull;
 import lombok.ToString;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.google.common.collect.Lists;
 
 /**
  * The type Mineson api.
@@ -59,7 +60,7 @@ public class AdvancedAPI extends JavaPlugin {
 		this.moduleService.register();
 
 		new AdvancedCommand("ebat")
-			.argument(new StringArgument("test").setSuggestions(List.of("test", "aaa")))
+			.argument(new StringArgument("test").setSuggestions(Lists.newArrayList("test", "aaa")))
 			.subCommands(new AdvancedCommand("apopa")
 				.complete((sender, command, alias, args) -> {
 					return ArgumentType.ADVANCEMENT.getList((Player) sender);

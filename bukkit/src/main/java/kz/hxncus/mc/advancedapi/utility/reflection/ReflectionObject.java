@@ -1,32 +1,23 @@
 package kz.hxncus.mc.advancedapi.utility.reflection;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class ReflectionObject {
     private static final byte FLAG_ACCESS = 1;
     private static final byte FLAG_FINAL = 1 << 1;
 
-    private static final VarHandle modifiers;
-
     private final Object object;
     private final Class<?> clazz;
-
-    static {
-        try {
-            MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup());
-            modifiers = lookup.findVarHandle(Field.class, "modifiers", int.class);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
     
     /**
      * Получаем из готового объекта
@@ -127,17 +118,12 @@ public class ReflectionObject {
 
     public static void accessField(Field field, byte flags) {
         ReflectionObject.accessObject(field, flags);
-
-        if ((flags & FLAG_FINAL) != 0 && (field.getModifiers() & Modifier.FINAL) == 0) {
-            modifiers.set(field, field.getModifiers() | Modifier.FINAL);
-        }
     }
 
     public static byte unaccessField(Field field, boolean unfinal) {
         byte flags = ReflectionObject.unaccessObject(field);
 
         if (unfinal && (field.getModifiers() & Modifier.FINAL) != 0) {
-            modifiers.set(field, field.getModifiers() & ~Modifier.FINAL);
             flags |= FLAG_FINAL;
         }
 
@@ -145,14 +131,14 @@ public class ReflectionObject {
     }
     
     private static void accessObject(AccessibleObject object, byte flags) {
-        if ((flags & FLAG_ACCESS) != 0 && object.canAccess(null)) {
+        if ((flags & FLAG_ACCESS) != 0 && object.isAccessible()) {
             object.setAccessible(false);
         }
     }
 
     private static byte unaccessObject(AccessibleObject object) {
         byte flags = 0;
-        if (!object.canAccess(null)) {
+        if (!object.isAccessible()) {
             object.setAccessible(true);
             flags |= FLAG_ACCESS;
         }

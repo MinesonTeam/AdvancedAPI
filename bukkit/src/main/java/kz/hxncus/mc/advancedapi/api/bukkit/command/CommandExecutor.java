@@ -12,6 +12,6 @@ public interface CommandExecutor {
 	void run(CommandSender sender, Command command, String label, CommandArguments args) throws CommandSyntaxException;
 	
 	default void run(SenderExecutionInfo executionInfo) throws CommandSyntaxException {
-		this.run(executionInfo.sender(), executionInfo.command(), executionInfo.label(), executionInfo.args());
+		this.run(executionInfo.getSender(), executionInfo.getCommand(), executionInfo.getLabel(), executionInfo.getArgs());
 	}
 }

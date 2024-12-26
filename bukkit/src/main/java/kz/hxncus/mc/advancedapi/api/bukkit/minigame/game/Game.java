@@ -5,6 +5,7 @@ import lombok.NonNull;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -163,7 +164,7 @@ public interface Game<P extends GameProfile> {
      * Получить список игроков
      */
     default @NonNull List<P> getProfiles() {
-        return this.getTeams().stream().flatMap(team -> team.getProfiles().stream()).toList();
+        return this.getTeams().stream().flatMap(team -> team.getProfiles().stream()).collect(Collectors.toList());
     }
     
     /**

@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 
 import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.Argument;
 import kz.hxncus.mc.advancedapi.bukkit.command.CommandArguments;
@@ -190,7 +191,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	}
 	
 	default ICommand subCommands(ICommand... subCommands) {
-		Map<String, ICommand> map = List.of(subCommands).stream()
+		Map<String, ICommand> map = Lists.newArrayList(subCommands).stream()
 			.collect(Collectors.toMap(subCommand -> subCommand.getName(), subCommand -> subCommand));
 		
 		this.getSubCommands().putAll(map);

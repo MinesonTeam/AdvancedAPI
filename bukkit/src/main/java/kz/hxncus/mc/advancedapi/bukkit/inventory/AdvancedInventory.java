@@ -10,11 +10,14 @@ import kz.hxncus.mc.advancedapi.utility.InventoryUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.base.Optional;
@@ -36,6 +39,26 @@ public class AdvancedInventory extends AbstractInventory implements InventoryHan
 	private final List<Consumer<InventoryCloseEvent>> closeHandlers = new ArrayList<>();
 	private final List<Consumer<InventoryClickEvent>> clickHandlers = new ArrayList<>();
 	private Predicate<Player> closeFilter;
+
+	public AdvancedInventory(final Inventory inventory) {
+		super(inventory);
+	}
+	
+	public AdvancedInventory(final InventoryType inventoryType) {
+		super(inventoryType);
+	}
+	
+	public AdvancedInventory(final InventoryType inventoryType, final String title) {
+		super(inventoryType, title);
+	}
+	
+	public AdvancedInventory(final int size) {
+		super(size);
+	}
+	
+	public AdvancedInventory(final int size, final String title) {
+		super(size, title);
+	}
 
 	public AdvancedInventory(@NonNull final AdvancedInventory advancedInventory) {
 		super(InventoryUtil.createInventory(null, advancedInventory.getInventoryType(), advancedInventory.getSize(), advancedInventory.getTitle()));

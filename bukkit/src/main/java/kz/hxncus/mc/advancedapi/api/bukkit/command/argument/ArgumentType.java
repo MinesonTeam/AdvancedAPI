@@ -11,17 +11,16 @@ import org.bukkit.generator.BiomeProvider;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 import java.util.function.Function;
 
 public enum ArgumentType {
 	ADVANCEMENT(player -> Collections2.transform(Lists.newArrayList(Registry.ADVANCEMENT), advancement -> advancement.getKey().toString())),
-	AXIS(player -> Set.of("x", "xy", "xyz", "xz", "y", "yz", "z")),
+	AXIS(player -> Lists.newArrayList("x", "xy", "xyz", "xz", "y", "yz", "z")),
 	BIOME(player -> Collections2.transform(Lists.newArrayList(Registry.BIOME), biome -> biome.getKey().toString())),
-	BOOLEAN(player -> Set.of("true", "false")),
+	BOOLEAN(player -> Lists.newArrayList("true", "false")),
 	BOSS_BAR(player -> Collections2.transform(Lists.newArrayList(Registry.BOSS_BARS), bossBar -> bossBar.getKey().toString())),
 	CHAT_COLOR(player -> Collections2.transform(Arrays.asList(ChatColor.values()), Enum::name)),
-	COORDINATE(player -> Set.of(player.getLocation().getX() + "", player.getLocation().getY() + "", player.getLocation().getZ() + "")),
+	COORDINATE(player -> Lists.newArrayList(player.getLocation().getX() + "", player.getLocation().getY() + "", player.getLocation().getZ() + "")),
 	CURRENT_WORLD_BIOME(player -> {
 		World world = player.getWorld();
 		BiomeProvider biomeProvider = world.getBiomeProvider();
