@@ -1,12 +1,15 @@
 package kz.hxncus.mc.advancedapi.utility;
 
 import kz.hxncus.mc.advancedapi.bukkit.generator.EmptyChunkGenerator;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameRule;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.World.Environment;
 
 import java.io.File;
@@ -96,4 +99,23 @@ public final class WorldUtil {
 
 		return emptyWorldDir;
 	}
+
+	public void kickAll(@NonNull final World world, final Location to) {
+        // kick player if location is null or world is the same.
+        if (to == null || to.getWorld().equals(world)) {
+            world.getPlayers().forEach(p -> p.kickPlayer("This world is under unloading. Please re"));
+		} else {
+			world.getPlayers().forEach(p -> p.teleport(to, PlayerTeleportEvent.TeleportCause.PLUGIN));
+		}
+    }
+
+    public void unloadWorld(@NonNull final World world, final boolean save, Location to) {
+        WorldUtil.kickAll(world, to);
+        Bukkit.unloadWorld(world, save);
+    }
+
+	public void unloadWorld(@NonNull final World world, final boolean save) {
+		WorldUtil.unloadWorld(world, save, null);
+    }
+
 }
