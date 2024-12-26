@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
@@ -33,12 +34,13 @@ public final class PlayerUtil {
         player.playSound(player.getLocation(), sound, soundCategory, 0f, 100f);
     }
 
-    public List<Entity> getNearbyEntities(@NonNull final Player player, final double x, final double y, final double z) {
-        return player.getNearbyEntities(x, y, z);
-    }
-
-    public List<Entity> getNearbyEntities(@NonNull final Player player, final double radius) {
-        return player.getNearbyEntities(radius, radius, radius);
+    public void restore(@NonNull final Player player) {
+        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        player.setFoodLevel(20);
+        player.setSaturation(5f);
+        player.setFireTicks(0);
+        player.setFreezeTicks(0);
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
     }
 
     public List<Player> getNearbyPlayers(@NonNull final Player player, final double x, final double y, final double z) {
