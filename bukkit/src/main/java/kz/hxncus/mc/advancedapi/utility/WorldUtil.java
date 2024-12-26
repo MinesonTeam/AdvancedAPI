@@ -115,7 +115,7 @@ public final class WorldUtil {
     }
 
 	public void unloadWorld(@NonNull final World world, final boolean save) {
-		WorldUtil.unloadWorld(world, save, null);
+		WorldUtil.unloadWorld(world, save, Bukkit.getWorlds().get(0).getSpawnLocation());
     }
 
 }
