@@ -103,7 +103,7 @@ public final class WorldUtil {
 	public void kickAll(@NonNull final World world, final Location to) {
         // kick player if location is null or world is the same.
         if (to == null || to.getWorld().equals(world)) {
-            world.getPlayers().forEach(p -> p.kickPlayer("This world is under unloading. Please re"));
+            world.getPlayers().forEach(p -> p.kickPlayer("World is under unloading. Please rejoin."));
 		} else {
 			world.getPlayers().forEach(p -> p.teleport(to, PlayerTeleportEvent.TeleportCause.PLUGIN));
 		}
