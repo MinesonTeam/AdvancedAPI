@@ -1,6 +1,7 @@
 package kz.hxncus.mc.advancedapi.bukkit.event;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -26,6 +27,14 @@ public class PlayerPhysicalInteractEvent extends PlayerEvent implements Cancella
 	private EquipmentSlot hand;
 	private Vector clickedPosition;
 	
+	public PlayerPhysicalInteractEvent(@NonNull final Player who, @NonNull final Action action, final ItemStack item, final Block clickedBlock, @NonNull final BlockFace clickedFace) {
+        this(who, action, item, clickedBlock, clickedFace, EquipmentSlot.HAND);
+    }
+
+    public PlayerPhysicalInteractEvent(@NonNull final Player who, @NonNull final Action action, final ItemStack item, final Block clickedBlock, @NonNull final BlockFace clickedFace, final EquipmentSlot hand) {
+        this(who, action, item, clickedBlock, clickedFace, hand, null);
+    }
+
 	public PlayerPhysicalInteractEvent(final Player who, final Action action, final ItemStack item, final Block clickedBlock, final BlockFace clickedFace, final EquipmentSlot hand, final Vector clickedPosition) {
 		super(who);
 		this.action = action;

@@ -1,53 +1,32 @@
 package kz.hxncus.mc.advancedapi.bukkit.profile;
 
+import kz.hxncus.mc.advancedapi.api.bukkit.minigame.party.Party;
+import kz.hxncus.mc.advancedapi.api.bukkit.profile.AbstractGameProfile;
+import kz.hxncus.mc.advancedapi.api.bukkit.profile.GameProfile;
+import kz.hxncus.mc.advancedapi.api.friend.Friend;
+import kz.hxncus.mc.advancedapi.bukkit.friend.AdvancedFriend;
+import kz.hxncus.mc.advancedapi.bukkit.minigame.party.AdvancedParty;
+import lombok.NonNull;
+import org.bukkit.OfflinePlayer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
-import com.google.common.base.Optional;
-
-import kz.hxncus.mc.advancedapi.api.bukkit.minigame.party.Party;
-import kz.hxncus.mc.advancedapi.api.bukkit.profile.AbstractGameProfile;
-import kz.hxncus.mc.advancedapi.api.friend.Friend;
-import kz.hxncus.mc.advancedapi.bukkit.minigame.party.AdvancedParty;
-import kz.hxncus.mc.advancedapi.bukkit.minigame.party.PartyService;
-import kz.hxncus.mc.advancedapi.friend.AdvancedFriend;
-import kz.hxncus.mc.advancedapi.service.ServiceModule;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class AdvancedGameProfile extends AbstractGameProfile {
-    protected int kills = 0;
-    protected int deaths = 0;
-    protected int balance = 0;
+    protected Map<String, Double> properties;
 
-    public AdvancedGameProfile(@NonNull UUID uniqueId, int kills, int deaths, int balance) {
+    public AdvancedGameProfile(@NonNull UUID uniqueId) {
         super(uniqueId);
-        this.kills = kills;
-        this.deaths = deaths;
-        this.balance = balance;
+        this.properties = new HashMap<>();
     }
 
     public AdvancedGameProfile(@NonNull OfflinePlayer player) {
         super(player);
     }
 
-    public AdvancedGameProfile(@NonNull UUID uniqueId) {
-        super(uniqueId);
-    }
-
-    public AdvancedGameProfile(@NonNull Player player) {
-        super(player);
-    }
-
-    public float getKD() {
-        return this.kills / this.deaths;
+    public AdvancedGameProfile(@NonNull UUID uniqueId, @NonNull Party<GameProfile> party) {
+        super(uniqueId, party);
     }
 
     public Friend asFriend() {
@@ -57,13 +36,11 @@ public class AdvancedGameProfile extends AbstractGameProfile {
     @NonNull
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
 
         data.put("player", this.player.getUniqueId().toString());
         data.put("party", this.party.getUniqueId().toString());
-        data.put("kills", this.kills);
-        data.put("deaths", this.deaths);
-        data.put("balance", this.balance);
+        data.put("properties", this.properties);
 
         return data;
     }
@@ -75,20 +52,17 @@ public class AdvancedGameProfile extends AbstractGameProfile {
         int deaths = Integer.parseInt((String) data.get("deaths"));
         int balance = Integer.parseInt((String) data.get("balance"));
 
-        Optional<PartyService> partyService = ServiceModule.getService(PartyService.class);
-        Party<?> party;
-        if (partyUniqueId != null && partyService.isPresent()) {
-            party = partyService.get().getParty(partyUniqueId);
-        } else {
-            party = null;
-        }
+        Party<?> party = null;
+//        if (partyUniqueId != null) {
+//            PartyController partyController = plugin.getPartyController();
+//            party = partyController.getParty(partyUniqueId);
+//        }
         if (party instanceof AdvancedParty) {
             AdvancedParty typedParty = (AdvancedParty) party;
-            AdvancedGameProfile gameProfile = new AdvancedGameProfile(playerUniqueId, kills, deaths, balance);
+            AdvancedGameProfile gameProfile = new AdvancedGameProfile(playerUniqueId, typedParty);
             gameProfile.setParty(typedParty);
             return gameProfile;
         }
-        return new AdvancedGameProfile(playerUniqueId, kills, deaths, balance);
+        return new AdvancedGameProfile(playerUniqueId);
     }
 }
-

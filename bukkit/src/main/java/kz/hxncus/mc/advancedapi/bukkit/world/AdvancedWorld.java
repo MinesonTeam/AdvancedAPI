@@ -55,7 +55,7 @@ public class AdvancedWorld {
 	 *
 	 * @return the name
 	 */
-	public String getWorldName() {
+	public String getName() {
 		return this.world.getName();
 	}
 	

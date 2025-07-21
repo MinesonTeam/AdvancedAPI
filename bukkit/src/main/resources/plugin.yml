@@ -3,3 +3,5 @@ version: "$version"
 main: kz.hxncus.mc.advancedapi.AdvancedAPI
 api-version: '1.13'
 load: STARTUP
+depend: []
+folia-supported: true

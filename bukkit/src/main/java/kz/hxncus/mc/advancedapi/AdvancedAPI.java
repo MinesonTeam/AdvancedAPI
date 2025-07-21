@@ -1,22 +1,9 @@
 package kz.hxncus.mc.advancedapi;
 
-import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.ArgumentType;
-import kz.hxncus.mc.advancedapi.bukkit.command.AdvancedCommand;
-import kz.hxncus.mc.advancedapi.bukkit.command.argument.StringArgument;
-import kz.hxncus.mc.advancedapi.bukkit.scheduler.AdvancedScheduler;
-import kz.hxncus.mc.advancedapi.module.ModuleService;
-import kz.hxncus.mc.advancedapi.service.ServiceModule;
-import kz.hxncus.mc.advancedapi.utility.CommandUtil;
+import kz.hxncus.mc.advancedapi.annotation.scanner.AnnotationScanner;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.ToString;
-
-import java.util.Arrays;
-
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.google.common.collect.Lists;
 
 /**
  * The type Mineson api.
@@ -26,76 +13,37 @@ import com.google.common.collect.Lists;
 @Getter
 @ToString
 public class AdvancedAPI extends JavaPlugin {
-	@Getter
-	private static AdvancedAPI instance;
-	
-	@NonNull private ModuleService moduleService;
-	@NonNull private ServiceModule serviceModule;
-	
-	private boolean isLoaded = false;
-	
+	private boolean loaded = false;
+	private AnnotationScanner scanner;
+
 	@Override
 	public void onLoad() {
-		if (this.isLoaded) {
+		if (this.loaded) {
+			this.getLogger().warning("Попытка повторной загрузки плагина");
 			return;
 		}
-		AdvancedAPI.instance = this;
-		
-		this.moduleService = new ModuleService(this);
-		this.serviceModule = new ServiceModule(this);
-		
-		this.moduleService.addModule(this.serviceModule);
-		this.serviceModule.addService(this.moduleService);
-		
-		this.isLoaded = true;
+		this.scanner = new AnnotationScanner(this);
+		this.scanner.load();
+		this.loaded = true;
+		this.getLogger().info("AdvancedAPI loaded.");
 	}
 	
 	@Override
 	public void onEnable() {
-		if (!this.isLoaded) {
-			throw new RuntimeException("Plugin not loaded yet!");
+		if (!this.loaded) {
+			this.getLogger().severe("Плагин не загружен.");
+			return;
 		}
-
-		this.serviceModule.setEnabled(true);
-		this.moduleService.register();
-
-		new AdvancedCommand("ebat")
-			.argument(new StringArgument("test").setSuggestions(Lists.newArrayList("test", "aaa")))
-			.subCommands(new AdvancedCommand("apopa")
-				.complete((sender, command, alias, args) -> {
-					return ArgumentType.ADVANCEMENT.getList((Player) sender);
-				})
-				.execute((sender, command, label, args) -> {
-					sender.sendMessage(Arrays.toString(args.getArgs()));
-				}),
-			new AdvancedCommand("pipa")
-				.complete((sender, command, alias, args) -> {
-					return Arrays.asList("pipa1", "pipa2");
-				})
-				.execute((sender, command, label, args) -> {
-					sender.sendMessage("pipa: " + Arrays.toString(args.getArgs()));
-				})
-			)
-			.complete((sender, command, alias, args) -> {
-				return Arrays.asList("AAA321", "EEE123");
-			})
-			.execute((sender, command, label, args) -> {
-				sender.sendMessage("jopa: " + Arrays.toString(args.getArgs()));
-			})
-			.register();
+		this.scanner.enable();
+		this.getLogger().info("AdvancedAPI enabled.");
 	}
 	
 	@Override
 	public void onDisable() {
-		if (!this.isLoaded) {
+		if (!this.loaded) {
 			return;
 		}
-		
-		this.isLoaded = false;
-		AdvancedScheduler.cancelPluginTasks(this);
-		CommandUtil.unregisterMyCommands();
-		this.moduleService.unregister();
-		this.serviceModule.onDisable();
-		AdvancedAPI.instance = null;
+		this.scanner.disable();
+		this.getLogger().info("AdvancedAPI disabled.");
 	}
 }

@@ -1,46 +1,41 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.profile;
 
+import kz.hxncus.mc.advancedapi.api.bukkit.minigame.game.Game;
+import kz.hxncus.mc.advancedapi.api.bukkit.minigame.party.Party;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NonNull;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
-import kz.hxncus.mc.advancedapi.api.bukkit.minigame.game.Game;
-import kz.hxncus.mc.advancedapi.api.bukkit.minigame.party.Party;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 public abstract class AbstractGameProfile implements GameProfile {
     protected final OfflinePlayer player;
     protected Party<? super GameProfile> party;
     protected Game<? super GameProfile> game;
     protected Map<String, Long> partyInvites;
 
-    protected AbstractGameProfile(@NonNull OfflinePlayer player) {
+    protected AbstractGameProfile(@NonNull OfflinePlayer player, Party<? super GameProfile> party) {
         this.player = player;
-        this.party = null;
+        this.party = party;
         this.game = null;
         this.partyInvites = new HashMap<>();
     }
 
-    protected AbstractGameProfile(@NonNull Player player) {
-        this(player.getUniqueId());
+    protected AbstractGameProfile(@NonNull OfflinePlayer player) {
+        this(player, null);
     }
     
-    protected AbstractGameProfile(@NonNull UUID uniqueId) {
-        this(Bukkit.getOfflinePlayer(uniqueId));
+    protected AbstractGameProfile(@NonNull UUID uniqueId, Party<? super GameProfile> party) {
+        this(Bukkit.getOfflinePlayer(uniqueId), party);
     }
 
-    protected AbstractGameProfile(@NonNull OfflinePlayer player, @NonNull Party<GameProfile> party, @NonNull Game<GameProfile> game) {
-        this.player = player;
-        this.party = party;
-        this.game = game;
-        this.partyInvites = new HashMap<>();
+    protected AbstractGameProfile(@NonNull UUID uniqueId) {
+        this(uniqueId, null);
     }
 }

@@ -1,13 +1,12 @@
 package kz.hxncus.mc.advancedapi.bukkit.region;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.util.BoundingBox;
-
 import kz.hxncus.mc.advancedapi.api.bukkit.region.AbstractRegion;
 import kz.hxncus.mc.advancedapi.api.bukkit.region.Region;
 import lombok.Getter;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.util.BoundingBox;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,9 +25,9 @@ public class AdvancedRegion extends AbstractRegion {
     @NonNull
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> result = new LinkedHashMap<String, Object>();
+        Map<String, Object> result = new LinkedHashMap<>();
         result.put("name", name);
-        result.put("owner", owner.transform(UUID::toString).orNull());
+        result.put("owner", owner.toString());
         result.put("uniqueId", uniqueId.toString());
         result.put("world", world.getUID().toString());
         result.put("boundingBox", boundingBox.serialize());
@@ -40,7 +39,7 @@ public class AdvancedRegion extends AbstractRegion {
     @SuppressWarnings("unchecked")
     public static Region deserialize(@NonNull Map<String, Object> args) {
         String name = (String) args.get("name");
-        UUID owner = args.get("owner") == null ? null : UUID.fromString((String) args.get("owner"));
+        UUID owner = UUID.fromString((String) args.get("owner"));
         UUID uniqueId = UUID.fromString((String) args.get("uniqueId"));
         World world = Bukkit.getWorld(UUID.fromString((String) args.get("world")));
         BoundingBox boundingBox = BoundingBox.deserialize((Map<String, Object>) args.get("boundingBox"));

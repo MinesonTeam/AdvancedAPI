@@ -1,15 +1,7 @@
 package kz.hxncus.mc.advancedapi.utility.reflection;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
+import java.lang.reflect.*;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Predicate;
 
 public class ReflectionObject {
@@ -73,7 +65,9 @@ public class ReflectionObject {
         do {
             try {
                 field = c.getDeclaredField(name);
-            } catch (NoSuchFieldException ignored) {}
+            } catch (NoSuchFieldException ignored) {
+                // ignored
+            }
             if (field != null) {
                 break;
             }
@@ -354,17 +348,14 @@ public class ReflectionObject {
     }
 
     public interface SupplierThrows<T> {
-
         T get() throws Exception;
     }
 
     public interface RunnableThrows {
-
         void run() throws Exception;
     }
 
     public interface PredicateThrows<T> {
-
         boolean test(T val) throws Exception;
     }
 }

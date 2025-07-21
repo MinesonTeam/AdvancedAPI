@@ -1,5 +1,6 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.region;
 
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -7,10 +8,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
-
-import com.google.common.base.Optional;
-
-import lombok.NonNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +35,8 @@ public interface Region extends ConfigurationSerializable {
     /**
      * Получить владельца региона
      */
-    @NonNull Optional<UUID> getOwner();
+    @NonNull
+    UUID getOwner();
 
     /**
      * Установить владельца региона

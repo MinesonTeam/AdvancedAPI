@@ -252,8 +252,7 @@ public final class VersionUtil {
 	@SuppressWarnings("deprecation")
 	public String getEnchantmentName(final Enchantment enchantment) {
 		if (IS_NAMESPACED_KEY_VERSION) {
-			return enchantment.getKey()
-			                  .getKey();
+			return enchantment.getKey().getKey();
 		} else {
 			return enchantment.getName();
 		}

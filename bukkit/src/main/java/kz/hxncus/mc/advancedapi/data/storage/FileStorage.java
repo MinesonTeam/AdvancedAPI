@@ -1,29 +1,30 @@
 package kz.hxncus.mc.advancedapi.data.storage;
 
-import kz.hxncus.mc.advancedapi.api.bukkit.config.Config;
 import kz.hxncus.mc.advancedapi.api.data.storage.AbstractStorage;
-
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import com.google.common.base.Optional;
-
+import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 public class FileStorage<T> extends AbstractStorage<T> {
-	private final Config config;
+	private final FileConfiguration config;
+	private final File file;
 	private final String path;
 	
-	public FileStorage(Plugin plugin, Config config, String path) {
+	public FileStorage(Plugin plugin, FileConfiguration config, File file, String path) {
 		super(plugin);
 		this.config = config;
+		this.file = file;
 		this.path = path;
 	}
 	
 	@Override
 	public void init() {
 		try {
-			config.load(this.getPlugin());
+			this.config.load(this.file);
 		} catch (IOException | InvalidConfigurationException e) {
 			throw new RuntimeException(e);
 		}
@@ -32,7 +33,7 @@ public class FileStorage<T> extends AbstractStorage<T> {
 	@Override
 	public void shutdown() {
 		try {
-			config.save();
+			this.config.save(this.file);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -41,7 +42,8 @@ public class FileStorage<T> extends AbstractStorage<T> {
 	@Override
 	public void save(final T thing) {
 		try {
-			config.setAndSave(path, thing);
+			this.config.set(path, thing);
+			this.config.save(this.file);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -49,7 +51,7 @@ public class FileStorage<T> extends AbstractStorage<T> {
 	
 	@Override
 	public Optional<T> load() {
-		return Optional.absent();
+		return Optional.empty();
 	}
 	
 	@Override

@@ -19,13 +19,11 @@ public final class FunctionalUtil {
 	 * @param willAccept the willAccept
 	 * @param consumer the consumer
 	 * @param type     the type
-	 * @return the boolean
-	 */
-	public <T> boolean ifTrueAccept(final boolean willAccept, final Consumer<T> consumer, final T type) {
+     */
+	public <T> void acceptIfTrue(final boolean willAccept, final Consumer<T> consumer, final T type) {
 		if (willAccept) {
 			consumer.accept(type);
 		}
-		return willAccept;
 	}
 	
 	/**
@@ -38,7 +36,7 @@ public final class FunctionalUtil {
 	 * @param type     the type
 	 * @return the r
 	 */
-	public <T, R> R ifTrueApply(final boolean willApply, final Function<T, R> function, final T type) {
+	public <T, R> R applyIfTrue(final boolean willApply, final Function<T, R> function, final T type) {
 		if (willApply) {
 			return function.apply(type);
 		}
@@ -52,13 +50,11 @@ public final class FunctionalUtil {
 	 * @param willNotAccept    the willNotAccept
 	 * @param consumer the consumer
 	 * @param type     the type
-	 * @return the boolean
-	 */
-	public <T> boolean ifFalseAccept(final boolean willNotAccept, final Consumer<T> consumer, final T type) {
+     */
+	public <T> void acceptIfFalse(final boolean willNotAccept, final Consumer<T> consumer, final T type) {
 		if (!willNotAccept) {
 			consumer.accept(type);
 		}
-		return willNotAccept;
 	}
 	
 	/**
@@ -71,7 +67,7 @@ public final class FunctionalUtil {
 	 * @param type     the type
 	 * @return the r
 	 */
-	public <T, R> R ifFalseApply(final boolean willNotApply, final Function<T, R> function, final T type) {
+	public <T, R> R applyIfFalse(final boolean willNotApply, final Function<T, R> function, final T type) {
 		if (!willNotApply) {
 			return function.apply(type);
 		}

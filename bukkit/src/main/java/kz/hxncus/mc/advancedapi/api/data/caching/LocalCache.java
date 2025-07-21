@@ -93,11 +93,17 @@ public abstract class LocalCache<K, V> extends HashMap<K, V> implements Concurre
 	}
 	
 	private void setExpiresAfterAccess(Object key, long now) {
-		this.expireNanosMap.get(key).setLeft(now);
+		Pair<Long, Long> expires = this.expireNanosMap.get(key);
+		if (expires != null) {
+			expires.setLeft(now);
+		}
 	}
 	
 	private void setExpiresAfterWrite(Object key, long now) {
-		this.expireNanosMap.get(key).setRight(now);
+		Pair<Long, Long> expires = this.expireNanosMap.get(key);
+		if (expires != null) {
+			expires.setRight(null);
+		}
 	}
 	
 	private boolean removeIfExpired(Object key, long now) {

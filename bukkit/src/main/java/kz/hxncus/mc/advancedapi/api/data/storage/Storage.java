@@ -2,7 +2,7 @@ package kz.hxncus.mc.advancedapi.api.data.storage;
 
 import org.bukkit.plugin.Plugin;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 public interface Storage<T> {
 	Plugin getPlugin();

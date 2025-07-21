@@ -1,11 +1,11 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.command.argument;
 
-import java.util.Collection;
-
 import lombok.Getter;
 
+import java.util.Collection;
+
 @Getter
-public abstract class AbstractArgument<T> implements Argument<T> {
+public abstract class AbstractArgument implements Argument {
     protected final String nodeName;
     protected Collection<String> suggestions;
 
@@ -14,7 +14,7 @@ public abstract class AbstractArgument<T> implements Argument<T> {
     }
 
     @Override
-    public Argument<T> setSuggestions(Collection<String> suggestions) {
+    public Argument setSuggestions(Collection<String> suggestions) {
         this.suggestions = suggestions;
         return this;
     }

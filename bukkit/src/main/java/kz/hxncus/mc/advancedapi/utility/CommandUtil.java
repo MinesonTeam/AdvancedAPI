@@ -6,16 +6,15 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import kz.hxncus.mc.advancedapi.utility.reflection.ReflectionUtil;
 
 import java.util.*;
 
 @UtilityClass
 public final class CommandUtil {
-	private final Logger LOGGER = LoggerFactory.getLogger(CommandUtil.class);
+	private final Logger log = LoggerFactory.getLogger(CommandUtil.class);
     @Getter
     private final CommandMap commandMap = ReflectionUtil.getFieldValue(Bukkit.getServer(), "commandMap");
     @Getter
@@ -33,7 +32,7 @@ public final class CommandUtil {
     }
 
     public void updatePlayersCommands() {
-        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.updateCommands());
+        Bukkit.getServer().getOnlinePlayers().forEach(Player::updateCommands);
     }
 
     /**
@@ -74,10 +73,15 @@ public final class CommandUtil {
 
     /**
      * Удалить команду
-     * @param command имя команды, которую надо удалить
+     * @param commandName имя команды, которую надо удалить
      */
     public void unregisterCommand(String commandName) {
-        CommandUtil.unregisterCommand(CommandUtil.getCommand(commandName));
+        Command command = CommandUtil.getCommand(commandName);
+        if (command == null) {
+            log.warn("Command not found: {}", commandName);
+            return;
+        }
+        CommandUtil.unregisterCommand(command);
     }
     
     /**
@@ -88,13 +92,13 @@ public final class CommandUtil {
         CommandUtil.unregisterCommand(command);
 
         Set<String> aliases = CommandUtil.getAliases(command, true);
-        aliases.forEach(alias -> CommandUtil.knownCommands.put(alias.toLowerCase(), command));
-        aliases.forEach(alias -> CommandUtil.myCommands.add(alias.toLowerCase()));
-
+        aliases.forEach(alias -> {
+            CommandUtil.knownCommands.put(alias.toLowerCase(), command);
+            CommandUtil.myCommands.add(alias.toLowerCase());
+        });
         if (registerPlayerCommands) {
             updatePlayersCommands();
         }
-        LOGGER.info(String.format("Регистрируем команду %s. Класс %s", command.getName(), command.getClass().getName()));
     }
 
     /**
@@ -102,8 +106,10 @@ public final class CommandUtil {
      * @param command команда, которую надо удалить
      */
     public void unregisterCommand(Command command) {
-        command.getAliases().forEach(CommandUtil.knownCommands::remove);
-        command.getAliases().forEach(CommandUtil.myCommands::remove);
+        command.getAliases().forEach(alias -> {
+            CommandUtil.knownCommands.remove(alias.toLowerCase());
+            CommandUtil.myCommands.remove(alias.toLowerCase());
+        });
     }
 
     /**

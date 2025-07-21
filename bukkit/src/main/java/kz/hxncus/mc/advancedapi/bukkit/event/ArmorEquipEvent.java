@@ -24,7 +24,8 @@ public class ArmorEquipEvent extends EntityEvent implements Cancellable {
 	private boolean cancelled = false;
 	private final EquipMethod equipMethod;
 	private final ArmorType armorType;
-	private ItemStack oldArmorPiece, newArmorPiece;
+	private ItemStack oldArmorPiece;
+	private ItemStack newArmorPiece;
 	
 	public ArmorEquipEvent(@NonNull final Entity what, @NonNull final EquipMethod equipMethod,
 	                       @NonNull final ArmorType armorType, @NonNull final ItemStack oldArmorPiece,
@@ -61,7 +62,7 @@ public class ArmorEquipEvent extends EntityEvent implements Cancellable {
 		 */
 		HELMET(5),
 		/**
-		 * Represents armor belonging to the chestplate slot, e.g., chestplates and elytras.
+		 * Represents armor belonging to the chestplate slot, e.g., chestplate and elytra.
 		 */
 		CHESTPLATE(6),
 		/**
@@ -133,7 +134,7 @@ public class ArmorEquipEvent extends EntityEvent implements Cancellable {
 		 */
 		DISPENSER,
 		/**
-		 * When an armor piece is removed due to it losing all durabilities.
+		 * When an armor piece is removed due to it losing all durability.
 		 */
 		BROKE,
 		/**

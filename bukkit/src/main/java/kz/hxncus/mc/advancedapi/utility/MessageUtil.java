@@ -1,13 +1,12 @@
 package kz.hxncus.mc.advancedapi.utility;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * Утилитный класс для работы с сообщениями
@@ -30,7 +29,7 @@ public final class MessageUtil {
      * @param message текст сообщения для рассылки
      */
     public void broadcast(@NonNull String message) {
-        Bukkit.getOnlinePlayers().forEach(player -> 
+        Bukkit.getOnlinePlayers().forEach(player ->
             MessageUtil.sendMessage(player, message)
         );
     }

@@ -1,18 +1,13 @@
 package kz.hxncus.mc.advancedapi.bukkit.profile;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import kz.hxncus.mc.advancedapi.api.bukkit.profile.AbstractProfile;
+import kz.hxncus.mc.advancedapi.api.friend.Friend;
+import kz.hxncus.mc.advancedapi.bukkit.friend.AdvancedFriend;
+import lombok.NonNull;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import kz.hxncus.mc.advancedapi.api.bukkit.profile.AbstractProfile;
-import kz.hxncus.mc.advancedapi.api.friend.Friend;
-import kz.hxncus.mc.advancedapi.friend.AdvancedFriend;
-import lombok.NonNull;
+import java.util.*;
 
 public class AdvancedProfile extends AbstractProfile {
     public AdvancedProfile(@NonNull OfflinePlayer player) {

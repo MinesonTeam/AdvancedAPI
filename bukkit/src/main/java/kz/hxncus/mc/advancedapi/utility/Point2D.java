@@ -1,23 +1,18 @@
 package kz.hxncus.mc.advancedapi.utility;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import lombok.Data;
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.ToString;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Класс для работы с 2D точками в Minecraft
  */
 @Data
-@ToString
-@EqualsAndHashCode
 public class Point2D implements Cloneable, ConfigurationSerializable {
     private double x;
     private double z;

@@ -1,10 +1,10 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.profile;
 
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.game.Game;
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.party.Party;
+
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public interface GameProfile extends Profile {
     Party<? super GameProfile> getParty();
@@ -43,7 +43,7 @@ public interface GameProfile extends Profile {
 
     default boolean isPartyOwner() {
         Party<? super GameProfile> party = this.getParty();
-        return party != null && party.getLeader() == this;
+        return this.isInParty() && party.getLeader() == this;
     }
 
     default boolean isInParty() {

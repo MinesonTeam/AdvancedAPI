@@ -9,16 +9,26 @@ import org.bukkit.inventory.InventoryHolder;
 
 @UtilityClass
 public final class InventoryUtil {
+	public Inventory clone(Inventory inventory, String title) {
+		Inventory clone = InventoryUtil.createInventory(inventory.getHolder(), inventory.getType(), inventory.getSize(), title);
+		for (int i = 0; i < inventory.getSize(); i++) {
+			clone.setItem(i, inventory.getItem(i));
+		}
+		return clone;
+	}
+
 	@NonNull
 	public Inventory createInventory(final InventoryHolder inventoryHolder, final InventoryType inventoryType, int size, String title) {
-		if (inventoryType != null && size == 0 && title == null) {
-			return Bukkit.createInventory(inventoryHolder, inventoryType);
-		} else if (inventoryType != null && title != null && size == 0) {
-			return Bukkit.createInventory(inventoryHolder, inventoryType, title);
-		} else if (inventoryType == null && title != null && size != 0) {
+		if (inventoryType == null || inventoryType == InventoryType.CHEST) {
+			if (title == null || title.isEmpty()) {
+				return Bukkit.createInventory(inventoryHolder, size);
+			}
 			return Bukkit.createInventory(inventoryHolder, size, title);
 		} else {
-			return Bukkit.createInventory(inventoryHolder, size % 9 == 0 ? size : 9);
+			if (title == null || title.isEmpty()) {
+				return Bukkit.createInventory(inventoryHolder, inventoryType);
+			}
+			return Bukkit.createInventory(inventoryHolder, inventoryType, title);
 		}
 	}
 }

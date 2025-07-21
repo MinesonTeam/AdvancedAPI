@@ -3,13 +3,17 @@ package kz.hxncus.mc.advancedapi.utility;
 import kz.hxncus.mc.advancedapi.utility.random.AdvancedRandom;
 import kz.hxncus.mc.advancedapi.utility.tuples.Pair;
 import kz.hxncus.mc.advancedapi.utility.tuples.Triplet;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.bukkit.Axis;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
+import org.bukkit.util.BoundingBox;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The type Location util.
@@ -18,6 +22,21 @@ import org.bukkit.block.BlockFace;
  */
 @UtilityClass
 public final class LocationUtil {
+	public List<Player> getNearbyPlayers(@NonNull final Location location, final double x, final double y, final double z) {
+        BoundingBox boundingBox = BoundingBox.of(location, x, y, z);
+
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        return onlinePlayers.stream().filter(onlinePlayer -> {
+            Location onlinePlayerLocation = onlinePlayer.getLocation();
+            return boundingBox.contains(onlinePlayerLocation.getX(), onlinePlayerLocation.getY(), onlinePlayerLocation.getZ());
+        }).collect(Collectors.toList());
+    }
+
+    public List<Player> getNearbyPlayers(@NonNull final Location location, final double radius) {
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        return onlinePlayers.stream().filter(p -> p.getLocation().distance(location) <= radius).collect(Collectors.toList());
+    }
+
 	public Location floorBlock(Location location) {
 		location.setX(location.getBlockX());
 		location.setY(location.getBlockY());

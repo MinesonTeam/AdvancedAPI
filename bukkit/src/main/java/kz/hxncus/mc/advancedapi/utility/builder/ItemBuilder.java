@@ -1,5 +1,6 @@
 package kz.hxncus.mc.advancedapi.utility.builder;
 
+import kz.hxncus.mc.advancedapi.utility.MaterialUtil;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
@@ -14,15 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import com.google.common.base.Optional;
-
-import kz.hxncus.mc.advancedapi.utility.MaterialUtil;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -55,8 +48,7 @@ public class ItemBuilder {
 	 * @param type the type
 	 */
 	public ItemBuilder(final Material type) {
-		this.itemStack = new ItemStack(type);
-		this.itemMeta = this.itemStack.getItemMeta();
+		this(new ItemStack(type));
 	}
 	
 	/**
@@ -66,8 +58,7 @@ public class ItemBuilder {
 	 * @param amount the amount
 	 */
 	public ItemBuilder(final Material type, final int amount) {
-		this.itemStack = new ItemStack(type, amount);
-		this.itemMeta = this.itemStack.getItemMeta();
+		this(new ItemStack(type, amount));
 	}
 	
 	/**
@@ -123,7 +114,7 @@ public class ItemBuilder {
 	public ItemBuilder addLoreLine(final String line) {
 		final List<String> lore = this.itemMeta.getLore();
 		if (lore == null) {
-			this.itemMeta.setLore(Collections.singletonList(line));
+			this.setLore(line);
 		} else {
 			lore.add(line);
 		}
@@ -153,8 +144,11 @@ public class ItemBuilder {
 	 * @return the item builder
 	 */
 	public ItemBuilder addLoreLines(final String... lines) {
-		for (String line : lines) {
-			addLoreLine(line);
+		final List<String> lore = this.itemMeta.getLore();
+		if (lore == null) {
+			this.setLore(lines);
+		} else {
+			lore.addAll(Arrays.asList(lines));
 		}
 		return this;
 	}
@@ -180,12 +174,12 @@ public class ItemBuilder {
 	/**
 	 * Sets material.
 	 *
-	 * @param material the material
-	 * @return the material
+	 * @param type the type
+	 * @return the item builder
 	 */
-	public ItemBuilder setType(final Material material) {
-		if (this.getMaterial() != material) {
-			this.itemStack.setType(material);
+	public ItemBuilder setType(final Material type) {
+		if (this.getType() != type) {
+			this.itemStack.setType(type);
 			this.itemMeta = this.itemStack.getItemMeta();
 		}
 		return this;
@@ -213,7 +207,7 @@ public class ItemBuilder {
 	}
 	
 	public ItemBuilder setQuantity(final int quantity) {
-		this.itemStack.setAmount(quantity);
+		this.setAmount(quantity);
 		return this;
 	}
 	
@@ -265,7 +259,7 @@ public class ItemBuilder {
 	 * @param color the color
 	 * @return the item builder
 	 */
-	public ItemBuilder color(@NonNull final DyeColor color) {
+	public ItemBuilder setColor(@NonNull final DyeColor color) {
 		return this.setColor(color.getColor());
 	}
 	
@@ -324,8 +318,7 @@ public class ItemBuilder {
 	 * @return the item builder
 	 */
 	public ItemBuilder clearEnchants() {
-		this.itemMeta.getEnchants()
-		             .forEach((enchantment, level) -> this.itemMeta.removeEnchant(enchantment));
+		this.itemMeta.getEnchants().keySet().forEach(enchantment -> this.itemMeta.removeEnchant(enchantment));
 		return this;
 	}
 	
@@ -413,8 +406,7 @@ public class ItemBuilder {
 	 * @return the pdc
 	 */
 	public <T, Z> Z getPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, Z> pdt) {
-		return this.itemMeta.getPersistentDataContainer()
-		                    .get(namespacedKey, pdt);
+		return this.itemMeta.getPersistentDataContainer().get(namespacedKey, pdt);
 	}
 	
 	/**
@@ -427,8 +419,7 @@ public class ItemBuilder {
 	 * @return the or default pdc
 	 */
 	public <T, Z> Z getPDCOrDefault(final NamespacedKey namespacedKey, final PersistentDataType<T, Z> pdt, final Z def) {
-		final Z value = this.itemMeta.getPersistentDataContainer()
-		                             .get(namespacedKey, pdt);
+		final Z value = this.itemMeta.getPersistentDataContainer().get(namespacedKey, pdt);
 		return value == null ? def : value;
 	}
 	
@@ -441,8 +432,7 @@ public class ItemBuilder {
 	 * @return the boolean
 	 */
 	public <T> boolean hasPDC(final NamespacedKey namespacedKey, final PersistentDataType<T, T> pdt) {
-		return this.itemMeta.getPersistentDataContainer()
-		                    .has(namespacedKey, pdt);
+		return this.itemMeta.getPersistentDataContainer().has(namespacedKey, pdt);
 	}
 	
 	/**
@@ -452,8 +442,7 @@ public class ItemBuilder {
 	 * @return the item builder
 	 */
 	public ItemBuilder removePDC(final NamespacedKey namespacedKey) {
-		this.itemMeta.getPersistentDataContainer()
-		             .remove(namespacedKey);
+		this.itemMeta.getPersistentDataContainer().remove(namespacedKey);
 		return this;
 	}
 	
@@ -463,8 +452,7 @@ public class ItemBuilder {
 	 * @return the pdc keys
 	 */
 	public Set<NamespacedKey> getPDCKeys() {
-		return this.itemMeta.getPersistentDataContainer()
-		                    .getKeys();
+		return this.itemMeta.getPersistentDataContainer().getKeys();
 	}
 	
 	public <T extends ItemMeta> boolean isInstance(final Class<T> metaClass) {
@@ -488,16 +476,16 @@ public class ItemBuilder {
 	 */
 	public <T extends ItemMeta, R> Optional<R> meta(final Class<T> metaClass, final Function<T, R> metaFunction) {
 		if (this.isInstance(metaClass)) {
-			return Optional.fromNullable(metaFunction.apply(this.getMeta(metaClass)));
+			return Optional.ofNullable(metaFunction.apply(this.getMeta(metaClass)));
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	/**
 	 * Meta item builder.
 	 *
 	 * @param <T>          the type parameter
-	 * @param metaClass    the meta-class
+	 * @param metaClass    the metaclass
 	 * @param metaConsumer the meta-consumer
 	 * @return the item builder
 	 */

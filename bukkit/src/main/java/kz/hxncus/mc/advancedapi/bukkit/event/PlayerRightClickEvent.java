@@ -37,6 +37,14 @@ public class PlayerRightClickEvent extends PlayerEvent implements Cancellable {
 	private EquipmentSlot hand;
 	private Vector clickedPosition;
 	
+	public PlayerRightClickEvent(@NonNull final Player who, @NonNull final Action action, final ItemStack item, final Block clickedBlock, @NonNull final BlockFace clickedFace) {
+        this(who, action, item, clickedBlock, clickedFace, EquipmentSlot.HAND);
+    }
+
+    public PlayerRightClickEvent(@NonNull final Player who, @NonNull final Action action, final ItemStack item, final Block clickedBlock, @NonNull final BlockFace clickedFace, final EquipmentSlot hand) {
+        this(who, action, item, clickedBlock, clickedFace, hand, null);
+    }
+
 	/**
 	 * Instantiates a new Player right click event.
 	 *

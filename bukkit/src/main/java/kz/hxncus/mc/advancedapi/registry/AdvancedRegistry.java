@@ -26,6 +26,7 @@ public class AdvancedRegistry<T> implements Registry<T> {
 		}
 		
 		this.map = builder.build();
+		AdvancedRegistry.getRegistries().put(type, this);
 	}
 	
 	public AdvancedRegistry(@NonNull Class<T> type) {
@@ -39,9 +40,5 @@ public class AdvancedRegistry<T> implements Registry<T> {
 			return null;
 		}
 		return (Registry<V>) registry;
-	}
-	
-	public static <V> void addRegistry(@NonNull Class<V> key, @NonNull Registry<V> registry) {
-		AdvancedRegistry.getRegistries().put(key, registry);
 	}
 }

@@ -1,14 +1,13 @@
 package kz.hxncus.mc.advancedapi.utility;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Класс для работы с 2D областями в Minecraft
@@ -19,7 +18,7 @@ import lombok.ToString;
 public class BoundingBox2D implements Cloneable, ConfigurationSerializable {
     private double minX;
     private double minZ;
-    private double maxX; 
+    private double maxX;
     private double maxZ;
     
     public BoundingBox2D(final double x1, final double z1, final double x2, final double z2) {
@@ -38,8 +37,8 @@ public class BoundingBox2D implements Cloneable, ConfigurationSerializable {
      * Проверяет, содержит ли область указанную точку
      */
     public boolean contains(@NonNull final Point2D point) {
-        return point.getX() >= this.minX && point.getX() <= this.maxX && 
-        point.getZ() >= this.minZ && point.getZ() <= this.maxZ;
+        return point.getX() >= this.minX && point.getX() <= this.maxX &&
+                point.getZ() >= this.minZ && point.getZ() <= this.maxZ;
     }
     
     /**
@@ -160,7 +159,11 @@ public class BoundingBox2D implements Cloneable, ConfigurationSerializable {
      * Изменяет размер области
      */
     public BoundingBox2D resize(final double x1, final double z1, final double x2, final double z2) {
-        return new BoundingBox2D(x1, z1, x2, z2);
+        this.minX = Math.min(x1, x2);
+        this.maxX = Math.max(x1, x2);
+        this.minZ = Math.min(z1, z2);
+        this.maxZ = Math.max(z1, z2);
+        return this;
     }
     
     /**
@@ -173,7 +176,7 @@ public class BoundingBox2D implements Cloneable, ConfigurationSerializable {
     /**
      * Создает новый BoundingBox2D из центра и радиуса
      */
-    public static BoundingBox2D of(@NonNull final Point2D center, final double radius) {      
+    public static BoundingBox2D of(@NonNull final Point2D center, final double radius) {
         final Point2D first = center.clone().add(-radius, -radius);
         final Point2D second = center.clone().add(radius, radius);
         return new BoundingBox2D(first.getX(), first.getZ(), second.getX(), second.getZ());

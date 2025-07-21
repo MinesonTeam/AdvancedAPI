@@ -1,6 +1,6 @@
 package kz.hxncus.mc.advancedapi.api.data.mapper;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 public interface DataMapper<T> {
 	void insert(T t);

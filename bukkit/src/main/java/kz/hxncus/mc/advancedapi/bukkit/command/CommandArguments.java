@@ -1,22 +1,21 @@
 package kz.hxncus.mc.advancedapi.bukkit.command;
 
-import java.util.List;
-
-import com.google.common.base.Optional;
-
 import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.Argument;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
 public class CommandArguments {
 	private Object[] args;
 	private String[] input;
-	private List<Argument<?>> arguments;
+	private List<Argument> arguments;
 
-	public CommandArguments(final Object[] args, final String[] input, final List<Argument<?>> arguments) {
+	public CommandArguments(final Object[] args, final String[] input, final List<Argument> arguments) {
 		this.args = args;
 		this.input = input;
 		this.arguments = arguments;
@@ -25,7 +24,8 @@ public class CommandArguments {
 	public Object get(final int index) {
 		try {
 			return this.args[index];
-		} catch (IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException ignored) {
+			// ignored
 		}
 		return null;
 	}
@@ -44,7 +44,7 @@ public class CommandArguments {
 
 	public Object get(final String nodeName) {
 		for (int i = 0; i < this.arguments.size(); i++) {
-			Argument<?> arg = this.arguments.get(i);
+			Argument arg = this.arguments.get(i);
 			if (arg.getNodeName().equals(nodeName)) {
 				return this.cast(this.args[i], arg.getType());
 			}
@@ -57,7 +57,7 @@ public class CommandArguments {
 	 */
 	@NonNull
 	public Optional<Object> getOptional(final int index) {
-		return Optional.fromNullable(this.get(index));
+		return Optional.ofNullable(this.get(index));
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class CommandArguments {
 	 */
 	@NonNull
 	public <T> Optional<T> getOptional(final int index, final Class<T> clazz) {
-		return Optional.fromNullable(this.cast(this.get(index), clazz));
+		return Optional.ofNullable(this.cast(this.get(index), clazz));
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public class CommandArguments {
 	 * Проверяем, является ли аргумент экземпляром класса
 	 */
 	private <T> boolean isInstance(final Object obj, final Class<T> clazz) {
-		return obj == null ? false : clazz.isInstance(obj);
+		return clazz.isInstance(obj);
 	}
 	
 	/**

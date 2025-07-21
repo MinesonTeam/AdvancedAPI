@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import org.bukkit.plugin.Plugin;
-import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 
@@ -98,8 +97,15 @@ public class AdvancedDatabase {
 		if (entry == null) {
 			return 1;
 		}
-		final Object obj = entry.get("maxId");
-		return obj == null ? 1 : (int) obj + 1;
+		final Object maxId = entry.get("maxId");
+		if (maxId == null) {
+			return 1;
+		}
+		try {
+			return Integer.parseInt(maxId.toString()) + 1;
+		} catch (NumberFormatException e) {
+			return 1;
+		}
 	}
 	
 	/**

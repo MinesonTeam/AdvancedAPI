@@ -1,16 +1,14 @@
 package kz.hxncus.mc.advancedapi.bukkit.inventory;
 
+import kz.hxncus.mc.advancedapi.annotation.Inject;
 import kz.hxncus.mc.advancedapi.api.bukkit.inventory.AbstractInventory;
 import kz.hxncus.mc.advancedapi.api.bukkit.inventory.Clickable;
 import kz.hxncus.mc.advancedapi.api.bukkit.inventory.InventoryHandler;
 import kz.hxncus.mc.advancedapi.api.bukkit.inventory.OpenCloseable;
 import kz.hxncus.mc.advancedapi.api.bukkit.inventory.marker.ItemMarker;
-import kz.hxncus.mc.advancedapi.service.ServiceModule;
 import kz.hxncus.mc.advancedapi.utility.InventoryUtil;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
-
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,8 +17,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import com.google.common.base.Optional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,9 +27,8 @@ import java.util.function.Predicate;
 
 @Getter
 public class AdvancedInventory extends AbstractInventory implements InventoryHandler, OpenCloseable, Clickable {
-	@Getter
-	@Setter
-	private static InventoryService inventoryService;
+	@Inject
+	private InventoryController controller;
 	private final Map<Integer, Consumer<InventoryClickEvent>> itemClickHandlers = new HashMap<>();
 	private final List<Consumer<InventoryOpenEvent>> openHandlers = new ArrayList<>();
 	private final List<Consumer<InventoryCloseEvent>> closeHandlers = new ArrayList<>();
@@ -78,13 +73,7 @@ public class AdvancedInventory extends AbstractInventory implements InventoryHan
 	
 	@Override
 	public void registerInventory() {
-		final Optional<InventoryService> inventoryServiceOptional = ServiceModule.getService(InventoryService.class);
-		if (inventoryServiceOptional.isPresent()) {
-			AdvancedInventory.inventoryService = inventoryServiceOptional.get();
-			AdvancedInventory.inventoryService.registerInventory(this);
-		} else {
-			throw new IllegalStateException("InventoryService is not registered");
-		}
+		controller.registerInventory(this);
 	}
 	
 	@NonNull
@@ -96,7 +85,7 @@ public class AdvancedInventory extends AbstractInventory implements InventoryHan
 	@Override
 	@NonNull
 	public AdvancedInventory setItem(final int slot, final ItemStack item, final Consumer<InventoryClickEvent> clickHandler) {
-		ItemMarker itemMarker = AdvancedInventory.getInventoryService().getItemMarker();
+		final ItemMarker itemMarker = controller.getItemMarker();
 		super.setItem(slot, this.isMarking() ? itemMarker.markItem(item) : item);
 		this.putOrRemoveClickHandler(slot, clickHandler);
 		return this;

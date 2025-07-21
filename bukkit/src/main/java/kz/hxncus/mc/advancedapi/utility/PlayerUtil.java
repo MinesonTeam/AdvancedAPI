@@ -1,23 +1,35 @@
 package kz.hxncus.mc.advancedapi.utility;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.util.BoundingBox;
-
+import kz.hxncus.mc.advancedapi.bukkit.player.PlayerMemento;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @UtilityClass
 public final class PlayerUtil {
+    @Getter
+    private final Map<UUID, PlayerMemento> playerMementos = new HashMap<>();
+
+    public void remember(@NonNull final Player player) {
+        PlayerUtil.playerMementos.put(player.getUniqueId(), new PlayerMemento(player));
+    }
+
+    public void restore(@NonNull final Player player) {
+        final PlayerMemento memento = PlayerUtil.playerMementos.get(player.getUniqueId());
+        if (memento == null) {
+            throw new IllegalArgumentException("Player memento not found for player " + player.getName());
+        }
+        memento.apply();
+        PlayerUtil.playerMementos.remove(player.getUniqueId());
+    }
+
     public void playSound(@NonNull final Player player, @NonNull final String sound) {
         player.playSound(player.getLocation(), sound, 0f, 100f);
     }
@@ -34,28 +46,27 @@ public final class PlayerUtil {
         player.playSound(player.getLocation(), sound, soundCategory, 0f, 100f);
     }
 
-    public void restore(@NonNull final Player player) {
-        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-        player.setFoodLevel(20);
-        player.setSaturation(5f);
+    public void reset(@NonNull final Player player) {
+        World world = player.getWorld();
+        double max_health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
         player.setFireTicks(0);
         player.setFreezeTicks(0);
+        player.setFallDistance(0);
+        try {
+            player.setGameMode(Bukkit.getDefaultGameMode());
+        } catch (NullPointerException e) {
+            player.setGameMode(GameMode.SURVIVAL);
+        }
         player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
-    }
-
-    public List<Player> getNearbyPlayers(@NonNull final Player player, final double x, final double y, final double z) {
-        Location location = player.getLocation();
-        BoundingBox boundingBox = BoundingBox.of(location, x, y, z);
-
-        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
-        return onlinePlayers.stream().filter(onlinePlayer -> {
-            Location onlinePlayerLocation = onlinePlayer.getLocation();
-            return boundingBox.contains(onlinePlayerLocation.getX(), onlinePlayerLocation.getY(), onlinePlayerLocation.getZ());
-        }).collect(Collectors.toList());
-    }
-
-    public List<Player> getNearbyPlayers(@NonNull final Player player, final double radius) {
-        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
-        return onlinePlayers.stream().filter(p -> p.getLocation().distance(player.getLocation()) <= radius).collect(Collectors.toList());
+        player.setHealth(max_health);
+        player.setHealthScale(20);
+        player.setFoodLevel(20);
+        player.setSaturation(5f);
+        player.setExp(0);
+        player.setLevel(0);
+        player.setWorldBorder(world.getWorldBorder());
+        player.setVisualFire(false);
+        player.setWalkSpeed(0.2f);
+        player.setFlying(false);
     }
 }

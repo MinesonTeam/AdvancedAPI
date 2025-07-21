@@ -1,14 +1,13 @@
 package kz.hxncus.mc.advancedapi.data.caching;
 
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
+import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.Getter;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 @Getter
 public class ConfigCache<K, V extends ConfigurationSerializable> extends AdvancedCache<K, V> {
@@ -52,15 +51,19 @@ public class ConfigCache<K, V extends ConfigurationSerializable> extends Advance
 		this.sectionConverter = sectionConverter;
 	}
 
-    public V loadFromConfig(final K key) {
+	@Override
+    public V get(final Object key) {
+		if (super.get(key) != null) {
+			return super.get(key);
+		}
 		ConfigurationSection section = this.getSection();
 		ConfigurationSection subSection = section.getConfigurationSection(this.getPath() + "." + key.toString());
-        final V valueConverted = subSection == null ? null : this.getSectionConverter().apply(subSection);
-        if (valueConverted == null) {
+        final V value = subSection == null ? null : this.getSectionConverter().apply(subSection);
+        if (value == null) {
             return null;
         }
-        this.put(key, valueConverted);
-		return valueConverted;
+        this.put((K) key, value);
+		return value;
 	}
 
 	public void loadAllFromConfig() {
@@ -89,8 +92,8 @@ public class ConfigCache<K, V extends ConfigurationSerializable> extends Advance
 	}
 	
 	public boolean storeToConfig(final K key) {
-		V value = this.get(key);
-		String path = this.getPath();
+		V value = this.remove(key);
+		String path = this.getPath();	
 		ConfigurationSection section = this.getSection();
 		String keyConverted = this.getKeyConverter().apply(key);
 		String keyPath = path + "." + keyConverted;
@@ -115,5 +118,6 @@ public class ConfigCache<K, V extends ConfigurationSerializable> extends Advance
 			String keyConverted = this.getKeyConverter().apply(key);
 			subSection.set(keyConverted, value.serialize());
 		}
+		this.clear();
 	}
 }

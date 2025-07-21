@@ -1,88 +1,79 @@
 package kz.hxncus.mc.advancedapi.bukkit.event;
 
-import org.bukkit.Location;
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerStatisticIncrementEvent;
 import org.bukkit.inventory.ItemStack;
 
-import lombok.NonNull;
-
 public class CustomEvents {
-    private final EventService eventService;
+	private static boolean isRegistered = false;
+    private final EventDispatcher eventDispatcher;
 
-    public CustomEvents(@NonNull EventService eventService) {
-        this.eventService = eventService;
+    public CustomEvents(@NonNull EventDispatcher eventDispatcher) {
+        this.eventDispatcher = eventDispatcher;
     }
 
     public void registerEvents() {
-        this.registerPlayerInteractEvent();
-        this.registerPlayerStatisticIncrementEvent();
-        this.registerInventoryClickEvent();
+		if (CustomEvents.isRegistered) {
+			return;
+		}
+		this.registerInventoryClickEvent();
+		this.registerPlayerInteractEvent();
+		this.registerPlayerStatisticIncrementEvent();
         this.registerBlockDispenseArmorEvent();
+
+		CustomEvents.isRegistered = true;
     }
 
+	// Add check for new version to add extra parameter interactEvent.getClickedPosition()
     private void registerPlayerInteractEvent() {
-        this.eventService.register(PlayerInteractEvent.class, interactEvent -> {
+        this.eventDispatcher.register(PlayerInteractEvent.class, interactEvent -> {
 			final Action action = interactEvent.getAction();
 			switch (action) {
 				case LEFT_CLICK_BLOCK:
 				case LEFT_CLICK_AIR:
 					PlayerLeftClickEvent leftClickEvent = new PlayerLeftClickEvent(interactEvent.getPlayer(), interactEvent.getAction(),
-                        interactEvent.getItem(), interactEvent.getClickedBlock(), interactEvent.getBlockFace(), interactEvent.getHand(),
-                        interactEvent.getClickedPosition());
-					this.eventService.callEvent(leftClickEvent);
-					interactEvent.setCancelled(leftClickEvent.isCancelled());
+                        interactEvent.getItem(), interactEvent.getClickedBlock(), interactEvent.getBlockFace(), interactEvent.getHand());
+					this.eventDispatcher.callEvent(leftClickEvent);
 					break;
 				case RIGHT_CLICK_BLOCK:
 				case RIGHT_CLICK_AIR:
 					PlayerRightClickEvent rightClickEvent = new PlayerRightClickEvent(interactEvent.getPlayer(), interactEvent.getAction(),
-                        interactEvent.getItem(), interactEvent.getClickedBlock(), interactEvent.getBlockFace(), interactEvent.getHand(),
-                        interactEvent.getClickedPosition());
-					this.eventService.callEvent(rightClickEvent);
-					interactEvent.setCancelled(rightClickEvent.isCancelled());
+                        interactEvent.getItem(), interactEvent.getClickedBlock(), interactEvent.getBlockFace(), interactEvent.getHand());
+					this.eventDispatcher.callEvent(rightClickEvent);
 					break;
 				case PHYSICAL:
 					PlayerPhysicalInteractEvent physicalInteractEvent = new PlayerPhysicalInteractEvent(interactEvent.getPlayer(), interactEvent.getAction(),
-                        interactEvent.getItem(), interactEvent.getClickedBlock(), interactEvent.getBlockFace(), interactEvent.getHand(),
-                        interactEvent.getClickedPosition());
-					this.eventService.callEvent(physicalInteractEvent);
-					interactEvent.setCancelled(physicalInteractEvent.isCancelled());
+                        interactEvent.getItem(), interactEvent.getClickedBlock(), interactEvent.getBlockFace(), interactEvent.getHand());
+					this.eventDispatcher.callEvent(physicalInteractEvent);
 			}
 		});
     }
 
     private void registerPlayerStatisticIncrementEvent() {
-        this.eventService.register(PlayerStatisticIncrementEvent.class, event -> {
+        this.eventDispatcher.register(PlayerStatisticIncrementEvent.class, event -> {
 			final Statistic statistic = event.getStatistic();
 			final Player player = event.getPlayer();
-			Location location = player.getLocation();
 			if (statistic == Statistic.JUMP) {
-				this.eventService.callEvent(new PlayerJumpEvent(player, location, location.clone().add(player.getVelocity())));
-			} else if (statistic == Statistic.DAMAGE_BLOCKED_BY_SHIELD) {
-				final EntityDamageEvent lastDamageCause = player.getLastDamageCause();
-				if (lastDamageCause == null) {
-					return;
-				}
-				this.eventService.callEvent(new PlayerDamageBlockByShieldEvent(player, lastDamageCause.getEntity(), event.getNewValue() - event.getPreviousValue()));
+				this.eventDispatcher.callEvent(new PlayerJumpEvent(player, player.getLocation(), player.getLocation().clone().add(player.getVelocity())));
 			}
 		});
     }
 
     private void registerInventoryClickEvent() {
-        this.eventService.register(InventoryClickEvent.class, inventoryClickEvent -> {
+        this.eventDispatcher.register(InventoryClickEvent.class, inventoryClickEvent -> {
 		
 		});
     }
 
     private void registerBlockDispenseArmorEvent() {
-        this.eventService.register(BlockDispenseArmorEvent.class, event -> {
+        this.eventDispatcher.register(BlockDispenseArmorEvent.class, event -> {
 			final ArmorEquipEvent.ArmorType armorType = ArmorEquipEvent.ArmorType.matchType(event.getItem());
 			if (armorType == null) {
 				return;
@@ -90,7 +81,7 @@ public class CustomEvents {
 			final ArmorEquipEvent armorEquipEvent = new ArmorEquipEvent(event.getTargetEntity(),
 			                                                            ArmorEquipEvent.EquipMethod.DISPENSER, armorType,
 			                                                            new ItemStack(Material.AIR), event.getItem());
-			this.eventService.callEvent(armorEquipEvent);
+			this.eventDispatcher.callEvent(armorEquipEvent);
 			if (armorEquipEvent.isCancelled()) {
 				event.setCancelled(true);
 			}

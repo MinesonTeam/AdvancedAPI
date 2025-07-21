@@ -1,26 +1,18 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.command;
 
+import com.google.common.collect.Lists;
+import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.Argument;
+import kz.hxncus.mc.advancedapi.bukkit.command.CommandArguments;
+import kz.hxncus.mc.advancedapi.bukkit.command.exception.CommandSyntaxException;
+import kz.hxncus.mc.advancedapi.utility.CommandUtil;
+import lombok.NonNull;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-
-import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.Argument;
-import kz.hxncus.mc.advancedapi.bukkit.command.CommandArguments;
-import kz.hxncus.mc.advancedapi.bukkit.command.exception.CommandSyntaxException;
-import kz.hxncus.mc.advancedapi.utility.CommandUtil;
-import lombok.NonNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public interface ICommand extends CommandExecutor, TabCompleter {
@@ -39,7 +31,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	ICommand addAliases(String... aliases);
 
 	Map<String, ICommand> getSubCommands();
-	List<Argument<?>> getArguments();
+	List<Argument> getArguments();
 
 	List<kz.hxncus.mc.advancedapi.api.bukkit.command.CommandExecutor> getExecutors();
 	List<kz.hxncus.mc.advancedapi.api.bukkit.command.TabCompleter> getCompleters();
@@ -53,17 +45,17 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 		return null;
 	}
 
-	default Argument<?> getArgument(final String argumentName) {
-		return this.getArguments().stream().filter(argument -> argument.getNodeName().equals(argumentName)).findAny().get();
+	default Optional<Argument> getArgument(final String argumentName) {
+		return this.getArguments().stream().filter(argument -> argument.getNodeName().equals(argumentName)).findAny();
 	}
 
 	default boolean hasPermission(CommandSender sender) {
-		return this.getPermission() != null && sender.hasPermission(this.getPermission());
+		return sender.hasPermission(this.getPermission());
 	}
 
 	default boolean onCommand(@NonNull CommandSender sender, @NonNull String label, @NonNull String[] args) {
 		ICommand command = this.getCommandFromArgs(args);
-		if (!sender.isOp() && !hasPermission(sender)) {
+		if (!hasPermission(sender)) {
 			if (this.getPermissionMessage() == null) {
 				sender.sendMessage(ChatColor.RED + "You don`t have permission to execute this command.");
 			} else {
@@ -78,6 +70,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 				Object[] convertedArgs = this.convertArgs(command.getArguments(), argsWithoutSubCommand);
 				executor.run(sender, command.getCommand(), label, new CommandArguments(convertedArgs, args, command.getArguments()));
 			} catch (CommandSyntaxException ignored) {
+				// ignored
 			}
 		});
 		return true;
@@ -86,21 +79,21 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	@Override
 	default List<String> onTabComplete(@NonNull CommandSender sender, @NonNull Command command, @NonNull String alias, @NonNull String[] args) {
 		Optional<ICommand> tabCommand = this.getTabCommandFromArgs(args);
-		if (!sender.isOp() && this.getPermission() != null && !sender.hasPermission(this.getPermission())) {
+		if (!hasPermission(sender)) {
 			return Collections.emptyList();
 		}
-		return this.sort(this.filter(tabCommand.transform(icommand -> icommand.getCompleters().stream()
-			.map(completer -> {
-				try {
-					return completer.run(sender, command, alias, args);
-				} catch (CommandSyntaxException ignored) {
-				}
-				return Collections.<String>emptyList();
-			}).flatMap(Collection::stream).collect(Collectors.toList())).or(Collections.emptyList()), args), args);
+		return this.sort(this.filter(tabCommand.map(icommand -> icommand.getCompleters().stream().map(completer -> {
+			try {
+				return completer.run(sender, command, alias, args);
+			} catch (CommandSyntaxException ignored) {
+				// ignored
+			}
+			return Collections.<String>emptyList();
+		}).flatMap(Collection::stream).collect(Collectors.toList())).orElse(Collections.emptyList()), args), args);
 	}
 
 	default Optional<ICommand> getTabCommandFromArgs(@NonNull final String[] args) {
-		if (args == null || args.length <= 1) {
+		if (args.length <= 1) {
 			return Optional.of(this);
 		}
 		int count = 1;
@@ -119,21 +112,17 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 		if (args.length <= count) {
 			return Optional.of(current);
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 
 	@NonNull
-	default Object[] convertArgs(List<Argument<?>> arguments, String[] args) {
+	default Object[] convertArgs(List<Argument> arguments, String[] args) {
 		Object[] convertedArgs = new Object[args.length];
-		for (int i = 0; i < args.length; i++) {
-			if (i >= arguments.size()) {
-				break;
+		for (int i = 0; i < args.length && i < arguments.size(); i++) {
+			Argument argument = arguments.get(i);
+			if (argument != null) {
+				convertedArgs[i] = argument.parse(args[i]);
 			}
-			Argument<?> argument = arguments.get(i);
-			if (argument == null) {
-				break;
-			}
-			convertedArgs[i] = argument.parse(args[i]);
 		}
 		return convertedArgs;
 	}
@@ -179,7 +168,7 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 
 		this.getSubCommands().put(subCommandName, subCommand);
 		this.complete((sender, command, alias, args) -> {
-			if (sender.isOp() || subCommand.hasPermission(sender)) {
+			if (subCommand.hasPermission(sender)) {
 				List<String> list = new ArrayList<>(this.getAliases());
 				list.add(subCommandName);
 				return list;
@@ -192,27 +181,22 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 	
 	default ICommand subCommands(ICommand... subCommands) {
 		Map<String, ICommand> map = Lists.newArrayList(subCommands).stream()
-			.collect(Collectors.toMap(subCommand -> subCommand.getName(), subCommand -> subCommand));
+			.collect(Collectors.toMap(ICommand::getName, subCommand -> subCommand));
 		
 		this.getSubCommands().putAll(map);
-		this.complete((sender, command, alias, args) -> {
-			if (sender.isOp() || Arrays.stream(subCommands).anyMatch(subCommand -> subCommand.hasPermission(sender))) {
-				List<String> list = new ArrayList<>(this.getAliases());
-				list.addAll(map.keySet());
-				return list;
-			}
-			return Collections.emptyList();
-		});
+		this.complete((sender, command, alias, args) ->
+			Arrays.stream(subCommands).filter(subCommand -> subCommand.hasPermission(sender)).map(ICommand::getName).collect(Collectors.toList())
+		);
 
 		return this;
 	}
 	
-	default <T> ICommand argument(Argument<T> argument) {
+	default ICommand argument(Argument argument) {
 		this.getArguments().add(argument);
 		return this;
 	}
 
-	default ICommand arguments(Argument<?>... arguments) {
+	default ICommand arguments(Argument... arguments) {
 		this.getArguments().addAll(Arrays.asList(arguments));
 		return this;
 	}
@@ -251,8 +235,8 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 			return list;
 		}
 		String input = args[args.length - 1].toLowerCase();
-		
-		List<String> sorted = list.stream()
+
+		return list.stream()
 			.sorted((a, b) -> {
 				// Сортируем по "близости" совпадения к началу строки
 				int posA = a.toLowerCase().indexOf(input);
@@ -260,7 +244,5 @@ public interface ICommand extends CommandExecutor, TabCompleter {
 				return Integer.compare(posA, posB);
 			})
 			.collect(Collectors.toList());
-		
-		return sorted;
 	}
 }

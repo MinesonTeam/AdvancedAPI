@@ -1,20 +1,17 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.minigame.game;
 
-import lombok.NonNull;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
-import com.google.common.base.Optional;
-
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.arena.Arena;
 import kz.hxncus.mc.advancedapi.api.bukkit.minigame.team.Team;
 import kz.hxncus.mc.advancedapi.api.bukkit.profile.GameProfile;
+import lombok.NonNull;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Интерфейс для управления мини-игрой
@@ -144,7 +141,7 @@ public interface Game<P extends GameProfile> {
     default Optional<Team<P>> getFreeTeam() {
         Team<P> team = this.getTeams().stream().filter(t -> !t.isFull()).findFirst().orElse(null);
         if (team == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(team);
     }
@@ -157,7 +154,7 @@ public interface Game<P extends GameProfile> {
                 return Optional.of(team);
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
     
     /**

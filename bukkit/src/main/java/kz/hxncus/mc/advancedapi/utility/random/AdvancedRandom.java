@@ -13,10 +13,10 @@ import java.util.SplittableRandom;
  */
 @ToString
 public class AdvancedRandom extends Random {
+	private static AdvancedRandom instance;
 	private static final long serialVersionUID = 1L;
 	private static final long[] JUMP = {-2337365368286915419L, 1659688472399708668L};
 	private static final long[] LONG_JUMP = {-3266927057705177477L, -2459076376072127807L};
-	private static AdvancedRandom instance;
 	private long s0;
 	private long s1;
 	

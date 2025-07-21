@@ -3,12 +3,12 @@ package kz.hxncus.mc.advancedapi.api.bukkit.command.argument;
 import java.util.Collection;
 import java.util.Collections;
 
-public interface Argument<T> {
+public interface Argument {
     String getNodeName();
     Collection<String> getSuggestions();
-    Argument<T> setSuggestions(Collection<String> suggestions);
-    T parse(String arg);
-    Class<T> getType();
+    Argument setSuggestions(Collection<String> suggestions);
+    Object parse(String arg);
+    Class<?> getType();
     default Collection<String> getDefaultSuggestions() {
         return Collections.emptyList();
     }

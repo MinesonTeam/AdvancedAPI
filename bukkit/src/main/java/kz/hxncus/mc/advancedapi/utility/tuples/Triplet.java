@@ -14,7 +14,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class Triplet<L, M, R> extends Pair<L, R> {
 	protected M middle;
 	
@@ -37,12 +37,13 @@ public class Triplet<L, M, R> extends Pair<L, R> {
 	public void setThird(M third) {
 		this.middle = third;
 	}
-	
+
 	@NonNull
+	@Override
 	public Triplet<R, M, L> swap() {
 		return Triplet.of(this.right, this.middle, this.left);
 	}
-	
+
 	public static <L, M, R> Triplet<L, M, R> of(@NonNull L left, @NonNull M middle, @NonNull R right) {
 		return new Triplet<>(left, middle, right);
 	}

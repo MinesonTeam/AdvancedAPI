@@ -1,13 +1,10 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.region;
 
-import org.bukkit.World;
-import org.bukkit.util.BoundingBox;
-
-import com.google.common.base.Optional;
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.bukkit.World;
+import org.bukkit.util.BoundingBox;
 
 import java.util.UUID;
 
@@ -15,7 +12,7 @@ import java.util.UUID;
 @Setter
 public abstract class AbstractRegion implements Region {
     @NonNull protected String name;
-    protected Optional<UUID> owner;
+    protected UUID owner;
     @NonNull protected final UUID uniqueId;
     @NonNull protected final BoundingBox boundingBox;
     @NonNull protected World world;
@@ -23,7 +20,7 @@ public abstract class AbstractRegion implements Region {
     
     protected AbstractRegion(@NonNull String name, UUID owner, @NonNull UUID uniqueId, @NonNull BoundingBox boundingBox, @NonNull World world, int priority) {
         this.name = name;
-        this.owner = Optional.fromNullable(owner);
+        this.owner = owner;
         this.uniqueId = uniqueId;
         this.boundingBox = boundingBox;
         this.world = world;
@@ -32,7 +29,7 @@ public abstract class AbstractRegion implements Region {
 
     protected AbstractRegion(@NonNull String name, UUID owner, @NonNull UUID uniqueId, @NonNull BoundingBox boundingBox, @NonNull World world) {
         this.name = name;
-        this.owner = Optional.fromNullable(owner);
+        this.owner = owner;
         this.uniqueId = uniqueId;
         this.boundingBox = boundingBox;
         this.world = world;
@@ -41,6 +38,6 @@ public abstract class AbstractRegion implements Region {
 
     @Override
     public void setOwner(@NonNull UUID owner) {
-        this.owner = Optional.of(owner);
+        this.owner = owner;
     }
 }

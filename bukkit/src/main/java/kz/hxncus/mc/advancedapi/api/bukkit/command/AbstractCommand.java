@@ -1,33 +1,33 @@
 package kz.hxncus.mc.advancedapi.api.bukkit.command;
 
+import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.Argument;
 import lombok.Getter;
 import lombok.NonNull;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import kz.hxncus.mc.advancedapi.api.bukkit.command.argument.Argument;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public abstract class AbstractCommand extends Command implements ICommand {
 	protected final Map<String, ICommand> subCommands = new HashMap<>();
-	protected final List<Argument<?>> arguments = new ArrayList<>();
+	protected final List<Argument> arguments = new ArrayList<>();
 	protected final List<CommandExecutor> executors = new ArrayList<>();
 	protected final List<TabCompleter> completers = new ArrayList<>();
 
 	protected AbstractCommand(final String name) {
+		this(name.toLowerCase(), "");
+	}
+
+	protected AbstractCommand(String name, String permission) {
 		super(name.toLowerCase());
+		this.setPermission(permission);
 	}
 
 	protected AbstractCommand(@NonNull String name, @NonNull String description, @NonNull String usageMessage, @NonNull List<String> aliases) {
 		super(name.toLowerCase(), description, usageMessage, aliases);
+		this.setPermission("");
 	}
 
 	@Override

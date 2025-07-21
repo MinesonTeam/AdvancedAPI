@@ -3,30 +3,18 @@ package kz.hxncus.mc.advancedapi.utility;
 import kz.hxncus.mc.advancedapi.bukkit.generator.EmptyChunkGenerator;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.bukkit.Bukkit;
-import org.bukkit.Difficulty;
-import org.bukkit.GameRule;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.*;
 import org.bukkit.World.Environment;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 @UtilityClass
 public final class WorldUtil {
 	public World getOrCreateWorld(final WorldCreator worldCreator) {
 		String worldName = worldCreator.name();
-		if (WorldUtil.copyEmptyWorld(worldName)) {
-			return worldCreator.createWorld();
-		}
-		return Bukkit.getWorld(worldName);
+		WorldUtil.copyEmptyWorld(worldName);
+		return worldCreator.createWorld();
 	}
 	
 	public boolean copyWorld(final File source, final File target) {
@@ -117,5 +105,4 @@ public final class WorldUtil {
 	public void unloadWorld(@NonNull final World world, final boolean save) {
 		WorldUtil.unloadWorld(world, save, Bukkit.getWorlds().get(0).getSpawnLocation());
     }
-
 }

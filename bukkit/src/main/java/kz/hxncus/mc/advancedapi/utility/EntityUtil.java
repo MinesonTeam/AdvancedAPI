@@ -7,7 +7,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
@@ -62,25 +61,25 @@ public final class EntityUtil {
 		}
 	}
 	
-	/**
-	 * Is fixed boolean.
-	 *
-	 * @param itemDisplay the item display
-	 * @return the boolean
-	 */
-	public boolean isFixed(final ItemDisplay itemDisplay) {
-		return itemDisplay.getItemDisplayTransform() == ItemDisplay.ItemDisplayTransform.FIXED;
-	}
-	
-	/**
-	 * Is none boolean?
-	 *
-	 * @param itemDisplay the item display
-	 * @return the boolean
-	 */
-	public boolean isNone(final ItemDisplay itemDisplay) {
-		return itemDisplay.getItemDisplayTransform() == ItemDisplay.ItemDisplayTransform.NONE;
-	}
+//	/**
+//	 * Is fixed boolean.
+//	 *
+//	 * @param itemDisplay the item display
+//	 * @return the boolean
+//	 */
+//	public boolean isFixed(final ItemDisplay itemDisplay) {
+//		return itemDisplay.getItemDisplayTransform() == ItemDisplay.ItemDisplayTransform.FIXED;
+//	}
+//
+//	/**
+//	 * Is none boolean?
+//	 *
+//	 * @param itemDisplay the item display
+//	 * @return the boolean
+//	 */
+//	public boolean isNone(final ItemDisplay itemDisplay) {
+//		return itemDisplay.getItemDisplayTransform() == ItemDisplay.ItemDisplayTransform.NONE;
+//	}
 	
 	/**
 	 * Teleport.

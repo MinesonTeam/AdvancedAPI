@@ -6,13 +6,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.MultipleFacing;
-import org.bukkit.block.sign.Side;
 import org.bukkit.persistence.PersistentDataType;
-
-import com.google.common.base.Optional;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -54,7 +52,7 @@ public final class BlockUtil {
 	public boolean isPlayerPlaced(final Block block) {
 		final int hashCode = block.getLocation().hashCode();
 		final String key = Integer.toString(hashCode, RADIX);
-		final NamespacedKey namespacedKey = NamespacedKeyUtil.create(key);
+		final NamespacedKey namespacedKey = NamespacedKey.minecraft(key);
 		return block.getChunk().getPersistentDataContainer().has(namespacedKey, PersistentDataType.INTEGER);
 	}
 	
@@ -101,40 +99,40 @@ public final class BlockUtil {
 			Sign sign = (Sign) block.getState();
 			return Optional.of(sign);
 		}
-		return Optional.absent();
+		return Optional.empty();
 	}
 	
-	public boolean setSignLine(Block signBlock, Side side, int line, String text) {
-		return BlockUtil.getSign(signBlock)
-						.transform(sign -> {
-							sign.getSide(side).setLine(line, text);
-							return true;
-						}).or(false);
-	}
-	
-	public boolean setSignLine(Block signBlock, int line, String text) {
-		return BlockUtil.setSignLine(signBlock, Side.FRONT, line, text);
-	}
-	
-	public String getSignLine(Block signBlock, Side side, int line) {
-		return BlockUtil.getSign(signBlock)
-						.transform(sign -> {
-							return sign.getSide(side).getLine(line);
-						}).or("");
-	}
-	
-	public String getSignLine(Block signBlock, int line) {
-		return BlockUtil.getSignLine(signBlock, Side.FRONT, line);
-	}
-	
-	public String[] getSignLines(Block signBlock, Side side) {
-		return BlockUtil.getSign(signBlock)
-						.transform(sign -> {
-							return sign.getSide(side).getLines();
-						}).or(new String[4]);
-	}
-	
-	public String[] getSignLines(Block signBlock) {
-		return BlockUtil.getSignLines(signBlock, Side.FRONT);
-	}
+//	public boolean setSignLine(Block signBlock, Side side, int line, String text) {
+//		return BlockUtil.getSign(signBlock)
+//						.map(sign -> {
+//							sign.getSide(side).setLine(line, text);
+//							return true;
+//						}).orElse(false);
+//	}
+//
+//	public boolean setSignLine(Block signBlock, int line, String text) {
+//		return BlockUtil.setSignLine(signBlock, Side.FRONT, line, text);
+//	}
+//
+//	public String getSignLine(Block signBlock, Side side, int line) {
+//		return BlockUtil.getSign(signBlock)
+//						.map(sign -> {
+//							return sign.getSide(side).getLine(line);
+//						}).orElse("");
+//	}
+//
+//	public String getSignLine(Block signBlock, int line) {
+//		return BlockUtil.getSignLine(signBlock, Side.FRONT, line);
+//	}
+//
+//	public String[] getSignLines(Block signBlock, Side side) {
+//		return BlockUtil.getSign(signBlock)
+//						.map(sign -> {
+//							return sign.getSide(side).getLines();
+//						}).orElse(new String[4]);
+//	}
+//
+//	public String[] getSignLines(Block signBlock) {
+//		return BlockUtil.getSignLines(signBlock, Side.FRONT);
+//	}
 }

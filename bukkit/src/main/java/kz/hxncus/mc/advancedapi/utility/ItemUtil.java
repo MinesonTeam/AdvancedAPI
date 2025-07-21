@@ -26,7 +26,7 @@ public final class ItemUtil {
 	private final Yaml yaml = new Yaml(YAML_CONSTRUCTOR, YAML_REPRESENTER, DUMPER_OPTIONS);
 	
 	public boolean isNullOrAir(final ItemStack item) {
-		return item == null || MaterialUtil.isNullOrAir(item.getType());
+		return item == null || item.getType().isAir();
 	}
 	
 	/**

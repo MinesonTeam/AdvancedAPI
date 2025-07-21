@@ -1,8 +1,7 @@
 package kz.hxncus.mc.advancedapi.api.data.repository;
 
 import java.util.Collection;
-
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 /**
  * Базовый интерфейс для репозиториев
@@ -14,7 +13,6 @@ public interface Repository<ID, T> {
      * Сохраняет сущность
      * @param entity Сущность для сохранения
      * @return Сохраненная сущность
-     * @throws RepositoryException при ошибке сохранения
      */
     T save(T entity);
 
@@ -22,7 +20,6 @@ public interface Repository<ID, T> {
      * Сохраняет коллекцию сущностей
      * @param entities Коллекция сущностей
      * @return Коллекция сохраненных сущностей
-     * @throws RepositoryException при ошибке сохранения
      */
     Collection<T> saveAll(Collection<T> entities);
 
@@ -30,7 +27,6 @@ public interface Repository<ID, T> {
      * Находит сущность по ID
      * @param id Идентификатор
      * @return Optional с найденной сущностью
-     * @throws RepositoryException при ошибке поиска
      */
     Optional<T> findById(ID id);
 
@@ -56,20 +52,17 @@ public interface Repository<ID, T> {
     /**
      * Удаляет сущность по ID
      * @param id Идентификатор
-     * @throws RepositoryException при ошибке удаления
      */
     void deleteById(ID id);
 
     /**
      * Удаляет сущность
      * @param entity Сущность для удаления
-     * @throws RepositoryException при ошибке удаления
      */
     void delete(T entity);
 
     /**
      * Удаляет все сущности
-     * @throws RepositoryException при ошибке удаления
      */
     void deleteAll();
 }

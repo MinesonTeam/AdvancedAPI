@@ -1,6 +1,7 @@
 package kz.hxncus.mc.advancedapi.bukkit.scheduler;
 
 import kz.hxncus.mc.advancedapi.AdvancedAPI;
+import kz.hxncus.mc.advancedapi.annotation.Inject;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
@@ -22,7 +23,8 @@ import java.util.function.IntConsumer;
 @UtilityClass
 public class AdvancedScheduler {
 	private final Set<Integer> tasksId = new HashSet<>(8);
-	private final AdvancedAPI plugin = AdvancedAPI.getInstance();
+	@Inject
+	private AdvancedAPI plugin;
 	private final BukkitScheduler scheduler = Bukkit.getScheduler();
 	/**
 	 * The constant 1 second = 20 ticks.
@@ -535,10 +537,9 @@ public class AdvancedScheduler {
 	 */
 	public void cancelPluginTasks(final Plugin plugin) {
 		for (final BukkitWorker activeWorker : scheduler.getActiveWorkers()) {
-			if (activeWorker.getOwner() != plugin) {
-				continue;
+			if (activeWorker.getOwner() == plugin) {
+				cancelTask(activeWorker.getTaskId());
 			}
-			cancelTask(activeWorker.getTaskId());
 		}
 	}
 	
