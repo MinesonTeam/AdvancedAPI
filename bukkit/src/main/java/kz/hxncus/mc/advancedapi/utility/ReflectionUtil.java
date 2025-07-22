@@ -119,8 +119,8 @@ public class ReflectionUtil {
         return null;
     }
 
-    public <T> T getFieldValue(Object obj, String name) {
-        Field field = ReflectionUtil.getField(obj, name);
+    public <T> T getFieldValue(String fieldName, Object obj) {
+        Field field = ReflectionUtil.getField(obj, fieldName);
         if (field == null) {
             return null;
         }

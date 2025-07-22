@@ -8,5 +8,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Config {
-    String value();
+    String fileName();
+    boolean autoReload() default true;
+    int reloadDelay() default 1200;
+    int reloadInterval() default 1200;
 }

@@ -16,9 +16,9 @@ import java.util.*;
 public final class CommandUtil {
 	private final Logger log = LoggerFactory.getLogger(CommandUtil.class);
     @Getter
-    private final CommandMap commandMap = ReflectionUtil.getFieldValue(Bukkit.getServer(), "commandMap");
+    private final CommandMap commandMap = ReflectionUtil.getFieldValue("commandMap", Bukkit.getServer());
     @Getter
-    private final Map<String, Command> knownCommands = ReflectionUtil.getFieldValue(CommandUtil.getCommandMap(), "knownCommands");
+    private final Map<String, Command> knownCommands = ReflectionUtil.getFieldValue("knownCommands", CommandUtil.getCommandMap());
     @Getter
     private final List<String> myCommands = new ArrayList<>();
 
