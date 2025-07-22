@@ -18,24 +18,24 @@ public class AdvancedAPI extends JavaPlugin {
 
 	@Override
 	public void onLoad() {
-		if (this.loaded) {
-			this.getLogger().warning("Попытка повторной загрузки плагина");
+		if (loaded) {
+			getLogger().warning("Попытка повторной загрузки плагина");
 			return;
 		}
-		this.scanner = new AnnotationScanner(this);
-		this.scanner.load();
-		this.loaded = true;
-		this.getLogger().info("AdvancedAPI loaded.");
+		scanner = new AnnotationScanner(this);
+		scanner.load();
+		loaded = true;
+		getLogger().info("AdvancedAPI loaded.");
 	}
 	
 	@Override
 	public void onEnable() {
 		if (!this.loaded) {
-			this.getLogger().severe("Плагин не загружен.");
+			getLogger().severe("Плагин не загружен.");
 			return;
 		}
-		this.scanner.enable();
-		this.getLogger().info("AdvancedAPI enabled.");
+		scanner.enable();
+		getLogger().info("AdvancedAPI enabled.");
 	}
 	
 	@Override
@@ -43,7 +43,7 @@ public class AdvancedAPI extends JavaPlugin {
 		if (!this.loaded) {
 			return;
 		}
-		this.scanner.disable();
-		this.getLogger().info("AdvancedAPI disabled.");
+		scanner.disable();
+		getLogger().info("AdvancedAPI disabled.");
 	}
 }

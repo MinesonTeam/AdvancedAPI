@@ -1,6 +1,8 @@
 package kz.hxncus.mc.advancedapi.bukkit.inventory;
 
 import kz.hxncus.mc.advancedapi.AdvancedAPI;
+import kz.hxncus.mc.advancedapi.annotation.Inject;
+import kz.hxncus.mc.advancedapi.annotation.Provide;
 import kz.hxncus.mc.advancedapi.api.bukkit.inventory.Clickable;
 import kz.hxncus.mc.advancedapi.api.bukkit.inventory.OpenCloseable;
 import kz.hxncus.mc.advancedapi.api.bukkit.inventory.marker.ItemMarker;
@@ -26,15 +28,16 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
+@Provide
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class InventoryController {
 	protected static final Map<Inventory, AdvancedInventory> inventories = new ConcurrentHashMap<>();
+	@Inject
 	private static AdvancedAPI plugin;
 	private final ItemMarker itemMarker;
 	
-	public InventoryController(final AdvancedAPI plugin) {
-		InventoryController.plugin = plugin;
+	public InventoryController() {
 		this.itemMarker = this.getItemMarker(plugin);
 	}
 	

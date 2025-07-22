@@ -13,12 +13,23 @@ import java.util.Map;
 
 @UtilityClass
 public class InjectProcessor {
-
-
+    public void processStatic(Plugin plugin, Class<?> clazz) {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (!field.isAnnotationPresent(Inject.class)) {
+                continue;
+            }
+            Class<?> fieldType = field.getType();
+            if (Plugin.class.isAssignableFrom(fieldType)) {
+                ReflectionUtil.setField(field, null, plugin);
+            } else if (field.getType() == Logger.class) {
+                ReflectionUtil.setField(field, null, LoggerFactory.getLogger(clazz.getSimpleName()));
+            }
+        }
+    }
     public void process(Plugin plugin, Class<?> clazz, Map<Class<?>, Object> instances) {
-        Object instance = newInstance(clazz, instances);
-        if (instance == null && Plugin.class.isAssignableFrom(clazz)) {
-            instance = plugin;
+        Object instance = plugin;
+        if (instance == null || !Plugin.class.isAssignableFrom(clazz)) {
+            instance = newInstance(clazz, instances);
         }
         for (Field field : clazz.getDeclaredFields()) {
             if (!field.isAnnotationPresent(Inject.class)) {

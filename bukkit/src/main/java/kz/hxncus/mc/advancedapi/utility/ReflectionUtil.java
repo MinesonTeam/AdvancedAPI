@@ -71,6 +71,37 @@ public class ReflectionUtil {
         }
     }
 
+    public void setPrimitiveField(Field field, Object obj, Object value) {
+        ReflectionUtil.setAccessible(field, true);
+        try {
+            if (value != null) {
+                if (field.getType() == int.class) {
+                    field.setInt(obj, Integer.parseInt(value.toString()));
+                } else if (field.getType() == boolean.class) {
+                    field.setBoolean(obj, Boolean.getBoolean(value.toString()));
+                } else if (field.getType() == byte.class) {
+                    field.setByte(obj, Byte.parseByte(value.toString()));
+                } else if (field.getType() == char.class) {
+                    field.setChar(obj, value.toString().charAt(0));
+                } else if (field.getType() == double.class) {
+                    field.setDouble(obj, Double.parseDouble(value.toString()));
+                } else if (field.getType() == float.class) {
+                    field.setFloat(obj, Float.parseFloat(value.toString()));
+                } else if (field.getType() == long.class) {
+                    field.setLong(obj, Long.parseLong(value.toString()));
+                } else if (field.getType() == short.class) {
+                    field.setShort(obj, Short.parseShort(value.toString()));
+                } else {
+                    setField(field, obj, value);
+                }
+            } else {
+                setField(field, obj, null);
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Field getField(Class<?> clazz, String name) {
         try {
             return clazz.getDeclaredField(name);

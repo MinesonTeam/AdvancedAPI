@@ -20,18 +20,23 @@ public class AnnotationScanner {
     private final Map<Class<?>, Object> instances = new HashMap<>();
     private final JavaPlugin plugin;
     private final PluginProcessor pluginProcessor;
+    private final ConfigProcessor configProcessor;
 
     public AnnotationScanner(JavaPlugin plugin) {
         this.plugin = plugin;
         this.pluginProcessor = new PluginProcessor();
+        this.configProcessor = new ConfigProcessor();
     }
 
     public void load() {
+        List<Class<?>> injects = ReflectionUtil.findAnnotatedClasses(plugin, Inject.class);
+        for (Class<?> inject : injects) {
+            InjectProcessor.processStatic(plugin, inject);
+        }
         List<Class<?>> provides = ReflectionUtil.findAnnotatedClasses(plugin, Provide.class);
         for (Class<?> provide : provides) {
             newInstance(provide);
         }
-        List<Class<?>> injects = ReflectionUtil.findAnnotatedClasses(plugin, Inject.class);
         for (Class<?> inject : injects) {
             InjectProcessor.process(plugin, inject, instances);
         }
@@ -42,7 +47,7 @@ public class AnnotationScanner {
         }
         List<Class<?>> configs = ReflectionUtil.findAnnotatedClasses(plugin, Config.class);
         for (Class<?> config : configs) {
-            ConfigProcessor.process(plugin, config);
+            configProcessor.process(plugin, config);
         }
         List<Class<?>> holograms = ReflectionUtil.findAnnotatedClasses(plugin, Hologram.class);
         for (Class<?> hologram : holograms) {
@@ -77,10 +82,12 @@ public class AnnotationScanner {
             Object instance = newInstance(pluginClass);
             pluginProcessor.process(pluginClass, instance);
         }
+        configProcessor.enable(plugin);
         pluginProcessor.enable(plugin);
     }
 
     public void disable() {
+        configProcessor.disable();
         AdvancedScheduler.cancelPluginTasks(plugin);
         CommandUtil.unregisterMyCommands();
         EventDispatcher.unregisterAll(plugin);
